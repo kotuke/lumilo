@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Install with Homebrew: `brew install --cask kotuke/tap/lumilo`.
+- The README shows Lumilo starting a server in a demo GIF.
 - Splash's model list shows the models already on this Mac, for example
   downloaded for llama.cpp, and adds one from those files in seconds.
 

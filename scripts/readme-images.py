@@ -4,12 +4,15 @@
 The panel screenshots come from the board tests (TestShot in
 internal/panel), drawn offscreen at 2x in both themes; this script cuts
 their rounded corners, sets them on a gradient with a shadow and writes a
-light and a dark version of each image. It needs Pillow.
+light and a dark version of each image. The demo GIF comes from TestDemo's
+frames. It needs Pillow and ffmpeg.
 
     python3 scripts/readme-images.py
 """
 
+import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -241,6 +244,77 @@ def themes(dir):
     save(c, "themes.png")
 
 
+def shoot_demo(dir):
+    env = dict(os.environ, LUMILO_DEMO_DIR=dir, CGO_ENABLED="0")
+    subprocess.run(["go", "test", "./internal/panel", "-run", "TestDemo$", "-count=1"],
+                   cwd=ROOT, env=env, check=True)
+
+
+def demo(dir, theme):
+    """The demo: the panel hangs from its icon in the menu bar while Lumilo
+    starts Splash and serves requests, the speed live in the icon. The
+    frames come from TestDemo in internal/panel; ffmpeg makes the GIF."""
+    t = THEMES[theme]
+    frames = json.load(open(os.path.join(dir, f"frames-{theme}.json")))
+    scale, bar, margin = 0.75, 52, 40
+    pw = round(744 * scale)
+    w = pw + 2 * margin + 120
+    h = bar + 16 + round(1100 * scale) + margin
+    base = gradient(w, h, t["stops"])
+    px = (w - pw) // 2
+    icon_cx = px + pw / 2
+    tmp = os.path.join(dir, "gif-" + theme)
+    os.makedirs(tmp, exist_ok=True)
+    for i, f in enumerate(frames):
+        c = base.copy()
+        im = Image.open(os.path.join(dir, f["panel"])).convert("RGBA")
+        big = Image.new("L", (im.width * 4, im.height * 4), 0)
+        ImageDraw.Draw(big).rounded_rectangle((0, 0, big.width - 1, big.height - 1), RADIUS * 4, fill=255)
+        im.putalpha(big.resize(im.size, Image.LANCZOS))
+        im = im.resize((pw, round(im.height * scale)), Image.LANCZOS)
+        place(c, im, px, bar + 10, t["shadow"])
+        # The menu bar with Lumilo's icon, highlighted as its panel is open.
+        tint, _ = BAR[theme]
+        strip = c.crop((0, 0, w, bar)).filter(ImageFilter.GaussianBlur(16))
+        strip.alpha_composite(Image.new("RGBA", strip.size, tint))
+        c.paste(strip, (0, 0))
+        icon = Image.open(os.path.join(dir, f["tray"])).convert("RGBA")
+        # At the scale of the 2x panel: the menu bar as it is.
+        over = Image.new("RGBA", c.size, (0, 0, 0, 0))
+        ImageDraw.Draw(over).rounded_rectangle(
+            (icon_cx - icon.width / 2 - 8, 5, icon_cx + icon.width / 2 + 8, bar - 5), 8,
+            fill=(255, 255, 255, 46) if theme == "dark" else (0, 0, 0, 26))
+        c.alpha_composite(over)
+        c.alpha_composite(icon, (round(icon_cx - icon.width / 2), round((bar - icon.height) / 2)))
+        if f["click"][0]:
+            # The pointer moves in from the lower right to Start.
+            x, y = px + f["click"][0] * scale, bar + 10 + f["click"][1] * scale
+            u = min(1, i / 18)
+            x, y = x + (1 - u) * 160, y + (1 - u) * 220
+            pointer(c, x, y, f["press"])
+        c.convert("RGB").save(os.path.join(tmp, f"{i:03d}.png"))
+    out = os.path.join(OUT, f"demo-{theme}.gif")
+    palette = os.path.join(tmp, "palette.png")
+    src = ["-framerate", "20", "-i", os.path.join(tmp, "%03d.png")]
+    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", *src, "-vf", "palettegen=stats_mode=diff:max_colors=256",
+                    palette], check=True)
+    subprocess.run(["ffmpeg", "-loglevel", "error", "-y", *src, "-i", palette, "-lavfi",
+                    "paletteuse=dither=bayer:bayer_scale=4:diff_mode=rectangle", "-loop", "0", out], check=True)
+    shutil.rmtree(tmp)
+    print(os.path.relpath(out, ROOT), f"{os.path.getsize(out) // 1024} KB")
+
+
+def pointer(canvas, x, y, pressed):
+    """The macOS arrow pointer with its tip at x, y; a ring while pressed."""
+    d = ImageDraw.Draw(canvas)
+    if pressed:
+        d.ellipse((x - 18, y - 18, x + 18, y + 18), outline=(255, 255, 255, 200), width=3)
+    s = 1.3
+    arrow = [(0, 0), (0, 17), (4, 13), (7, 20), (10, 19), (7, 12), (12, 12)]
+    pts = [(x + a * s, y + b * s) for a, b in arrow]
+    d.polygon(pts, fill=(0, 0, 0), outline=(255, 255, 255), width=2)
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     with tempfile.TemporaryDirectory() as dir:
@@ -252,6 +326,10 @@ def main():
             grid(dir, theme, FEATURES, 4, 0.6, "features")
         hero(dir, "dark", "social", 2)
         themes(dir)
+    with tempfile.TemporaryDirectory() as dir:
+        shoot_demo(dir)
+        for theme in THEMES:
+            demo(dir, theme)
 
 
 if __name__ == "__main__":

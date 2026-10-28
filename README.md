@@ -29,6 +29,17 @@ speed, downloads and deletes models, launches coding agents against it, and
 installs or updates the engine. One engine runs at a time; you choose it in
 Settings. Engines are pluggable; mlx-serve is planned.
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/images/demo-dark.gif">
+    <img src="docs/images/demo-light.gif" width="379" alt="Lumilo starts Splash with Qwen3.8-27B: the model loads, requests come in, the speed rises in the menu-bar icon and joins the chart">
+  </picture>
+</p>
+
+```bash
+brew install --cask kotuke/tap/lumilo
+```
+
 > **Unofficial.** Lumilo is an independent project. It is not affiliated with,
 > endorsed by, or supported by the authors of Splash or any other engine it
 > controls. Engine names and logos belong to their owners.
@@ -84,6 +95,17 @@ Arabic. Lumilo follows the system language, or the one you pick in Settings.
 </picture>
 
 ## Install
+
+With [Homebrew](https://brew.sh):
+
+```bash
+brew install --cask kotuke/tap/lumilo
+```
+
+Then open Lumilo from Applications. Lumilo updates itself, so Homebrew
+leaves it alone after the install.
+
+Or by hand:
 
 1. Download the `.dmg` from the
    [latest release](https://github.com/kotuke/lumilo/releases/latest).
@@ -190,8 +212,8 @@ Test the server lifecycle, Homebrew and the login item from the built app in
 kills its process group on every rebuild.
 
 The images of this README come from the panel's screenshot tests:
-`python3 scripts/readme-images.py` (it needs Pillow) renders them again into
-`docs/images`.
+`python3 scripts/readme-images.py` (it needs Pillow and ffmpeg) renders them
+again into `docs/images`, the demo GIF from the frames of `TestDemo`.
 
 A release build is signed with Developer ID, its disk image notarized and its
 update archive signed: `scripts/setup-release-signing.sh` sets up the
@@ -199,6 +221,10 @@ certificate and keys once, then `scripts/release.sh` builds. It packs the
 app again into a disk image with an arrow to Applications
 (`scripts/make-dmg.sh`, background drawn by `packaging/dmg.py`); Finder lays
 its window out, so the first run asks to let the terminal control Finder.
+After the release, move the cask in
+[kotuke/homebrew-tap](https://github.com/kotuke/homebrew-tap) to the new
+version: `brew bump-cask-pr --version <version> kotuke/tap/lumilo` opens
+the pull request.
 
 A live test against a real Splash server (it loads a model) runs with:
 
