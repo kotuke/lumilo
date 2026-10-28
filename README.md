@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="docs/images/icon.png" alt="Lumilo app icon" width="128" height="128">
+
 # Lumilo
 
 **A menu-bar panel for the LLM engines on your Mac.**<br>
@@ -10,6 +12,7 @@ and point coding agents at it, without a terminal.
 ![macOS on Apple silicon](https://img.shields.io/badge/macOS-Apple%20silicon-black?logo=apple)
 ![Engines: Splash and llama.cpp](https://img.shields.io/badge/engines-Splash%20%C2%B7%20llama.cpp-f26b4f)
 ![8 languages](https://img.shields.io/badge/languages-8-4b6bfb)
+![Signed with Developer ID and notarized](https://img.shields.io/badge/Developer%20ID-signed%20%26%20notarized-1f6feb?logo=apple)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 <picture>
@@ -74,9 +77,20 @@ Arabic. Lumilo follows the system language, or the one you pick in Settings.
 
 ## Install
 
-Signed and notarized builds will be published on the
-[Releases](https://github.com/kotuke/lumilo/releases) page as a disk image.
-Until the first release, [build Lumilo from source](#build).
+1. Download the `.dmg` from the
+   [latest release](https://github.com/kotuke/lumilo/releases/latest).
+2. Open it and drag Lumilo to Applications.
+3. Open Lumilo: its icon appears in the menu bar. If no engine is installed,
+   the panel offers to install it with Homebrew.
+
+Lumilo is signed with an Apple Developer ID certificate and notarized by
+Apple, so macOS opens it without a security warning. Check it with:
+
+```bash
+spctl --assess --verbose /Applications/Lumilo.app
+```
+
+which prints `accepted` and `source=Notarized Developer ID`.
 
 ## All features
 
