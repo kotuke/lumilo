@@ -18,6 +18,7 @@
     },
     "infoPlist": {
       "LSUIElement": true
-    }
+    },
+    "icon": "AppIcon.icon"
   }
 }
