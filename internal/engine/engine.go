@@ -96,6 +96,16 @@ type Downloader interface {
 	DropPartial(model string, since time.Time)
 }
 
+// Adopter is an engine that installs its own copy of models from files
+// already on disk for another engine (or another program): Splash
+// assembles a GGUF from the Hugging Face hub cache, where llama.cpp reads
+// it as it is.
+type Adopter interface {
+	// Adoptable lists those models, not the installed ones. A Model.ID is
+	// what Download takes to install it; SizeBytes is what is on disk.
+	Adoptable(ctx context.Context) ([]Model, error)
+}
+
 // Remover is an Engine that can delete an installed model from the disk.
 // The caller makes sure no server of the engine runs the model and none
 // of its downloads runs.

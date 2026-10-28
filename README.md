@@ -149,7 +149,11 @@ which prints `accepted` and `source=Notarized Developer ID`.
   to another engine pauses its downloads, and an engine update holds them
   and goes on after. llama.cpp resumes a file from its partial blob (Range,
   then a SHA-256 check); Splash's installer keeps finished files but fetches
-  an unfinished one again. It can be picked once it is installed. The
+  an unfinished one again. It can be picked once it is installed. Under
+  Splash the list also shows the models "Already on this Mac": GGUFs in the
+  Hugging Face cache that Splash serves but has not installed, as llama.cpp
+  downloads them. Add installs one from those files and fetches only what
+  is missing (the vision projector, the DFlash2 draft). The
   trash button of a model deletes it from the disk after a confirmation
   that says how much it frees; it stops the server first when the server
   runs that model, and keeps files another installed model shares (the
@@ -289,7 +293,10 @@ The app icon is `AppIcon.icon`, an Icon Composer document (`macos.icon` in
    engine without it downloads on the server's start instead: then
    `WatchDownload` returns a meter of the bytes fetched so far
    (`enginekit.HubMeter` for the hub cache) and `EventDownloading.Bytes` is
-   the size it fetches, when the engine says it.
+   the size it fetches, when the engine says it. An engine that keeps its
+   own copy of models can offer the files another engine downloaded:
+   `engine.Adopter` lists them, and `Download` of the ID installs one
+   (Splash assembles a GGUF of the hub cache).
 5. Add it to the engine list in `app.go`.
 6. Test it against responses and output recorded from the real server, as
    `internal/engines/splash/testdata` and `internal/engines/llamacpp/testdata`

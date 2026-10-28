@@ -1,6 +1,8 @@
 package panel
 
 import (
+	"strings"
+
 	"github.com/egoist/mygo/ui"
 
 	"github.com/kotuke/lumilo/internal/core"
@@ -219,4 +221,57 @@ func downloadedTag(c *ui.Context, f *frame) {
 		ico(c, "circle-check", 2, 11)
 		txt(c, m.Downloaded(), 11).NoWrap()
 	})
+}
+
+// adoptable are the models on disk the engine can install from those
+// files (core.View.Adoptable), less those already on their way.
+func adoptable(v core.View) []engine.Model {
+	var out []engine.Model
+	for _, md := range v.Adoptable {
+		if j, ok := jobFor(v, md.ID); ok && j.State != core.DownloadDone {
+			continue
+		}
+		out = append(out, md)
+	}
+	return out
+}
+
+// adoptList is "Already on this Mac": the models the engine can install
+// from files on disk, each with an Add button that downloads it, which
+// takes only what is missing.
+func (p *Panel) adoptList(c *ui.Context, f *frame, ms []engine.Model, inPopup bool) {
+	t, m, v := f.pal, f.m, p.view
+	if len(ms) == 0 {
+		return
+	}
+	head := txt(c, m.AdoptTitle(), 11).TextColor(t.muted).SingleLine().Tooltip(m.AdoptNote(v.Engine))
+	if inPopup {
+		head.Padding(8, 8, 2, 8)
+	} else {
+		head.Padding(6, 0, 2, 0)
+	}
+	for _, md := range ms {
+		sub := []string{md.Owner, md.Variant, format.GB(f.loc, md.SizeBytes)}
+		row := ui.Row(c).Key("adopt-" + md.ID).Gap(10).MinHeight(40).Children(func() {
+			ui.Column(c).Grow(1).MinWidth(0).Children(func() {
+				txt(c, modelName(md), 12.5).FontWeight(600).SingleLine().Direction(ui.LeftToRight).AlignSelf(ui.Start)
+				txt(c, strings.Join(sub, " · "), 11).TextColor(t.muted).SingleLine().Direction(ui.LeftToRight).AlignSelf(ui.Start)
+			})
+			id := md.ID
+			b := btn(c).Key("adopt-btn-" + id).Height(24).Radius(6).PaddingStart(7).PaddingEnd(9).Gap(4).Shrink(0).
+				Background(t.chip).TextColor(t.text).Label(m.Adopt() + " " + modelName(md))
+			if reason := p.downloadBlock(&m); reason != "" {
+				b.Disabled(true).Cursor(ui.CursorDefault).Opacity(0.6).Tooltip(reason).Description(reason)
+			} else {
+				b.Tooltip(m.AdoptNote(v.Engine)).OnClick(func() { p.act.Download(id, engine.ModelOptions{}) })
+			}
+			b.Children(func() {
+				ico(c, "plus", 2.2, 12)
+				txt(c, m.Adopt(), 12).FontWeight(600).NoWrap()
+			})
+		})
+		if inPopup {
+			row.PaddingX(8)
+		}
+	}
 }

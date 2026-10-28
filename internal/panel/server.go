@@ -311,8 +311,9 @@ func (p *Panel) modelButton(c *ui.Context, f *frame, s *mainState, crd ui.Elemen
 		popSurface(pop.Bind(&p.popup).Width(330).Padding(6), f).Role(ui.RolePopup)
 		// 2 pt between rows, as in the other lists, so a highlighted row
 		// never touches the next one.
+		adopt := adoptable(v)
 		list := ui.Column(c).Gap(2)
-		if len(v.Models)+len(v.Downloads) > 6 {
+		if rows := len(v.Models) + len(v.Downloads) + len(adopt); rows > 6 {
 			list = ui.Scroll(c).MaxHeight(6*42 - 2).Gap(2)
 		}
 		list.Children(func() {
@@ -325,6 +326,7 @@ func (p *Panel) modelButton(c *ui.Context, f *frame, s *mainState, crd ui.Elemen
 					p.jobRow(c, f, j, nil, true)
 				}
 			}
+			p.adoptList(c, f, adopt, true)
 		})
 		ui.Box(c).Height(2)
 		p.addModel(c, f, true)
@@ -407,12 +409,21 @@ func (p *Panel) suggestions(c *ui.Context, f *frame) {
 		txt(c, m.SuggestNote(), 11.5).TextColor(t.muted).LineHeight(1.4).Padding(0, 0, 4, 0)
 		// One download is the suggested one: the first that fits.
 		first := -1
+		// A model already on disk is offered to add, not to download.
+		adopt := adoptable(v)
+		onDisk := func(id string) bool {
+			return slices.ContainsFunc(adopt, func(md engine.Model) bool { return strings.EqualFold(md.ID, id) })
+		}
 		for i, sg := range v.Suggestions {
-			if first < 0 && p.fits(sg.MemoryBytes) {
+			if first < 0 && !onDisk(sg.ID) && p.fits(sg.MemoryBytes) {
 				first = i
 			}
 		}
+		p.adoptList(c, f, adopt, false)
 		for i, sg := range v.Suggestions {
+			if onDisk(sg.ID) {
+				continue
+			}
 			if j, ok := jobFor(v, sg.ID); ok {
 				p.jobRow(c, f, j, sg.MakerLogo, false)
 				continue
