@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Splash's model list shows the models already on this Mac, for example
+  downloaded for llama.cpp, and adds one from those files in seconds.
+
 ## 0.1.0
 
 The first release: a menu-bar panel for the LLM engines on your Mac.

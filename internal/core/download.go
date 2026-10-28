@@ -312,6 +312,7 @@ func (s *Supervisor) runJob(ctx context.Context, d engine.Downloader, j *job) {
 
 	lctx, cancel := context.WithTimeout(s.ctx, detectTimeout)
 	models, merr := j.eng.Models(lctx)
+	adopt := adoptable(lctx, j.eng)
 	cancel()
 	s.mu.Lock()
 	j.State, j.Installed = DownloadDone, id
@@ -325,7 +326,7 @@ func (s *Supervisor) runJob(ctx context.Context, d engine.Downloader, j *job) {
 		j.Failure = engine.Failure{Kind: engine.FailExit, Line: "downloaded, but the engine does not list " + id}
 	}
 	if merr == nil && s.eng == j.eng {
-		s.models = models
+		s.models, s.adoptable = models, adopt
 		s.pickModelLocked() // the first model when there was none
 	}
 	s.mu.Unlock()

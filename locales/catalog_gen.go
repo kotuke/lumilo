@@ -3477,6 +3477,54 @@ func (msgs Messages) DlFailed() string {
 	return Catalog.Format(msgs.locale, "dlFailed", nil)
 }
 
+// AdoptTitle says "Already on this Mac"
+// in the language the app shows.
+//
+// Model list: heading of the models found on disk (the Hugging Face cache)
+// that the engine has not installed yet.
+func AdoptTitle() string { return In(i18n.Locale()).AdoptTitle() }
+
+// AdoptTitle says "Already on this Mac"
+// in the language of msgs.
+//
+// Model list: heading of the models found on disk (the Hugging Face cache)
+// that the engine has not installed yet.
+func (msgs Messages) AdoptTitle() string {
+	return Catalog.Format(msgs.locale, "adoptTitle", nil)
+}
+
+// Adopt says "Add"
+// in the language the app shows.
+//
+// Model list: button that installs a model found on disk for the engine; it
+// downloads only missing files.
+func Adopt() string { return In(i18n.Locale()).Adopt() }
+
+// Adopt says "Add"
+// in the language of msgs.
+//
+// Model list: button that installs a model found on disk for the engine; it
+// downloads only missing files.
+func (msgs Messages) Adopt() string {
+	return Catalog.Format(msgs.locale, "adopt", nil)
+}
+
+// AdoptNote says "Found in the Hugging Face cache, for example downloaded for llama.cpp. Add installs it for {engine} from these files …"
+// in the language the app shows.
+//
+// Model list: tooltip of the models found on disk and of their Add button.
+// {engine} is the engine name, e.g. Splash.
+func AdoptNote(engine string) string { return In(i18n.Locale()).AdoptNote(engine) }
+
+// AdoptNote says "Found in the Hugging Face cache, for example downloaded for llama.cpp. Add installs it for {engine} from these files …"
+// in the language of msgs.
+//
+// Model list: tooltip of the models found on disk and of their Add button.
+// {engine} is the engine name, e.g. Splash.
+func (msgs Messages) AdoptNote(engine string) string {
+	return Catalog.Format(msgs.locale, "adoptNote", map[string]any{"engine": engine})
+}
+
 // Downloaded says "Downloaded"
 // in the language the app shows.
 //

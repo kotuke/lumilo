@@ -198,6 +198,7 @@ type Supervisor struct {
 	settings  Settings
 	inst      engine.Install
 	models    []engine.Model
+	adoptable []engine.Model // what the engine can install from files on disk
 	latest    string
 	phase     Phase
 	update    UpdatePhase
@@ -405,7 +406,7 @@ func (s *Supervisor) swapEngine(next engine.Engine, model string) {
 	s.logPath = filepath.Join(s.opts.LogDir, next.Info().ID+".log")
 	s.agents = next.Info().Agents
 	s.inst = engine.Install{}
-	s.models = nil
+	s.models, s.adoptable = nil, nil
 	s.latest, s.update, s.updateErr, s.updateReason = "", UpdateNone, "", UpdateReasonNone
 	s.checking, s.check = false, CheckNone
 	s.nextCheck = time.Time{}
@@ -750,15 +751,30 @@ func (s *Supervisor) killExternalNow(pid, port int) {
 
 // Detection.
 
+// adoptable lists the models eng can install from files already on disk
+// (engine.Adopter); nil for an engine that cannot, or when the look fails.
+func adoptable(ctx context.Context, eng engine.Engine) []engine.Model {
+	a, ok := eng.(engine.Adopter)
+	if !ok {
+		return nil
+	}
+	ms, err := a.Adoptable(ctx)
+	if err != nil {
+		return nil
+	}
+	return ms
+}
+
 func (s *Supervisor) detect() {
 	ctx, cancel := context.WithTimeout(s.ctx, detectTimeout)
 	defer cancel()
 	eng := s.engine()
 	inst := eng.Installer().Detect(ctx)
-	var models []engine.Model
+	var models, adopt []engine.Model
 	var running []engine.Running
 	if inst.Installed {
 		models, _ = eng.Models(ctx)
+		adopt = adoptable(ctx, eng)
 		running, _ = eng.FindRunning()
 	}
 	// The others, for the engine list of the settings: a look at fixed
@@ -777,7 +793,7 @@ func (s *Supervisor) detect() {
 	s.mu.Lock()
 	s.engines = infos
 	s.inst = inst
-	s.models = models
+	s.models, s.adoptable = models, adopt
 	s.pickModelLocked()
 	// A failed update is stale once the installed version is the newest
 	// known (updated by hand, or by a later brew run).
@@ -1269,6 +1285,7 @@ func (s *Supervisor) finishDownload() {
 	s.probe() // the snapshot names the model the server loaded
 	ctx, cancel := context.WithTimeout(s.ctx, detectTimeout)
 	models, err := eng.Models(ctx)
+	adopt := adoptable(ctx, eng)
 	cancel()
 
 	s.mu.Lock()
@@ -1277,7 +1294,7 @@ func (s *Supervisor) finishDownload() {
 		return
 	}
 	if err == nil {
-		s.models = models
+		s.models, s.adoptable = models, adopt
 	}
 	chosen := id
 	if !slices.ContainsFunc(s.models, func(m engine.Model) bool { return m.ID == id }) && s.snap.Model != "" &&
@@ -1748,6 +1765,7 @@ func (s *Supervisor) View() View {
 		Failure:        s.failure,
 		FreePort:       s.freePort,
 		Models:         slices.Clone(s.models),
+		Adoptable:      slices.Clone(s.adoptable),
 		Speed:          s.meter.view(),
 		StoppingLong:   s.stoppingLong,
 		LastLine:       s.lastLine,

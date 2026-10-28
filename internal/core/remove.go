@@ -122,6 +122,7 @@ func (s *Supervisor) RemoveModel(id string) {
 		cancel()
 		lctx, lcancel := context.WithTimeout(s.ctx, detectTimeout)
 		models, merr := eng.Models(lctx)
+		adopt := adoptable(lctx, eng)
 		lcancel()
 
 		s.mu.Lock()
@@ -131,7 +132,7 @@ func (s *Supervisor) RemoveModel(id string) {
 		}
 		removed := merr == nil && !slices.ContainsFunc(models, func(m engine.Model) bool { return m.ID == id })
 		if merr == nil && s.eng == eng {
-			s.models = models
+			s.models, s.adoptable = models, adopt
 			if removed && s.settings.Model == id {
 				s.settings.Model = ""
 				s.pickModelLocked()

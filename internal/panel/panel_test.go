@@ -944,7 +944,7 @@ func allBoards() []board {
 	all = append(append(all, idleBoards()...), featureBoards()...)
 	all = append(append(all, reviewBoards()...), jobBoards()...)
 	all = append(append(all, chipBoards()...), langBoards()...)
-	all = append(append(all, removeBoards()...), readmeBoards()...)
+	all = append(append(append(all, removeBoards()...), readmeBoards()...), adoptBoards()...)
 	return append(all, choiceBoards()...)
 }
 

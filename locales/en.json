@@ -1510,6 +1510,24 @@
   "@dlFailed": {
     "description": "Model list: a download failed for another reason; the engine's line is its tooltip."
   },
+  "adoptTitle": "Already on this Mac",
+  "@adoptTitle": {
+    "description": "Model list: heading of the models found on disk (the Hugging Face cache) that the engine has not installed yet."
+  },
+  "adopt": "Add",
+  "@adopt": {
+    "description": "Model list: button that installs a model found on disk for the engine; it downloads only missing files."
+  },
+  "adoptNote": "Found in the Hugging Face cache, for example downloaded for llama.cpp. Add installs it for {engine} from these files and downloads only what is missing.",
+  "@adoptNote": {
+    "description": "Model list: tooltip of the models found on disk and of their Add button. {engine} is the engine name, e.g. Splash.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
   "downloaded": "Downloaded",
   "@downloaded": {
     "description": "Model list: tag of a model whose download just finished."

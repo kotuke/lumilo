@@ -172,6 +172,9 @@ type View struct {
 
 	Model  engine.Model   // the selected model
 	Models []engine.Model // models the user can pick
+	// Adoptable are models on disk the engine has not installed but can
+	// install from those files (engine.Adopter): Download with the ID.
+	Adoptable []engine.Model
 
 	Port     int           // the port the server uses (or will use)
 	Address  string        // "host:port" shown in the address chip
