@@ -1,0 +1,111 @@
+{
+  "features": [
+    "refractivity"
+  ],
+  "fill": {
+    "linear-gradient": [
+      "srgb:0.16,0.18,0.42,1.0",
+      "srgb:0.07,0.08,0.22,1.0"
+    ],
+    "orientation": {
+      "start": {
+        "x": 0.5,
+        "y": 0
+      },
+      "stop": {
+        "x": 0.5,
+        "y": 0.7
+      }
+    }
+  },
+  "groups": [
+    {
+      "name": "Spark",
+      "layers": [
+        {
+          "image-name": "spark.svg",
+          "name": "Spark",
+          "glass": true,
+          "position": {
+            "scale": 1.3,
+            "translation-in-points": [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
+      },
+      "specular": true,
+      "translucency": {
+        "enabled": true,
+        "value": 0.1
+      }
+    },
+    {
+      "name": "Core",
+      "layers": [
+        {
+          "image-name": "core.svg",
+          "name": "Core",
+          "glass": false,
+          "position": {
+            "scale": 1.22,
+            "translation-in-points": [
+              0,
+              0
+            ]
+          },
+          "blend-mode": "plus-lighter"
+        }
+      ],
+      "shadow": {
+        "kind": "none",
+        "opacity": 0.5
+      },
+      "specular": false,
+      "translucency": {
+        "enabled": false,
+        "value": 0
+      }
+    },
+    {
+      "name": "Sphere",
+      "layers": [
+        {
+          "image-name": "sphere.svg",
+          "name": "Sphere",
+          "glass": true,
+          "position": {
+            "scale": 1.2,
+            "translation-in-points": [
+              0,
+              0
+            ]
+          }
+        }
+      ],
+      "shadow": {
+        "kind": "layer-color",
+        "opacity": 0.5
+      },
+      "specular": true,
+      "translucency": {
+        "enabled": true,
+        "value": 0.75
+      },
+      "blur-material": 0.3,
+      "refractivity": {
+        "enabled": true,
+        "strength": 0.6,
+        "depth": 0.5
+      }
+    }
+  ],
+  "supported-platforms": {
+    "squares": "shared"
+  }
+}

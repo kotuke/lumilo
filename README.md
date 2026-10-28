@@ -206,6 +206,9 @@ request: the strings are in `locales/<language>.json`.
 | `internal/settings`, `internal/terminal` | Settings file, Terminal launcher |
 | `locales`, `internal/format` | Message catalogs and locale-aware number formatting |
 
+The app icon is `AppIcon.icon`, an Icon Composer document (`macos.icon` in
+`mygo.json`). `mygo build` compiles it with Xcode 26 or later.
+
 ### Adding an engine
 
 1. Create a package under `internal/engines/` with a type that implements
