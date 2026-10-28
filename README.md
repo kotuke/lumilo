@@ -191,7 +191,10 @@ The images of this README come from the panel's screenshot tests:
 
 A release build is signed with Developer ID, its disk image notarized and its
 update archive signed: `scripts/setup-release-signing.sh` sets up the
-certificate and keys once, then `scripts/release.sh` builds.
+certificate and keys once, then `scripts/release.sh` builds. It packs the
+app again into a disk image with an arrow to Applications
+(`scripts/make-dmg.sh`, background drawn by `packaging/dmg.py`); Finder lays
+its window out, so the first run asks to let the terminal control Finder.
 
 A live test against a real Splash server (it loads a model) runs with:
 
