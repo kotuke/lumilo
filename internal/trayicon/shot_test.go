@@ -25,9 +25,19 @@ func TestTrayShot(t *testing.T) {
 		"generating": core.PhaseGenerating, "ready": core.PhaseReady, "loading": core.PhaseLoading,
 		"released": core.PhaseReleased, "stopped": core.PhaseStopped, "error": core.PhaseError,
 	}
+	views := map[string]core.View{}
 	for name, ph := range states {
+		views[name] = view(ph)
+		// The same under llama.cpp, as the README's hero shows it:
+		// llama-server counts a request's tokens when it ends, so a
+		// generating icon shows memory.
+		llama := view(ph)
+		llama.Engine, llama.Speed.Current, llama.Snapshot.MemoryUsed = "llama.cpp", 0, 20_600_000_000
+		views[name+"-llamacpp"] = llama
+	}
+	for name, v := range views {
 		for theme, dark := range map[string]bool{"dark": true, "light": false} {
-			b := PNG(For(view(ph), "en", dark))
+			b := PNG(For(v, "en", dark))
 			if err := os.WriteFile(filepath.Join(dir, name+"-"+theme+".png"), b, 0o644); err != nil {
 				t.Fatal(err)
 			}

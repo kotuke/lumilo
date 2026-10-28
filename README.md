@@ -17,7 +17,7 @@ and point coding agents at it, without a terminal.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-dark.png">
-  <img src="docs/images/hero-light.png" alt="Lumilo panels: a model downloading, the server generating, the Hugging Face model search">
+  <img src="docs/images/hero-light.png" alt="Lumilo panels: llama.cpp serving Qwen3.8-27B while Qwen3.6-35B-A3B downloads, llama.cpp generating, Splash looking up a model's variants on Hugging Face">
 </picture>
 
 </div>
@@ -51,7 +51,7 @@ Settings. Engines are pluggable; mlx-serve is planned.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/features-dark.png">
-  <img src="docs/images/features-light.png" alt="First-run model suggestions, network settings with an API key, the delete dialog, llama.cpp running">
+  <img src="docs/images/features-light.png" alt="First-run model suggestions, Splash's model list with image input and speculative decoding, llama.cpp open to the network with an API key, the delete dialog">
 </picture>
 
 ## In the menu bar
@@ -59,11 +59,19 @@ Settings. Engines are pluggable; mlx-serve is planned.
 The icon tells the state without opening the panel: the bar fills with the
 memory the model takes, and the value is the live speed while it generates,
 the memory while it waits, or a sign when it loads, sleeps, stops or fails.
+llama.cpp counts a request's tokens when it ends, so under llama.cpp the icon
+shows memory while it generates.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/menubar-dark.png">
   <img src="docs/images/menubar-light.png" alt="The menu-bar icon: generating, ready, loading, unloaded when idle, stopped, failed to start">
 </picture>
+
+## Light and dark
+
+The panel follows the system theme, or the one you switch to in its header.
+
+<img src="docs/images/themes.png" alt="The same llama.cpp panel with the engine list open, in the light and the dark theme">
 
 ## Languages
 
@@ -72,7 +80,7 @@ Arabic. Lumilo follows the system language, or the one you pick in Settings.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/languages-dark.png">
-  <img src="docs/images/languages-light.png" alt="The Lumilo panel in eight languages">
+  <img src="docs/images/languages-light.png" alt="The Lumilo panel in eight languages: Splash in the first row, llama.cpp in the second">
 </picture>
 
 ## Install

@@ -29,20 +29,26 @@ LANGS = [
     ("ar", "Arabic, right to left"),
 ]
 
+# Both engines take turns: the README's own boards (readme-* in
+# internal/panel/readme_test.go) run Qwen3.8-27B under llama.cpp and Splash.
 FEATURES = [
     ("suggestions", "First run: models that fit"),
-    ("settings-network-en", "Network access with an API key"),
-    ("picker-remove-dialog", "Delete with the space it frees"),
-    ("llamacpp-ready", "llama.cpp as the engine"),
+    ("readme-splash-models", "Image input and speculative decoding"),
+    ("readme-llama-network", "Network access with an API key"),
+    ("readme-splash-remove", "Delete with the space it frees"),
 ]
 
 # Boards taller than the others, cut to this height (2x pixels).
-CROP = {"settings-network-en": 1062}
+CROP = {"readme-llama-network": 1062}
 
-# The hero: a model downloading, the server generating, the model search.
-HERO = ["picker-downloading", "generating", "add-model-variants"]
+# The hero: llama.cpp with a model downloading and generating, Splash
+# looking up a model's files.
+HERO = ["readme-llama-downloading", "readme-llama-generating", "readme-splash-variants"]
 
-BOARDS = HERO + ["main-"] + [b for b, _ in FEATURES]
+# The same panels in the light and the dark theme, side by side.
+THEMED = [("readme-engines", "light", "Light"), ("readme-engines", "dark", "Dark")]
+
+BOARDS = HERO + ["readme-lang-"] + [b for b, _ in FEATURES] + [b for b, _, _ in THEMED]
 
 THEMES = {
     "dark": {"stops": [(15, 17, 26), (31, 27, 52), (16, 38, 48)], "text": (232, 233, 238), "shadow": 150},
@@ -50,11 +56,12 @@ THEMES = {
 }
 
 
-# The menu-bar icon in each state, with its caption.
+# The menu-bar icon in each state, with its caption; Splash and llama.cpp
+# take turns.
 TRAY = [
-    ("generating", "Generating: live speed"), ("ready", "Ready: memory in use"),
-    ("loading", "Loading"), ("released", "Unloaded when idle"),
-    ("stopped", "Stopped"), ("error", "Failed to start"),
+    ("generating", "Generating: live speed"), ("ready-llamacpp", "Ready: memory in use"),
+    ("loading", "Loading"), ("released-llamacpp", "Unloaded when idle"),
+    ("stopped", "Stopped"), ("error-llamacpp", "Failed to start"),
 ]
 
 
@@ -94,7 +101,7 @@ def menubar(canvas, dir, theme, h, icon_cx, scale):
         x += d.textlength(word, font=f) + 40 * scale
     clock = "Wed 28 Oct  14:32"
     d.text((canvas.width - 36 * scale, y), clock, font=font, fill=ink, anchor="rm")
-    icon = tray(dir, "generating", theme, scale / 2)
+    icon = tray(dir, "generating-llamacpp", theme, scale / 2)
     # The icon is highlighted while its panel is open.
     hl = (icon_cx - icon.width / 2 - 10 * scale, 4 * scale, icon_cx + icon.width / 2 + 10 * scale, h - 4 * scale)
     over = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
@@ -217,6 +224,23 @@ def grid(dir, theme, items, cols, scale, name):
     save(c, f"{name}-{theme}.png")
 
 
+def themes(dir):
+    """A panel in each theme, each on its own half of the gradient."""
+    ims = [(panel(dir, b, theme, 0.75), theme, text) for b, theme, text in THEMED]
+    cw = max(im.width for im, _, _ in ims)
+    ch = max(im.height for im, _, _ in ims)
+    margin, cap = 110, 70
+    half = cw + 2 * margin
+    h = ch + cap + 2 * margin
+    c = Image.new("RGBA", (2 * half, h))
+    for i, (im, theme, text) in enumerate(ims):
+        t = THEMES[theme]
+        c.paste(gradient(half, h, t["stops"]), (i * half, 0))
+        place(c, im, i * half + margin + (cw - im.width) // 2, margin, t["shadow"])
+        label(c, text, i * half + half / 2, margin + ch + 20, t["text"])
+    save(c, "themes.png")
+
+
 def main():
     os.makedirs(OUT, exist_ok=True)
     with tempfile.TemporaryDirectory() as dir:
@@ -224,9 +248,10 @@ def main():
         for theme in THEMES:
             hero(dir, theme)
             states(dir, theme)
-            grid(dir, theme, [("main-" + code, name) for code, name in LANGS], 4, 0.55, "languages")
+            grid(dir, theme, [("readme-lang-" + code, name) for code, name in LANGS], 4, 0.55, "languages")
             grid(dir, theme, FEATURES, 4, 0.6, "features")
         hero(dir, "dark", "social", 2)
+        themes(dir)
 
 
 if __name__ == "__main__":
