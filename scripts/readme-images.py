@@ -50,10 +50,77 @@ THEMES = {
 }
 
 
+# The menu-bar icon in each state, with its caption.
+TRAY = [
+    ("generating", "Generating: live speed"), ("ready", "Ready: memory in use"),
+    ("loading", "Loading"), ("released", "Unloaded when idle"),
+    ("stopped", "Stopped"), ("error", "Failed to start"),
+]
+
+
 def shoot(dir):
-    env = dict(os.environ, LUMILO_SHOT_DIR=dir, LUMILO_SHOT_ONLY=",".join(BOARDS), CGO_ENABLED="0")
+    env = dict(os.environ, LUMILO_SHOT_DIR=dir, LUMILO_SHOT_ONLY=",".join(BOARDS),
+               LUMILO_TRAY_DIR=os.path.join(dir, "tray"), CGO_ENABLED="0")
     subprocess.run(["go", "test", "./internal/panel", "-run", "TestShot$", "-count=1"],
                    cwd=ROOT, env=env, check=True)
+    subprocess.run(["go", "test", "./internal/trayicon", "-run", "TestTrayShot$", "-count=1"],
+                   cwd=ROOT, env=env, check=True)
+
+
+def tray(dir, state, theme, scale):
+    """The menu-bar icon, drawn at 4x, scaled."""
+    im = Image.open(os.path.join(dir, "tray", f"{state}-{theme}.png")).convert("RGBA")
+    return im.resize((round(im.width * scale), round(im.height * scale)), Image.LANCZOS)
+
+
+# The menu bar: its tint over the wallpaper and its text colour.
+BAR = {"dark": ((18, 18, 24, 150), (245, 245, 247)), "light": ((255, 255, 255, 140), (29, 29, 31))}
+
+
+def menubar(canvas, dir, theme, h, icon_cx, scale):
+    """Draws a menu bar across the top with Lumilo's icon open at icon_cx."""
+    tint, ink = BAR[theme]
+    bar = canvas.crop((0, 0, canvas.width, h)).filter(ImageFilter.GaussianBlur(20))
+    bar.alpha_composite(Image.new("RGBA", bar.size, tint))
+    canvas.paste(bar, (0, 0))
+    d = ImageDraw.Draw(canvas)
+    font = ImageFont.truetype(FONT, round(13 * 2 * scale))
+    bold = ImageFont.truetype(FONT, round(13 * 2 * scale))
+    bold.set_variation_by_name("Bold")
+    x, y = 36 * scale, h / 2
+    for i, word in enumerate(["Finder", "File", "Edit", "View", "Go", "Window", "Help"]):
+        f = bold if i == 0 else font
+        d.text((x, y), word, font=f, fill=ink, anchor="lm")
+        x += d.textlength(word, font=f) + 40 * scale
+    clock = "Wed 28 Oct  14:32"
+    d.text((canvas.width - 36 * scale, y), clock, font=font, fill=ink, anchor="rm")
+    icon = tray(dir, "generating", theme, scale / 2)
+    # The icon is highlighted while its panel is open.
+    hl = (icon_cx - icon.width / 2 - 10 * scale, 4 * scale, icon_cx + icon.width / 2 + 10 * scale, h - 4 * scale)
+    over = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+    ImageDraw.Draw(over).rounded_rectangle(hl, 10 * scale, fill=(255, 255, 255, 46) if theme == "dark" else (0, 0, 0, 26))
+    canvas.alpha_composite(over)
+    canvas.alpha_composite(icon, (round(icon_cx - icon.width / 2), round((h - icon.height) / 2)))
+
+
+def states(dir, theme):
+    """The menu-bar icon in each state on a strip of menu bar, captioned."""
+    t = THEMES[theme]
+    tint, _ = BAR[theme]
+    icons = [(tray(dir, s, theme, 0.75), text) for s, text in TRAY]
+    cw, gap, margin, bar_h = 300, 24, 70, 80
+    w = len(icons) * cw + (len(icons) - 1) * gap + 2 * margin
+    h = 2 * margin + bar_h + 70
+    c = gradient(w, h, t["stops"])
+    strip = Image.new("RGBA", (w - 2 * margin, bar_h), tint)
+    m = Image.new("L", strip.size, 0)
+    ImageDraw.Draw(m).rounded_rectangle((0, 0, strip.width - 1, bar_h - 1), 22, fill=255)
+    c.paste(strip, (margin, margin), m)
+    for i, (im, text) in enumerate(icons):
+        cx = margin + i * (cw + gap) + cw // 2
+        c.alpha_composite(im, (cx - im.width // 2, margin + (bar_h - im.height) // 2))
+        label(c, text, cx, margin + bar_h + 22, t["text"], size=26)
+    save(c, f"menubar-{theme}.png")
 
 
 def panel(dir, board, theme, scale):
@@ -110,7 +177,7 @@ def hero(dir, theme, name="hero", aspect=None):
     t = THEMES[theme]
     side, mid = 0.78, 0.9
     left, centre, right = (panel(dir, b, theme, s) for b, s in zip(HERO, (side, mid, side)))
-    gap, margin = 56, 110
+    gap, margin, bar = 56, 110, round(24 * 2 * mid)
     w = left.width + centre.width + right.width + 2 * gap + 2 * margin
     h = max(centre.height, left.height + 70, right.height + 70) + 2 * margin
     x0 = margin
@@ -120,7 +187,10 @@ def hero(dir, theme, name="hero", aspect=None):
     c = gradient(w, h, t["stops"])
     place(c, left, x0, margin + 70, t["shadow"])
     place(c, right, x0 + left.width + centre.width + 2 * gap, margin + 70, t["shadow"])
-    place(c, centre, x0 + left.width + gap, margin, t["shadow"])
+    # The centre panel hangs from its icon in the menu bar.
+    cx = x0 + left.width + gap
+    menubar(c, dir, theme, bar, cx + centre.width / 2, mid)
+    place(c, centre, cx, bar + 12, t["shadow"])
     if aspect:
         c = c.resize((1280, 640), Image.LANCZOS)
     save(c, f"{name}-{theme}.png")
@@ -153,6 +223,7 @@ def main():
         shoot(dir)
         for theme in THEMES:
             hero(dir, theme)
+            states(dir, theme)
             grid(dir, theme, [("main-" + code, name) for code, name in LANGS], 4, 0.55, "languages")
             grid(dir, theme, FEATURES, 4, 0.6, "features")
         hero(dir, "dark", "social", 2)
