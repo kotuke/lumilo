@@ -6,3 +6,6 @@ mygo_windows_*.syso
 /PROGRESS.md
 /NEW_SESSION_PROMPT.md
 /.claude/
+
+# The binary of `go build` in the root
+/lumilo

@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Install with Homebrew: `brew install --cask kotuke/tap/lumilo`.
+- The README shows Lumilo starting a server in a demo GIF.
+
 ## 0.1.0
 
 The first release: a menu-bar panel for the LLM engines on your Mac.
