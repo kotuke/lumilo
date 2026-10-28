@@ -26,10 +26,14 @@ type demoFrame struct {
 }
 
 // demoView is Splash with Qwen3.8-27B at second s of the demo: stopped,
-// started at 1.2 s, loading for 3 s, then eight requests, the speed rising
-// live in each and joining the chart when it ends.
+// started at 1.2 s, loading for 2.2 s, then requests back to back, as a
+// coding agent sends them, so the server stays generating: the live speed
+// glides to each request's own and the request joins the chart when it
+// ends. A request takes 2.85 s, long enough for the live bar of the chart
+// (6 s to its full height) to grow visibly before it settles. Nothing drops to zero between requests, which would flicker the
+// menu-bar icon between the speed and the memory.
 func demoView(s float64) core.View {
-	const start, loaded, firstReq, req, pause = 1.2, 4.2, 5.0, 1.0, 0.2
+	const start, loaded, firstReq, req, glide = 1.2, 3.4, 3.6, 2.85, 0.6
 	switch {
 	case s < start:
 		return readmeSplash(core.PhaseStopped)
@@ -39,25 +43,26 @@ func demoView(s float64) core.View {
 	v := readmeSplash(core.PhaseReady)
 	v.Snapshot.MemoryUsed, v.Snapshot.DiskUsed = 18_900_000_000, 0
 	v.Speed = core.Speed{FirstToken: 900 * time.Millisecond, Read: 1180}
-	// The speeds of the eight requests: Qwen3.8-27B with its DFlash2 draft.
-	done := []float64{34, 39, 37, 41, 38, 42, 36, 40}
-	for i, top := range done {
-		from := firstReq + float64(i)*(req+pause)
+	// The speeds of the requests: Qwen3.8-27B with its DFlash2 draft.
+	speeds := []float64{36, 39, 38, 41, 39, 42, 40, 41}
+	prev := speeds[0] * 0.6
+	for i, top := range speeds {
+		from := firstReq + float64(i)*req
 		if s < from {
 			break
 		}
 		if s < from+req {
-			// The live speed climbs to the request's own in its first
-			// half second and wavers around it.
-			t := s - from
+			// Ease out from the last request's speed to this one's.
+			u := min(1, (s-from)/glide)
+			u = 1 - (1-u)*(1-u)
 			v.Phase = core.PhaseGenerating
-			v.Snapshot.Active, v.Snapshot.Queued = 1, max(0, 3-i)
-			v.Snapshot.MemoryUsed = 19_600_000_000 + int64(i)*150_000_000
-			v.Speed.Current = math.Round(top * min(1, t/0.5) * (1 + 0.04*math.Sin(t*9)))
+			v.Snapshot.Active, v.Snapshot.Queued = 1, max(1, 3-i) // the queue pill stays, the card keeps its height
+			v.Snapshot.MemoryUsed = 19_600_000_000 + int64(i)*100_000_000
+			v.Speed.Current = math.Round(prev + (top-prev)*u)
 			break
 		}
 		v.Speed.History = append(v.Speed.History, top)
-		v.Snapshot.MemoryUsed = 19_400_000_000 + int64(i)*150_000_000
+		prev = top
 	}
 	if n := len(v.Speed.History); n > 0 {
 		var sum float64
@@ -71,7 +76,7 @@ func demoView(s float64) core.View {
 
 // LUMILO_DEMO_DIR=… saves the demo's frames in both themes at 2x with the
 // menu-bar icon of each and frames.json: the panel as Lumilo starts Splash
-// with Qwen3.8-27B and serves eight requests, 15 seconds at demoFPS.
+// with Qwen3.8-27B and serves requests back to back, 15 seconds at demoFPS.
 func TestDemo(t *testing.T) {
 	dir := os.Getenv("LUMILO_DEMO_DIR")
 	if dir == "" {
