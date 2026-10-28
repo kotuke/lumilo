@@ -230,7 +230,7 @@ func TestLabelPosition(t *testing.T) {
 			}
 			return first, last
 		}
-		const barEnd = 2*scale + 9 // padding 1 pt, bar 4.5 pt
+		barEnd := 2*scale + 9 // padding 1 pt, bar 4.5 pt
 		bTop, bBot := inkRows(0, barEnd, 0)
 		tTop, tBot := inkRows(barEnd+6, img.Bounds().Dx(), 0x4000)
 		h := img.Bounds().Dy()

@@ -18,13 +18,15 @@ import (
 	"github.com/egoist/mygo/ui"
 )
 
-// Sizes in points (menu-bar icons are 18 pt tall) and the render scale.
+// Sizes in points (menu-bar icons are 18 pt tall).
 const (
 	height   = 18
 	maxWidth = 80
-	scale    = 2
 	segments = 8
 )
+
+// scale is the render scale; the README images raise it.
+var scale = 2
 
 // Tone picks a colour from the palette of the menu-bar theme.
 type Tone uint8
@@ -183,7 +185,7 @@ func render(ic Icon, bg ui.Color) *image.RGBA {
 		})
 	}
 	t := ui.NewTester(view, maxWidth, height)
-	t.SetScale(scale)
+	t.SetScale(float32(scale))
 	t.Frame()
 	return t.Image()
 }

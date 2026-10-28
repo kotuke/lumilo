@@ -51,6 +51,17 @@ Settings. Engines are pluggable; mlx-serve is planned.
   <img src="docs/images/features-light.png" alt="First-run model suggestions, network settings with an API key, the delete dialog, llama.cpp running">
 </picture>
 
+## In the menu bar
+
+The icon tells the state without opening the panel: the bar fills with the
+memory the model takes, and the value is the live speed while it generates,
+the memory while it waits, or a sign when it loads, sleeps, stops or fails.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/menubar-dark.png">
+  <img src="docs/images/menubar-light.png" alt="The menu-bar icon: generating, ready, loading, unloaded when idle, stopped, failed to start">
+</picture>
+
 ## Languages
 
 English, Russian, German, French, Spanish, Japanese, Chinese (Simplified) and
