@@ -1,0 +1,36 @@
+0.00.000.452 I srv  llama_server: initializing ...
+0.00.066.152 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.066.303 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.067.726 I srv    load_model: loading model '/Users/user/.cache/huggingface/hub/models--ggml-org--Qwen3-0.6B-GGUF/snapshots/13ac06624948e4d8589cb4b6f90100837342fcb8/Qwen3-0.6B-Q8_0.gguf'
+0.00.223.608 W load: control-looking token: 128247 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.00.299.392 I cmn          init: llama threadpool init, n_threads = 6
+0.00.318.527 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 4096, kv_unified = 'true'
+0.00.321.675 I srv  llama_server: model loaded
+0.00.321.678 I srv  llama_server: listening on http://127.0.0.1:18204
+0.00.326.671 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 0, t_last = -1
+0.00.326.688 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.01.332.806 I srv    operator(): operator(): cleaning up before exit...
+Received second interrupt, terminating immediately.
+src/ggml-metal/ggml-metal-device.m:1041: GGML_ASSERT([rsets->data count] == 0) failed
+WARNING: Using native backtrace. Set GGML_BACKTRACE_LLDB for more info.
+WARNING: GGML_BACKTRACE_LLDB may cause native MacOS Terminal.app to crash.
+See: https://github.com/ggml-org/llama.cpp/pull/17869
+0   libggml-base.0.27.0.dylib           0x000000010410d804 ggml_print_backtrace + 276
+1   libggml-base.0.27.0.dylib           0x00000001041539f0 ggml_abort + 156
+2   libggml-metal.so                    0x000000010aada268 ggml_metal_device_id_token + 0
+3   libggml-metal.so                    0x000000010aada9ac ggml_metal_device_free + 40
+4   libggml-metal.so                    0x000000010aae4014 _ZNSt3__110unique_ptrI17ggml_metal_device25ggml_metal_device_deleterE5resetB9nqe220106EPS1_ + 28
+5   libggml-metal.so                    0x000000010aadc3f8 _ZNSt3__16vectorINS_10unique_ptrI17ggml_metal_device25ggml_metal_device_deleterEENS_9allocatorIS4_EEED1B9nqe220106Ev + 56
+6   libsystem_c.dylib                   0x000000019c255bc0 __cxa_finalize_ranges + 436
+7   libsystem_c.dylib                   0x000000019c2559ac exit + 44
+8   libllama-server-impl.dylib          0x0000000104a74730 _ZN25common_params_speculativeC2Ev.cold.1 + 0
+9   libllama-server-impl.dylib          0x000000010491e698 _ZL14signal_handleri + 80
+10  libsystem_platform.dylib            0x00000001a11de144 _sigtramp + 56
+11  libsystem_pthread.dylib             0x000000019c216fd8 _pthread_join + 620
+12  libc++.1.dylib                      0x00000001a120ff04 _ZNSt3__16thread4joinEv + 36
+13  libllama-server-impl.dylib          0x0000000104a2eb60 _ZN7httplib10ThreadPool8shutdownEv + 84
+14  libllama-server-impl.dylib          0x0000000104928b78 _ZN19server_http_context4joinEv + 80
+15  libllama-server-impl.dylib          0x000000010491c7e0 _Z12llama_serverR13common_paramsiPPcR12server_child + 17212
+16  libllama-server-impl.dylib          0x0000000104918414 _Z12llama_serveriPPc + 236
+17  dyld                                0x000000019c140d7c start + 6652
+exit 134

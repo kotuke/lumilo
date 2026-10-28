@@ -1,0 +1,6 @@
+error: cannot bind 127.0.0.1:8002: [Errno 48] Address already in use
+
+real	0m0.048s
+user	0m0.038s
+sys	0m0.008s
+exit 1

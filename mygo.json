@@ -1,0 +1,23 @@
+{
+  "name": "Lumilo",
+  "identifier": "ru.kotuke.lumilo",
+  "version": "0.1.0",
+  "out": "build",
+  "i18n": {
+    "dir": "locales",
+    "source": "en"
+  },
+  "updates": {
+    "publicKey": "/pTQTwb06TviUFlDlovUXeSJQYCQAMdy4o7khPappT4=",
+    "github": "kotuke/lumilo"
+  },
+  "macos": {
+    "signingIdentity": "Developer ID Application: Aleksandr Davydenko (88VB25X5UW)",
+    "notarize": {
+      "keychainProfile": "lumilo-notary"
+    },
+    "infoPlist": {
+      "LSUIElement": true
+    }
+  }
+}

@@ -1,0 +1,2 @@
+# HTTP 200 application/json t=28.14
+{"status":"ready"}

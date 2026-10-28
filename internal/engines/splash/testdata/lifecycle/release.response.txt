@@ -1,0 +1,2 @@
+# HTTP 200
+{"released":true,"weights":{"idle_release_seconds":600,"released":true,"restoring":false,"restores":0,"restore_failures":0}}

@@ -1,0 +1,7 @@
+0.00.000.439 I srv  llama_server: initializing ...
+0.00.067.392 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.067.547 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.069.035 I srv    load_model: loading model '/Users/user/.cache/huggingface/hub/models--ggml-org--Qwen3-0.6B-GGUF/snapshots/13ac06624948e4d8589cb4b6f90100837342fcb8/Qwen3-0.6B-Q8_0.gguf'
+0.00.129.063 W load: control-looking token: 128247 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.00.178.693 W llama_context: n_ctx_seq (4000000) > n_ctx_train (40960) -- possible training context overflow
+exit 137

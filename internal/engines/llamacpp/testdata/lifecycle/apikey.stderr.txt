@@ -1,0 +1,17 @@
+0.00.000.428 I srv  llama_server: initializing ...
+0.00.066.927 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.068.562 I srv    load_model: loading model '/Users/user/.cache/huggingface/hub/models--ggml-org--Qwen3-0.6B-GGUF/snapshots/13ac06624948e4d8589cb4b6f90100837342fcb8/Qwen3-0.6B-Q8_0.gguf'
+0.00.228.201 W load: control-looking token: 128247 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.00.305.381 I cmn          init: llama threadpool init, n_threads = 6
+0.00.324.678 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 4096, kv_unified = 'true'
+0.00.327.878 I srv  llama_server: model loaded
+0.00.327.882 I srv  llama_server: listening on http://127.0.0.1:18203
+0.00.331.625 W srv    operator(): unauthorized: Invalid API Key
+0.00.331.897 W srv    operator(): unauthorized: Invalid API Key
+0.00.332.508 W srv    operator(): unauthorized: Invalid API Key
+0.00.332.842 W srv    operator(): unauthorized: Invalid API Key
+0.00.333.428 W srv    operator(): unauthorized: Invalid API Key
+0.00.333.717 W srv    operator(): unauthorized: Invalid API Key
+0.00.334.311 W srv    operator(): unauthorized: Invalid API Key
+0.00.334.554 W srv    operator(): unauthorized: Invalid API Key
+0.00.335.190 I srv    operator(): operator(): cleaning up before exit...

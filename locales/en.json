@@ -1,0 +1,1659 @@
+{
+  "@@locale": "en",
+  "noticeAgentUnavailable": "The server isn't ready for agents yet",
+  "@noticeAgentUnavailable": {
+    "description": "Notice shown for a moment: an agent could not start because no server answers."
+  },
+  "noticeTerminalFailed": "The terminal did not open the agent",
+  "@noticeTerminalFailed": {
+    "description": "Notice title shown for a moment: the terminal did not open the agent; the error follows on its own line."
+  },
+  "noticeKeyNotStored": "The API key could not be saved in the Keychain, so the agent did not start",
+  "@noticeKeyNotStored": {
+    "description": "Notice title shown for a moment: the API key could not be saved, so the agent did not start; the error follows on its own line."
+  },
+  "updNoNewer": "Homebrew has no newer version yet",
+  "@updNoNewer": {
+    "description": "Update failed: brew ran fine, but Homebrew has no newer version of the engine yet."
+  },
+  "errTitleNoKey": "The network access needs an API key, and none could be read",
+  "@errTitleNoKey": {
+    "description": "Error title: Network access needs an API key and none could be read from the Keychain; nothing was started."
+  },
+  "errActNoKey": "Open Settings",
+  "@errActNoKey": {
+    "description": "Button of the missing-key error that opens Settings."
+  },
+  "featureOn": "{name}: on",
+  "@featureOn": {
+    "description": "Tooltip and label of a model feature toggle that is on. {name} is the feature, e.g. Image input.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Image input"
+      }
+    }
+  },
+  "featureOff": "{name}: off",
+  "@featureOff": {
+    "description": "Tooltip and label of a model feature toggle that is off. {name} is the feature, e.g. Image input.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Image input"
+      }
+    }
+  },
+  "addModelEmpty": "Type a model's name to search Hugging Face, or paste owner/repo:variant",
+  "@addModelEmpty": {
+    "description": "Add model: hint in the empty room under the field before anything is listed."
+  },
+  "subExternalShort": "Another app · {duration}",
+  "@subExternalShort": {
+    "description": "Header subtitle for a server started by another app, short enough for one line beside the buttons. {duration} is its uptime.",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "2 h 14 min"
+      }
+    }
+  },
+  "memPressure": "Memory pressure is high",
+  "@memPressure": {
+    "description": "Memory card: label when macOS reports critical memory pressure while the bar is not near full."
+  },
+  "dlSpeed": "{size}/s",
+  "@dlSpeed": {
+    "description": "Download speed. {size} is a formatted size such as \"45 MB\".",
+    "placeholders": {
+      "size": {
+        "type": "String",
+        "example": "45 MB"
+      }
+    }
+  },
+  "dlLeft": "about {duration} left",
+  "@dlLeft": {
+    "description": "Time left of a download. {duration} is a short duration such as \"6 min\".",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "6 min"
+      }
+    }
+  },
+  "engineInstallNote": "{engine} is not installed. Homebrew installs it first (about {size} of disk space), then the panel switches to it",
+  "@engineInstallNote": {
+    "description": "Confirmation of a switch to an engine that is not installed, while the server is not running. {size} is the engine's size on disk, such as \"56 MB\".",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "llama.cpp"
+      },
+      "size": {
+        "type": "String",
+        "example": "56 MB"
+      }
+    }
+  },
+  "engineInstallStopNote": "{engine} is not installed. Homebrew installs it (about {size} of disk space), and the server stops. Requests in progress are cut off",
+  "@engineInstallStopNote": {
+    "description": "Confirmation of a switch to an engine that is not installed, while the server runs. {size} is the engine's size on disk, such as \"56 MB\".",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "llama.cpp"
+      },
+      "size": {
+        "type": "String",
+        "example": "56 MB"
+      }
+    }
+  },
+  "engineInstallBtn": "Install and switch",
+  "@engineInstallBtn": {
+    "description": "Button that installs an engine with Homebrew and switches to it."
+  },
+  "chatOff": "The chat opens once the server is running",
+  "@chatOff": {
+    "description": "Tooltip of the disabled Open chat button: why it is off."
+  },
+  "memInUse": "in use",
+  "@memInUse": {
+    "description": "Memory card: caption after the memory in use when no budget is known."
+  },
+  "chat": "Open chat",
+  "@chat": {
+    "description": "Header button that opens the chat of the running server."
+  },
+  "log": "Log",
+  "@log": {
+    "description": "Label of the button that opens the engine log (header and error blocks)."
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Header button that opens the Settings screen."
+  },
+  "themeDark": "Dark theme",
+  "@themeDark": {
+    "description": "Header button that switches the panel to the dark theme."
+  },
+  "themeLight": "Light theme",
+  "@themeLight": {
+    "description": "Header button that switches the panel to the light theme."
+  },
+  "quit": "Quit",
+  "@quit": {
+    "description": "Header button that quits the app."
+  },
+  "pillNotInstalled": "Not installed",
+  "@pillNotInstalled": {
+    "description": "Status pill: the engine is not installed."
+  },
+  "pillNoBrew": "Homebrew needed",
+  "@pillNoBrew": {
+    "description": "Status pill: Homebrew is missing."
+  },
+  "pillInstalling": "Installing",
+  "@pillInstalling": {
+    "description": "Status text while the engine is being installed."
+  },
+  "pillInstallFailed": "Install failed",
+  "@pillInstallFailed": {
+    "description": "Status text when the install failed."
+  },
+  "pillUpdating": "Updating",
+  "@pillUpdating": {
+    "description": "Status pill while the engine updates."
+  },
+  "pillStopped": "Stopped",
+  "@pillStopped": {
+    "description": "Status pill: the server is not running."
+  },
+  "pillLoading": "Loading",
+  "@pillLoading": {
+    "description": "Status pill: the server is loading the model."
+  },
+  "pillReady": "Ready",
+  "@pillReady": {
+    "description": "Status pill: the server is ready."
+  },
+  "pillGenerating": "Generating",
+  "@pillGenerating": {
+    "description": "Status pill: the server is answering a request."
+  },
+  "pillReleased": "Unloaded",
+  "@pillReleased": {
+    "description": "Status pill: the server runs, the model weights are unloaded from memory."
+  },
+  "pillError": "Error",
+  "@pillError": {
+    "description": "Status pill: the server failed."
+  },
+  "pillExternal": "Running",
+  "@pillExternal": {
+    "description": "Status pill: a server started by another app is running."
+  },
+  "pillUnresponsive": "Not responding",
+  "@pillUnresponsive": {
+    "description": "Status pill: the server is alive but does not answer."
+  },
+  "pillStopping": "Stopping",
+  "@pillStopping": {
+    "description": "Status pill: the server is shutting down."
+  },
+  "subNotInstalled": "Install {engine} to run models",
+  "@subNotInstalled": {
+    "description": "Header subtitle when the engine is not installed. {engine} is the engine's display name.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
+  "subNoBrew": "Install {engine} to run models",
+  "@subNoBrew": {
+    "description": "Header subtitle when Homebrew is missing. {engine} is the engine's display name.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
+  "subStopped": "Server not running",
+  "@subStopped": {
+    "description": "Header subtitle when the server is not running."
+  },
+  "subLoading": "Started {duration} ago",
+  "@subLoading": {
+    "description": "Header subtitle while the model loads. {duration} is a formatted duration such as \"24 seconds\".",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "24 seconds"
+      }
+    }
+  },
+  "subReady": "Running for {duration}",
+  "@subReady": {
+    "description": "Header subtitle when the server is ready. {duration} is the uptime, such as \"2 hours 14 minutes\".",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "2 hours 14 minutes"
+      }
+    }
+  },
+  "subGenerating": "Running for {duration}",
+  "@subGenerating": {
+    "description": "Header subtitle while the server answers. {duration} is the uptime.",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "2 hours 14 minutes"
+      }
+    }
+  },
+  "subReleased": "Running for {duration}",
+  "@subReleased": {
+    "description": "Header subtitle when the weights are unloaded. {duration} is the uptime.",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "3 hours 2 minutes"
+      }
+    }
+  },
+  "subError": "Stopped {duration} ago",
+  "@subError": {
+    "description": "Header subtitle after a failure. {duration} is the time since the server stopped.",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "3 minutes"
+      }
+    }
+  },
+  "subExternal": "Started in another app · {duration}",
+  "@subExternal": {
+    "description": "Header subtitle for a server started by another app. {duration} is its uptime.",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "2 hours 14 minutes"
+      }
+    }
+  },
+  "subUnresponsive": "No response for {duration}",
+  "@subUnresponsive": {
+    "description": "Header subtitle when the server does not answer. {duration} is the time without a response.",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "45 seconds"
+      }
+    }
+  },
+  "subStopping": "Freeing memory",
+  "@subStopping": {
+    "description": "Header subtitle while the server shuts down and frees memory."
+  },
+  "subInstalling": "Installing {engine} {version}",
+  "@subInstalling": {
+    "description": "Header subtitle during the install. {engine} is the engine's name, {version} the version being installed.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      },
+      "version": {
+        "type": "String",
+        "example": "1.4.1"
+      }
+    }
+  },
+  "actStart": "Start",
+  "@actStart": {
+    "description": "Main button: start the server."
+  },
+  "actStartOn": "Start on {port, number, ::group-off}",
+  "@actStartOn": {
+    "description": "Main button after a port conflict: start the server on a free port.",
+    "placeholders": {
+      "port": {
+        "type": "int",
+        "example": "8001"
+      }
+    }
+  },
+  "actCancel": "Cancel",
+  "@actCancel": {
+    "description": "Main button while the model loads: cancel the start."
+  },
+  "actStop": "Stop",
+  "@actStop": {
+    "description": "Main button: stop the server."
+  },
+  "actRestart": "Restart",
+  "@actRestart": {
+    "description": "Main button after a failure: start the server again."
+  },
+  "actKill": "End process",
+  "@actKill": {
+    "description": "Main button for a server started by another app: end its process."
+  },
+  "actForce": "Force quit",
+  "@actForce": {
+    "description": "Button that kills an unresponsive or slow-stopping server."
+  },
+  "actStopping": "Stopping",
+  "@actStopping": {
+    "description": "Disabled main button while the server stops."
+  },
+  "actRetry": "Retry",
+  "@actRetry": {
+    "description": "Button that repeats a failed install or update."
+  },
+  "loadingText": "Loading the model. The server will respond when ready",
+  "@loadingText": {
+    "description": "Note under the progress band while the model loads."
+  },
+  "errTitlePort": "Port {port, number, ::group-off} is in use by another app",
+  "@errTitlePort": {
+    "description": "Error title: the server port is taken by another app.",
+    "placeholders": {
+      "port": {
+        "type": "int",
+        "example": "8000"
+      }
+    }
+  },
+  "errTitleModel": "Model files not found. Turn on “Check for model updates” to download the model",
+  "@errTitleModel": {
+    "description": "Error title: the model files are missing and downloads are off."
+  },
+  "errTitleMemory": "The model ran out of memory: {engine} waited {duration}. Close other apps and start again",
+  "@errTitleMemory": {
+    "description": "Error title: the model ran out of memory. {duration} is how long the engine waited.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      },
+      "duration": {
+        "type": "String",
+        "example": "10 minutes"
+      }
+    }
+  },
+  "errTitleExit": "Process exited with code {code, number, ::group-off}",
+  "@errTitleExit": {
+    "description": "Error title: the server process exited. {code} is the exit code.",
+    "placeholders": {
+      "code": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "errActPort": "Change port",
+  "@errActPort": {
+    "description": "Error button that opens the port setting."
+  },
+  "errActModel": "Choose model",
+  "@errActModel": {
+    "description": "Error button that opens the model list."
+  },
+  "extNote": "This server was not started from the panel. You can stop it only by ending its process. Panel settings do not apply to it",
+  "@extNote": {
+    "description": "Note for a server that was not started from the panel."
+  },
+  "modelLocked": "The model was set when this server started",
+  "@modelLocked": {
+    "description": "Tooltip of the model button for a server started by another app."
+  },
+  "hangNote": "The server has not responded for {duration} and the queue is stuck. It may be hung",
+  "@hangNote": {
+    "description": "Warning when the server stops answering. {duration} is the time without a response.",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "45 seconds"
+      }
+    }
+  },
+  "stopLong": "Stopping is taking longer than usual",
+  "@stopLong": {
+    "description": "Warning when stopping takes longer than usual."
+  },
+  "avail": "Version {version} available",
+  "@avail": {
+    "description": "Tooltip of the update chip. {version} is the new version.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1.4.1"
+      }
+    }
+  },
+  "updNote": "{engine} {version} is ready to install. The server will restart",
+  "@updNote": {
+    "description": "Note under the header when an update exists. {engine} is the engine's name, {version} the new version.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      },
+      "version": {
+        "type": "String",
+        "example": "1.4.1"
+      }
+    }
+  },
+  "updBtn": "Update",
+  "@updBtn": {
+    "description": "Button that starts the update."
+  },
+  "whatsNew": "What’s new",
+  "@whatsNew": {
+    "description": "Link to the release notes."
+  },
+  "updText": "Homebrew is installing the new version. The server will then start with the same model",
+  "@updText": {
+    "description": "Note while the update installs."
+  },
+  "subUpdating": "Updating {engine} to {version}",
+  "@subUpdating": {
+    "description": "Header subtitle during the update. {engine} is the engine's name, {version} the new version.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      },
+      "version": {
+        "type": "String",
+        "example": "1.4.1"
+      }
+    }
+  },
+  "updFailTitle": "Could not update {engine} to {version}",
+  "@updFailTitle": {
+    "description": "Error title: the update failed. {engine} is the engine's name, {version} the target version.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      },
+      "version": {
+        "type": "String",
+        "example": "1.4.1"
+      }
+    }
+  },
+  "keepOld": "The previous version {version} is still running",
+  "@keepOld": {
+    "description": "Note after a failed update. {version} is the version that still runs.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1.4.0"
+      }
+    }
+  },
+  "instProgress": "Homebrew is downloading and installing {engine}",
+  "@instProgress": {
+    "description": "Note while the install runs. {engine} is the engine's name.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
+  "instFailTitle": "Could not install {engine}",
+  "@instFailTitle": {
+    "description": "Error title: the install failed. {engine} is the engine's name.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
+  "sizeMb": "{value} MB",
+  "@sizeMb": {
+    "description": "A size in decimal megabytes. {value} is the formatted number.",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "270"
+      }
+    }
+  },
+  "instTitle": "{engine} is not installed",
+  "@instTitle": {
+    "description": "Title of the install card. {engine} is the engine's name.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
+  "instText": "{engine} is installed with Homebrew. It takes about a minute and needs about {size} of disk space",
+  "@instText": {
+    "description": "Body of the install card. {size} is a formatted size such as \"270 MB\".",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      },
+      "size": {
+        "type": "String",
+        "example": "270 MB"
+      }
+    }
+  },
+  "instBtn": "Install",
+  "@instBtn": {
+    "description": "Install button."
+  },
+  "instNote": "Models are downloaded separately on first launch",
+  "@instNote": {
+    "description": "Note on the install card."
+  },
+  "brewTitle": "Homebrew needed",
+  "@brewTitle": {
+    "description": "Title of the card shown when Homebrew is missing."
+  },
+  "brewText": "{engine} is installed with Homebrew, a package manager for macOS. Install it using the instructions on the website, then come back here",
+  "@brewText": {
+    "description": "Body of the Homebrew card. {engine} is the engine's name.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
+  "openBrew": "Open {host}",
+  "@openBrew": {
+    "description": "Button that opens the Homebrew website. {host} is the host name.",
+    "placeholders": {
+      "host": {
+        "type": "String",
+        "example": "brew.sh"
+      }
+    }
+  },
+  "recheck": "Check again",
+  "@recheck": {
+    "description": "Button that detects Homebrew again."
+  },
+  "brewReq": "Requires {arch} and {os} or later",
+  "@brewReq": {
+    "description": "Requirements line. {arch} is the CPU architecture, {os} the minimum macOS.",
+    "placeholders": {
+      "arch": {
+        "type": "String",
+        "example": "Apple silicon"
+      },
+      "os": {
+        "type": "String",
+        "example": "macOS 26.4"
+      }
+    }
+  },
+  "noUpdates": "Model updates off",
+  "@noUpdates": {
+    "description": "Chip: model updates are off."
+  },
+  "copyAddr": "Copy address",
+  "@copyAddr": {
+    "description": "Label of the address chip that copies the server address."
+  },
+  "popNote": "Models from Hugging Face. A download does not stop the server; switching models restarts it",
+  "@popNote": {
+    "description": "Note under the model list: models come from Hugging Face, a download does not stop the server, and switching models restarts the server."
+  },
+  "memory": "Memory",
+  "@memory": {
+    "description": "Title of the memory card."
+  },
+  "unload": "Unload",
+  "@unload": {
+    "description": "Button that unloads the model from memory."
+  },
+  "load": "Load",
+  "@load": {
+    "description": "Button that loads the model into memory."
+  },
+  "almost": "almost full",
+  "@almost": {
+    "description": "Label shown when memory is almost full."
+  },
+  "idleNote": "Unloads after {duration} idle",
+  "@idleNote": {
+    "description": "Memory card note. {duration} is the idle time before the model unloads.",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "7 minutes"
+      }
+    }
+  },
+  "disk": "Conversations on disk",
+  "@disk": {
+    "description": "Label of the conversations-on-disk row."
+  },
+  "sizeGb": "{value} GB",
+  "@sizeGb": {
+    "description": "A size in decimal gigabytes. {value} is the formatted number.",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "17.2"
+      }
+    }
+  },
+  "usedOf": "{used} of {total}",
+  "@usedOf": {
+    "description": "Disk usage. {used} is a number without unit, {total} a formatted size.",
+    "placeholders": {
+      "used": {
+        "type": "String",
+        "example": "6.1"
+      },
+      "total": {
+        "type": "String",
+        "example": "32 GB"
+      }
+    }
+  },
+  "ofTotal": "of {total}",
+  "@ofTotal": {
+    "description": "Memory budget. {total} is a formatted size.",
+    "placeholders": {
+      "total": {
+        "type": "String",
+        "example": "38 GB"
+      }
+    }
+  },
+  "speedTitle": "Generation speed",
+  "@speedTitle": {
+    "description": "Title of the speed card."
+  },
+  "avgNote": "on average",
+  "@avgNote": {
+    "description": "Caption of the average speed."
+  },
+  "speedTps": "{value} tok/s",
+  "@speedTps": {
+    "description": "A speed in tokens per second. {value} is the formatted number.",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "38"
+      }
+    }
+  },
+  "trayGb": "{value} GB",
+  "@trayGb": {
+    "description": "Menu bar value in gigabytes. {value} is a whole number.",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "17"
+      }
+    }
+  },
+  "trayTps": "{value} T/S",
+  "@trayTps": {
+    "description": "Menu bar value in tokens per second. {value} is a whole number.",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "41"
+      }
+    }
+  },
+  "queue": "{n, number, ::group-off} queued",
+  "@queue": {
+    "description": "Chip with the number of queued requests.",
+    "placeholders": {
+      "n": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "firstToken": "First token {seconds, number, ::.#} s",
+  "@firstToken": {
+    "description": "Time to first token. {seconds} is rounded to one decimal place (use format.Seconds).",
+    "placeholders": {
+      "seconds": {
+        "type": "double",
+        "example": "0.8"
+      }
+    }
+  },
+  "promptSpeed": "Prompt processing {speed}",
+  "@promptSpeed": {
+    "description": "Prompt processing speed. {speed} is a formatted speed such as \"1,240 tok/s\".",
+    "placeholders": {
+      "speed": {
+        "type": "String",
+        "example": "1,240 tok/s"
+      }
+    }
+  },
+  "chartLabel": "{count, plural, one {Last request} other {Last # requests}}, from {min} to {max}",
+  "@chartLabel": {
+    "description": "Accessible label of the speed chart. {count} is the number of bars, {min} a number without unit, {max} a formatted speed.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "20"
+      },
+      "min": {
+        "type": "String",
+        "example": "31"
+      },
+      "max": {
+        "type": "String",
+        "example": "42 tok/s"
+      }
+    }
+  },
+  "lastReq": "Last request {duration} ago",
+  "@lastReq": {
+    "description": "Footer when the model is unloaded. {duration} is the time since the last request.",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "18 minutes"
+      }
+    }
+  },
+  "loadsOnFirst": "Loads on first request",
+  "@loadsOnFirst": {
+    "description": "Footer when the model is unloaded: it loads on the next request."
+  },
+  "speedEmpty": "No requests yet — speed appears after the first answer",
+  "@speedEmpty": {
+    "description": "Note in the speed card before the first request has finished. It replaces the chart and the average."
+  },
+  "durSeconds": "{n, plural, one {# second} other {# seconds}}",
+  "@durSeconds": {
+    "description": "A duration in seconds, as used inside sentences (after \"in\", \"ago\", \"for\").",
+    "placeholders": {
+      "n": {
+        "type": "int",
+        "example": "24"
+      }
+    }
+  },
+  "durMinutes": "{n, plural, one {# minute} other {# minutes}}",
+  "@durMinutes": {
+    "description": "A duration in minutes, as used inside sentences.",
+    "placeholders": {
+      "n": {
+        "type": "int",
+        "example": "14"
+      }
+    }
+  },
+  "durHours": "{n, plural, one {# hour} other {# hours}}",
+  "@durHours": {
+    "description": "A duration in hours, as used inside sentences.",
+    "placeholders": {
+      "n": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "durDays": "{n, plural, one {# day} other {# days}}",
+  "@durDays": {
+    "description": "A duration in days, as used inside sentences.",
+    "placeholders": {
+      "n": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "durJoin": "{a} {b}",
+  "@durJoin": {
+    "description": "Joins two duration parts, such as \"2 hours\" and \"14 minutes\".",
+    "placeholders": {
+      "a": {
+        "type": "String",
+        "example": "2 hours"
+      },
+      "b": {
+        "type": "String",
+        "example": "14 minutes"
+      }
+    }
+  },
+  "durShortSeconds": "{n} s",
+  "@durShortSeconds": {
+    "description": "A short duration in seconds for the header subtitle: a number and an abbreviated unit, one line.",
+    "placeholders": {
+      "n": {
+        "type": "int",
+        "example": "24"
+      }
+    }
+  },
+  "durShortMinutes": "{n} min",
+  "@durShortMinutes": {
+    "description": "A short duration in minutes for the header subtitle: a number and an abbreviated unit.",
+    "placeholders": {
+      "n": {
+        "type": "int",
+        "example": "14"
+      }
+    }
+  },
+  "durShortHours": "{n} h",
+  "@durShortHours": {
+    "description": "A short duration in hours for the header subtitle: a number and an abbreviated unit.",
+    "placeholders": {
+      "n": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "durShortDays": "{n} d",
+  "@durShortDays": {
+    "description": "A short duration in days for the header subtitle: a number and an abbreviated unit.",
+    "placeholders": {
+      "n": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "hoverReq": "Request",
+  "@hoverReq": {
+    "description": "Chart hover text prefix for a past request."
+  },
+  "hoverCur": "This request",
+  "@hoverCur": {
+    "description": "Chart hover text prefix for the request in progress."
+  },
+  "agentsTitle": "Launch agent",
+  "@agentsTitle": {
+    "description": "Title of the agents card."
+  },
+  "agentStart": "Starts the server and the agent",
+  "@agentStart": {
+    "description": "Tooltip of agent buttons when the server is stopped or unloaded."
+  },
+  "agentOffError": "Fix the server error first",
+  "@agentOffError": {
+    "description": "Tooltip of disabled agent buttons after a server error."
+  },
+  "agentOffUnresponsive": "The server is not responding",
+  "@agentOffUnresponsive": {
+    "description": "Tooltip of disabled agent buttons when the server does not answer."
+  },
+  "agentOffStopping": "The server is stopping",
+  "@agentOffStopping": {
+    "description": "Tooltip of disabled agent buttons while the server stops."
+  },
+  "cutRequests": "{n, plural, one {# request will be interrupted} other {# requests will be interrupted}}",
+  "@cutRequests": {
+    "description": "Dialog note: requests in progress that a quit or update interrupts. {n} is their number.",
+    "placeholders": {
+      "n": {
+        "type": "int",
+        "example": "1"
+      }
+    }
+  },
+  "quitTitle": "Quit Lumilo?",
+  "@quitTitle": {
+    "description": "Quit dialog title. The app name is always Lumilo."
+  },
+  "cancelBtn": "Cancel",
+  "@cancelBtn": {
+    "description": "Cancel button of every dialog."
+  },
+  "quitBtn": "Quit",
+  "@quitBtn": {
+    "description": "Confirm button of the quit dialog."
+  },
+  "quitUpdTitle": "{engine} is still updating",
+  "@quitUpdTitle": {
+    "description": "Quit dialog title while an update runs. {engine} is the engine's name.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
+  "quitUpdNote": "Quit when the update finishes?",
+  "@quitUpdNote": {
+    "description": "Quit dialog note while an update runs."
+  },
+  "quitAfter": "Quit after update",
+  "@quitAfter": {
+    "description": "Button: quit after the update finishes."
+  },
+  "updDlgTitle": "Update now?",
+  "@updDlgTitle": {
+    "description": "Title of the update dialog."
+  },
+  "updLater": "When idle",
+  "@updLater": {
+    "description": "Button: update when the server is idle."
+  },
+  "killTitle": "End the {engine} process of another app?",
+  "@killTitle": {
+    "description": "Title of the dialog that ends another app's server process. {engine} is the engine's name.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
+  "killNote": "The app that started it will lose the server",
+  "@killNote": {
+    "description": "Note of that dialog."
+  },
+  "killBtn": "End process",
+  "@killBtn": {
+    "description": "Confirm button of that dialog."
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Back button of Settings."
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Title of the Settings screen."
+  },
+  "access": "Server access",
+  "@access": {
+    "description": "Label of the server access control."
+  },
+  "modesLocal": "This computer",
+  "@modesLocal": {
+    "description": "Access mode: this computer only."
+  },
+  "modesNetwork": "Network",
+  "@modesNetwork": {
+    "description": "Access mode: the network (every interface)."
+  },
+  "hintLocal": "The server listens on {address}. Only apps on this computer can reach it",
+  "@hintLocal": {
+    "description": "Hint for the local mode. {address} is host:port.",
+    "placeholders": {
+      "address": {
+        "type": "String",
+        "example": "127.0.0.1:8000"
+      }
+    }
+  },
+  "hintNetwork": "Devices on your network reach the server at {address}. It also listens on VPN and other networks of this computer, so a forwarded port or a tunnel works too",
+  "@hintNetwork": {
+    "description": "Hint for the network mode. {address} is host:port.",
+    "placeholders": {
+      "address": {
+        "type": "String",
+        "example": "192.168.1.20:8000"
+      }
+    }
+  },
+  "warnNetwork": "Any device on your network can use the model, and the internet too if you forward the port. The server accepts no request without the key",
+  "@warnNetwork": {
+    "description": "Warning for the network mode."
+  },
+  "port": "Port",
+  "@port": {
+    "description": "Label of the port field."
+  },
+  "apiKey": "API key",
+  "@apiKey": {
+    "description": "Label of the API key row."
+  },
+  "copyKey": "Copy key",
+  "@copyKey": {
+    "description": "Label of the button that copies the key."
+  },
+  "newKey": "Create new key",
+  "@newKey": {
+    "description": "Label of the button that creates a new key."
+  },
+  "keyNote": "The key is required while the server is open. Stored in Keychain",
+  "@keyNote": {
+    "description": "Note under the API key."
+  },
+  "hosts": "Allowed host names",
+  "@hosts": {
+    "description": "Label of the allowed host names."
+  },
+  "remove": "Remove",
+  "@remove": {
+    "description": "Label prefix of the button that removes a host name."
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Button that adds a host name."
+  },
+  "hostsNote": "{engine} answers only requests to known names. Add the domain of your tunnel or forwarded port",
+  "@hostsNote": {
+    "description": "Note under the allowed host names. {engine} is the engine's name.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
+  "model": "Model",
+  "@model": {
+    "description": "Title of the Settings model card."
+  },
+  "idleUnload": "Unload when idle",
+  "@idleUnload": {
+    "description": "Label of the idle unload setting."
+  },
+  "checkModelUpdates": "Check for model updates",
+  "@checkModelUpdates": {
+    "description": "Label of the switch that turns model update checks on."
+  },
+  "app": "App",
+  "@app": {
+    "description": "Title of the Settings app card."
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Label of the language setting."
+  },
+  "terminal": "Open agents in",
+  "@terminal": {
+    "description": "Label of the setting that picks the terminal app in which coding agents open (Terminal, Ghostty or Rex). The label must not repeat a value of the select."
+  },
+  "system": "System default",
+  "@system": {
+    "description": "Language option that follows the system."
+  },
+  "engineVersion": "{engine} version",
+  "@engineVersion": {
+    "description": "Label of the engine version row. {engine} is the engine's name.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
+  "checkUpdates": "Check for updates",
+  "@checkUpdates": {
+    "description": "Button that checks for engine updates."
+  },
+  "updatesNote": "Updates are installed with Homebrew",
+  "@updatesNote": {
+    "description": "Note under the engine version."
+  },
+  "checkLatest": "You have the latest version, {version}",
+  "@checkLatest": {
+    "description": "Settings, under the engine version, after the user checked for updates: the installed version is the newest. {version} is the installed version.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1.4.1"
+      }
+    }
+  },
+  "checkAvail": "Version {version} is available",
+  "@checkAvail": {
+    "description": "Settings, under the engine version, after the user checked for updates: a newer version exists. {version} is the new version.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "1.4.1"
+      }
+    }
+  },
+  "checkFailed": "Couldn’t check for updates",
+  "@checkFailed": {
+    "description": "Settings, under the engine version: the update check the user asked for failed."
+  },
+  "login": "Launch at login",
+  "@login": {
+    "description": "Label of the launch-at-login switch."
+  },
+  "blink": "Animate the icon while responding",
+  "@blink": {
+    "description": "Label of the switch that animates the menu bar icon while the server answers."
+  },
+  "restartStopped": "Applies when the server starts",
+  "@restartStopped": {
+    "description": "Banner text when settings changed and the server is stopped."
+  },
+  "restartAgents": "Running agents will lose their connection",
+  "@restartAgents": {
+    "description": "Second banner line: running agents lose their connection."
+  },
+  "restartNote": "Changes apply after the server restarts",
+  "@restartNote": {
+    "description": "Banner text when settings changed and the server runs."
+  },
+  "restart": "Restart",
+  "@restart": {
+    "description": "Banner button that restarts the server."
+  },
+  "portBusy": "Port {port, number, ::group-off} is in use. {free, number, ::group-off} is free",
+  "@portBusy": {
+    "description": "Port field error. {port} is the busy port, {free} a free one.",
+    "placeholders": {
+      "port": {
+        "type": "int",
+        "example": "8000"
+      },
+      "free": {
+        "type": "int",
+        "example": "8001"
+      }
+    }
+  },
+  "portTake": "Use {free, number, ::group-off}",
+  "@portTake": {
+    "description": "Button that takes the free port. {free} is that port.",
+    "placeholders": {
+      "free": {
+        "type": "int",
+        "example": "8001"
+      }
+    }
+  },
+  "settingsIdleAfter": "After {duration}",
+  "@settingsIdleAfter": {
+    "description": "Idle option. {duration} is a formatted duration such as \"10 minutes\".",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "10 minutes"
+      }
+    }
+  },
+  "settingsIdleNever": "Never",
+  "@settingsIdleNever": {
+    "description": "Idle option: never unload."
+  },
+  "pillDownloading": "Downloading",
+  "@pillDownloading": {
+    "description": "Status pill while the server downloads a new model."
+  },
+  "downloading": "Downloading the model…",
+  "@downloading": {
+    "description": "Progress text while the server downloads a model and the engine does not say its size."
+  },
+  "downloadingSize": "Downloading the model, {size}…",
+  "@downloadingSize": {
+    "description": "Progress text while the server downloads a model. {size} is a formatted size such as \"21.2 GB\".",
+    "placeholders": {
+      "size": {
+        "type": "String",
+        "example": "21.2 GB"
+      }
+    }
+  },
+  "engine": "Engine",
+  "@engine": {
+    "description": "Settings: title of the card that chooses the engine."
+  },
+  "engineNotInstalled": "Not installed",
+  "@engineNotInstalled": {
+    "description": "Settings, engine list: the engine is not installed (in place of its version)."
+  },
+  "engineSwitchNote": "Switching to {engine} stops the server. Requests in progress are cut off",
+  "@engineSwitchNote": {
+    "description": "Settings: asks before a switch to another engine stops the running server. {engine} is the engine's name.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "llama.cpp"
+      }
+    }
+  },
+  "engineSwitchBtn": "Switch",
+  "@engineSwitchBtn": {
+    "description": "Settings: button that confirms the switch to another engine."
+  },
+  "engineNote": "One engine runs at a time. An engine that is not installed is installed with Homebrew",
+  "@engineNote": {
+    "description": "Settings: note under the engine list."
+  },
+  "context": "Context",
+  "@context": {
+    "description": "Settings, Model card: label of the context size select."
+  },
+  "ctxAuto": "Auto",
+  "@ctxAuto": {
+    "description": "Context size option: the engine chooses (the model's native window when memory holds it)."
+  },
+  "ctxOther": "Other…",
+  "@ctxOther": {
+    "description": "Context size option that opens a field for another size."
+  },
+  "ctxOtherLabel": "Size in K tokens",
+  "@ctxOtherLabel": {
+    "description": "Label of the field for another context size, typed in K (1024 tokens)."
+  },
+  "ctxBad": "Enter a whole number of K tokens (K = 1024)",
+  "@ctxBad": {
+    "description": "Error under the context size field when the text is not a size."
+  },
+  "ctxWarn": "Past the model’s native context of {size}, answers can get worse at every length",
+  "@ctxWarn": {
+    "description": "Warning for a context size past the model's native context. {size} is that context, such as \"256K\".",
+    "placeholders": {
+      "size": {
+        "type": "String",
+        "example": "256K"
+      }
+    }
+  },
+  "ctxNative": "The model’s native context is {size}",
+  "@ctxNative": {
+    "description": "Note under the context size select. {size} is the model's native context, such as \"256K\".",
+    "placeholders": {
+      "size": {
+        "type": "String",
+        "example": "256K"
+      }
+    }
+  },
+  "addModel": "Add model…",
+  "@addModel": {
+    "description": "Model list: opens a field for a Hugging Face model name to download."
+  },
+  "addModelHint": "A model from Hugging Face. The server downloads it when it starts",
+  "@addModelHint": {
+    "description": "Note under the field for a model name to download."
+  },
+  "addModelBad": "Enter owner/repo or owner/repo:variant",
+  "@addModelBad": {
+    "description": "Error under the field for a model name when the engine does not accept it."
+  },
+  "addModelLoading": "Looking up variants…",
+  "@addModelLoading": {
+    "description": "Note under the field for a model name while the variants of the chosen repository load."
+  },
+  "addModelBlocked": "Not available now: the server is busy or was started by another app",
+  "@addModelBlocked": {
+    "description": "Tooltip of the disabled Download button under the field for a model name while the server cannot start a download: it is busy, updating, or not ours."
+  },
+  "modelDownloads": "{count, plural, one {# download} other {# downloads}}",
+  "@modelDownloads": {
+    "description": "How often a repository in the suggestions of the field for a model name was downloaded.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "6009562"
+      }
+    }
+  },
+  "suggestTitle": "No models yet",
+  "@suggestTitle": {
+    "description": "Server card title when the engine has no model yet."
+  },
+  "suggestNote": "Download a model from Hugging Face. It is ready to run once downloaded",
+  "@suggestNote": {
+    "description": "Note above the suggested models to download: the model can be started once downloaded."
+  },
+  "paramsDense": "{params} parameters",
+  "@paramsDense": {
+    "description": "Size of a suggested model. {params} is a count such as \"27B\" (billions).",
+    "placeholders": {
+      "params": {
+        "type": "String",
+        "example": "27B"
+      }
+    }
+  },
+  "paramsMoe": "{params}, {active} active",
+  "@paramsMoe": {
+    "description": "Size of a suggested mixture-of-experts model. {params} is the count in all, {active} the count active per token, such as \"36B\" and \"3B\".",
+    "placeholders": {
+      "params": {
+        "type": "String",
+        "example": "36B"
+      },
+      "active": {
+        "type": "String",
+        "example": "3B"
+      }
+    }
+  },
+  "needsMemory": "Needs about {size} of memory, this Mac has {total}",
+  "@needsMemory": {
+    "description": "Warning on a suggested model that does not fit in memory. {size} is what it needs, {total} the computer's memory, such as \"77 GB\" and \"51.5 GB\".",
+    "placeholders": {
+      "size": {
+        "type": "String",
+        "example": "77 GB"
+      },
+      "total": {
+        "type": "String",
+        "example": "51.5 GB"
+      }
+    }
+  },
+  "download": "Download",
+  "@download": {
+    "description": "Button that downloads a suggested model."
+  },
+  "clearField": "Clear",
+  "@clearField": {
+    "description": "“Add model…” field: the button that clears the typed name."
+  },
+  "addModelQuantBad": "{engine} cannot run this checkpoint: its quantization is {quant}",
+  "@addModelQuantBad": {
+    "description": "“Add model…” field: the engine cannot run the chosen MLX checkpoint. {engine} is the engine's name, {quant} the checkpoint's quantization as its config.json gives it.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      },
+      "quant": {
+        "type": "String",
+        "example": "mxfp8"
+      }
+    }
+  },
+  "memNeeds": "Needs about {size} of memory",
+  "@memNeeds": {
+    "description": "What a model needs in memory: its weights, vision projector, draft model, KV cache for the context and the engine's buffers. {size} such as \"21 GB\".",
+    "placeholders": {
+      "size": {
+        "type": "String",
+        "example": "21 GB"
+      }
+    }
+  },
+  "memTooMuch": "Needs about {size} of memory, more than the {total} available",
+  "@memTooMuch": {
+    "description": "Warning: a model needs more memory than the engine may use. {size} is what it needs, {total} what the engine may use (about three quarters of the Mac's memory).",
+    "placeholders": {
+      "size": {
+        "type": "String",
+        "example": "41 GB"
+      },
+      "total": {
+        "type": "String",
+        "example": "38.7 GB"
+      }
+    }
+  },
+  "memShorter": "Needs about {size} with the full context, more than the {total} available: the server will use a shorter context",
+  "@memShorter": {
+    "description": "A model fits only with a shorter context than its native one, which the engine then chooses. {size} is what the full context needs, {total} what the engine may use.",
+    "placeholders": {
+      "size": {
+        "type": "String",
+        "example": "41 GB"
+      },
+      "total": {
+        "type": "String",
+        "example": "38.7 GB"
+      }
+    }
+  },
+  "vision": "Image input",
+  "@vision": {
+    "description": "Settings, Model card: switch that loads the model's vision projector, so it reads images. Also the label of the eye badge in the model list."
+  },
+  "visionTip": "Loads the vision projector, {size}. Off, the model reads text only",
+  "@visionTip": {
+    "description": "Tooltip of the image input switch. {size} is the projector's size.",
+    "placeholders": {
+      "size": {
+        "type": "String",
+        "example": "0.93 GB"
+      }
+    }
+  },
+  "draft": "Speculative decoding",
+  "@draft": {
+    "description": "Settings, Model card: switch or select of the draft that speeds up generation (speculative decoding). Also the label of the bolt badge in the model list."
+  },
+  "draftAlways": "{engine} always runs its draft model {name}",
+  "@draftAlways": {
+    "description": "Tooltip of the speculative decoding switch when the engine cannot turn its draft off. {engine} is the engine's name, {name} the draft's repository.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      },
+      "name": {
+        "type": "String",
+        "example": "incoai/Qwen3.8-27B-DFlash2"
+      }
+    }
+  },
+  "draftOff": "Off",
+  "@draftOff": {
+    "description": "Speculative decoding select: no draft."
+  },
+  "draftMTPTip": "Drafts tokens with the model’s own MTP layers",
+  "@draftMTPTip": {
+    "description": "Tooltip of the speculative decoding switch for a model with multi-token prediction (MTP) layers."
+  },
+  "draftModelTip": "Drafts tokens with {name}, {size}",
+  "@draftModelTip": {
+    "description": "Tooltip of the speculative decoding switch for a draft model. {name} is its file, {size} its size.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "dflash-Qwen3.8-27B-Q4_0"
+      },
+      "size": {
+        "type": "String",
+        "example": "1.09 GB"
+      }
+    }
+  },
+  "errTitleModelOnline": "Could not download the model. Check its name and the internet connection",
+  "@errTitleModelOnline": {
+    "description": "Error title: the server could not download its model online (bad name, no network)."
+  },
+  "errTitleNoVision": "This model has no image input. Start it for text only",
+  "@errTitleNoVision": {
+    "description": "Error title: the engine cannot prepare the model's image input (its repository has no vision projector); it starts for text only."
+  },
+  "errActTextOnly": "Start without images",
+  "@errActTextOnly": {
+    "description": "Error button: turns image input off for the model and starts the server again."
+  },
+  "textOnly": "Text only",
+  "@textOnly": {
+    "description": "Tag under a model to download: its repository has no vision projector, so it is downloaded and served for text only."
+  },
+  "dlCancel": "Cancel download",
+  "@dlCancel": {
+    "description": "Label and tooltip of the × button of a model being downloaded in the model list."
+  },
+  "dlCancelling": "Cancelling…",
+  "@dlCancelling": {
+    "description": "Model list: a download being cancelled, until the engine stops."
+  },
+  "dlRemove": "Remove",
+  "@dlRemove": {
+    "description": "Button of a failed download in the model list: removes it from the list with its partial files."
+  },
+  "dlTextOnly": "Download without images",
+  "@dlTextOnly": {
+    "description": "Button of a download that failed because the model has no image input: downloads it again for text only."
+  },
+  "dlFailNoVision": "This model has no image input",
+  "@dlFailNoVision": {
+    "description": "Model list: why a download failed, the model's image input cannot be prepared."
+  },
+  "dlFailModel": "Not found on Hugging Face",
+  "@dlFailModel": {
+    "description": "Model list: why a download failed, the repository or variant does not exist."
+  },
+  "dlFailed": "Download failed",
+  "@dlFailed": {
+    "description": "Model list: a download failed for another reason; the engine's line is its tooltip."
+  },
+  "downloaded": "Downloaded",
+  "@downloaded": {
+    "description": "Model list: tag of a model whose download just finished."
+  },
+  "dlPreparing": "Checking the model…",
+  "@dlPreparing": {
+    "description": "Model list: a download that has not fetched a byte yet (the engine checks the model first)."
+  },
+  "addModelWait": "Not available while {engine} is updating",
+  "@addModelWait": {
+    "description": "Tooltip of the disabled Download button while the engine updates or is being switched.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
+  "dlQueued": "Queued",
+  "@dlQueued": {
+    "description": "Model list: a download waiting for the one before it to finish; one runs at a time."
+  },
+  "dlPaused": "Paused",
+  "@dlPaused": {
+    "description": "Model list: a download stopped with its files kept (Lumilo quit, or another engine runs); a size like “6.1 of 17.4 GB” may follow after “ · ”."
+  },
+  "dlResume": "Resume",
+  "@dlResume": {
+    "description": "Button of a paused download: goes on from what it fetched."
+  },
+  "addModelNothing": "Nothing found on Hugging Face",
+  "@addModelNothing": {
+    "description": "Under the Add model field: the search on Hugging Face found no repository the engine runs."
+  },
+  "addModelNoVariants": "No variants {engine} can run",
+  "@addModelNoVariants": {
+    "description": "Under the Add model field: the repository typed with “:” has no variant (GGUF quantization) the engine can run.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
+  "addModelUnreachable": "Hugging Face is unreachable",
+  "@addModelUnreachable": {
+    "description": "Under the Add model field: the search or the look at a repository failed, as without a network."
+  },
+  "updatesOn": "Model updates on",
+  "@updatesOn": {
+    "description": "Chip in the server card, a toggle: the server checks Hugging Face for model updates on start (the other state is noUpdates)."
+  },
+  "updatesOffTip": "The server starts offline, without checking models for updates. Click to check on start",
+  "@updatesOffTip": {
+    "description": "Tooltip of the model-updates chip while off: what off does and what a click does."
+  },
+  "updatesOnTip": "On start, the server checks Hugging Face for model updates. Click to start offline",
+  "@updatesOnTip": {
+    "description": "Tooltip of the model-updates chip while on: what on does and what a click does."
+  },
+  "appliesOnRestart": "Applies on restart",
+  "@appliesOnRestart": {
+    "description": "Note under the server card's chips after the model-updates chip changed while the server runs; a Restart button follows."
+  },
+  "rmLabel": "Delete {model}",
+  "@rmLabel": {
+    "description": "Label and tooltip of the trash button of a model in the model list. {model} is the model's name.",
+    "placeholders": {
+      "model": {
+        "type": "String",
+        "example": "Qwen3.8-27B"
+      }
+    }
+  },
+  "rmTitle": "Delete {model}?",
+  "@rmTitle": {
+    "description": "Title of the dialog that deletes an installed model from the disk.",
+    "placeholders": {
+      "model": {
+        "type": "String",
+        "example": "Qwen3.8-27B"
+      }
+    }
+  },
+  "rmCounting": "Counting its files…",
+  "@rmCounting": {
+    "description": "Note of that dialog while the size of the files to delete is counted."
+  },
+  "rmFrees": "Frees {size} on the disk. To use the model again, download it again.",
+  "@rmFrees": {
+    "description": "Note of that dialog: what deleting frees. {size} is a size, such as \"15.7 GB\".",
+    "placeholders": {
+      "size": {
+        "type": "String",
+        "example": "15.7 GB"
+      }
+    }
+  },
+  "rmShared": "The files are in the Hugging Face cache, so other apps that use them lose them too.",
+  "@rmShared": {
+    "description": "Second note of that dialog, when the files are in the cache that other programs read too."
+  },
+  "rmStops": "The server stops first.",
+  "@rmStops": {
+    "description": "Note of that dialog when the server runs the model."
+  },
+  "rmCountFailed": "Cannot read its files: {line}",
+  "@rmCountFailed": {
+    "description": "Note of that dialog when the files could not be counted. {line} is the error, in English.",
+    "placeholders": {
+      "line": {
+        "type": "String",
+        "example": "permission denied"
+      }
+    }
+  },
+  "rmBtn": "Delete",
+  "@rmBtn": {
+    "description": "Confirm button of that dialog."
+  },
+  "rmDeleting": "Deleting…",
+  "@rmDeleting": {
+    "description": "Status of a model in the model list while its files are deleted."
+  },
+  "rmFailed": "The model was not deleted",
+  "@rmFailed": {
+    "description": "Title of the notice that a model was not deleted; the reason, in English, shows under it."
+  },
+  "rmBusy": "Not available while another model is being deleted",
+  "@rmBusy": {
+    "description": "Tooltip of the disabled trash button while another model is deleted."
+  },
+  "rmWait": "Not available while {engine} is updating",
+  "@rmWait": {
+    "description": "Tooltip of the disabled trash button while the engine updates, installs or is being switched.",
+    "placeholders": {
+      "engine": {
+        "type": "String",
+        "example": "Splash"
+      }
+    }
+  },
+  "rmWaitDownload": "Not available while a model downloads",
+  "@rmWaitDownload": {
+    "description": "Tooltip of the disabled trash button while a download of the engine runs or waits."
+  }
+}

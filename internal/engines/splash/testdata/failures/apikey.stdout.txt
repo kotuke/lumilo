@@ -1,0 +1,5 @@
+Splash model orcarouter/OrcaCyber-Nano-1.0:Mix-15.7G is already installed in /Users/user/Library/Application Support/Splash/models/orcarouter/OrcaCyber-Nano-1.0:Mix-15.7G
+22:02:00 Loading · orcarouter/OrcaCyber-Nano-1.0:Mix-15.7G
+22:02:00 Chat template · patched to render later system messages in place (the original template rejects them), generation prompt 5-7 tokens
+22:02:09 Ready · orcarouter/OrcaCyber-Nano-1.0:Mix-15.7G · context 256K · http://127.0.0.1:8003
+22:02:10 Stopping · releasing engine resources

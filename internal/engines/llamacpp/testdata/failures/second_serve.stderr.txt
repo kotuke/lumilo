@@ -1,0 +1,7 @@
+0.00.000.430 I srv  llama_server: initializing ...
+0.02.817.290 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.02.817.451 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.02.817.509 E srv         start: couldn't bind HTTP server socket, hostname: 127.0.0.1, port: 18210
+0.02.817.511 I srv    operator(): operator(): cleaning up before exit...
+0.02.817.543 E srv  llama_server: exiting due to HTTP server error
+exit 1

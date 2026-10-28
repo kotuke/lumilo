@@ -1,0 +1,5 @@
+# exit 1
+## stdout
+
+## stderr
+error: Splash is already serving (PID 14340, model orcarouter/OrcaCyber-Nano-1.0:Mix-15.7G, port 8000); stop it with Ctrl+C first

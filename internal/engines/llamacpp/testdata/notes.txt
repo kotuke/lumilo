@@ -1,0 +1,31 @@
+[serve] ready=True after 0.46s children=[]
+[serve] GET / -> 415 text/plain 44 bytes
+[serve] SIGINT idle -> exit 0 in 0.06s
+[sleep] after GET /slots is_sleeping=False
+[sleep] before wake is_sleeping=True
+[sleep] wake completion 200 in 0.28s
+[sleep] after 6 s of /slots polling is_sleeping=False
+[sleep] SIGTERM idle -> exit 0 in 0.05s
+[apikey] GET / without key -> 415
+[apikey] exit 0
+[stop_gen] second SIGINT needed -> exit -6 in 3.01s
+[port_busy] exit 1 in 0.09s
+[no_model] exit 1 in 0.08s
+[bad_flag] exit 1 in 0.01s
+[bad_port] exit 1 in 0.08s
+[offline_missing] exit 1 in 0.08s
+[not_gguf] exit 1 in 0.08s
+[second_serve] exit 1 in 2.83s
+[huge_ctx] exit -9 in 44.10s
+# Exit codes above are Python's: -6 is SIGABRT (the shell's 134), -9 is SIGKILL (137).
+# The "exit N" lines at the end of the *.stderr.txt files use the shell form.
+[stop_gen] one SIGINT 1 s into a non-streamed request did not end it in 3 s; the second printed "Received second interrupt" and Metal's teardown aborted (GGML_ASSERT)
+[stop_sigint_plain] one SIGINT 1 s into a non-streamed 6000-token request: still alive after 60 s; the recorder sent SIGKILL
+[stop_sigterm_plain] one SIGTERM, same request: still alive after 60 s; the recorder sent SIGKILL
+[stop_sigint_stream] one SIGINT 1 s into a streamed request: exit 0 after 30.15 s
+[root] GET / without "Accept-Encoding: gzip" -> 415 "Error: gzip is not supported by this browser"; with it -> 200 text/html (gzip)
+[metrics] a server without --metrics answers GET /metrics with 501 not_supported_error
+[huge_ctx] -c 4000000 --fit off: SIGKILLed after 44 s with no error line; not repeated
+[sleep] the server slept 3 s after its last task while only /health, /props and /metrics were polled
+[recorder] llama.cpp 0.7.0 (build 11669, commit 620d2225c), Homebrew bottle, macOS 27.0.1 arm64 (Apple M5 Max, 48 GB); model ggml-org/Qwen3-0.6B-GGUF:Q8_0; ports 18200-18240
+[stdout] every run left stdout empty; all output is on stderr

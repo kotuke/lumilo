@@ -1,0 +1,9 @@
+HTTP/1.1 401 Unauthorized
+Server: Splash
+Date: Mon, 26 Oct 2026 19:02:10 GMT
+WWW-Authenticate: Bearer
+Content-Type: application/json
+Content-Length: 111
+Connection: close
+
+{"error":{"message":"invalid or missing API key","type":"invalid_request_error","code":"authentication_error"}}

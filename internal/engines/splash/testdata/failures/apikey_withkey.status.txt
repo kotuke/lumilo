@@ -1,0 +1,8 @@
+HTTP/1.1 200 OK
+Server: Splash
+Date: Mon, 26 Oct 2026 19:02:10 GMT
+Content-Type: application/json
+Content-Length: 11659
+Connection: close
+
+{"schema_version":6,"ready":true,"maximum_context_tokens":262144,"memory_pressure":"warning","thermal_state":"nominal","admission":{"waiting":0,"waiting_m

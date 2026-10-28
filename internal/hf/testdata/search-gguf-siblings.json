@@ -1,0 +1,2527 @@
+[
+ {
+  "_id": "6a9e86d1dab7f88030e2af20",
+  "id": "ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+  "likes": 1059,
+  "downloads": 7296902,
+  "gguf": {
+   "total": 176943899520,
+   "architecture": "qwen4exp",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "IQ2_XS/Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "IQ2_XS/Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "assets/banner.png"
+   },
+   {
+    "rfilename": "assets/plots/Qwen3.8-Flash-Next-aime25_vs_avg_bit_width.png"
+   },
+   {
+    "rfilename": "assets/plots/Qwen3.8-Flash-Next-gpqa_diamond_vs_avg_bit_width.png"
+   },
+   {
+    "rfilename": "assets/plots/Qwen3.8-Flash-Next-lcb_vs_avg_bit_width.png"
+   },
+   {
+    "rfilename": "assets/plots/Qwen3.8-Flash-Next-prefill_throughput.png"
+   },
+   {
+    "rfilename": "assets/plots/Qwen3.8-Flash-Next-task_avg_vs_avg_bit_width.png"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-Flash-Next-BF16.gguf"
+   },
+   {
+    "rfilename": "tensor-allocation/Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00001-of-00002.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.rco-allocation.txt"
+   }
+  ]
+ },
+ {
+  "_id": "6a7d8038d813eea1a14a8db4",
+  "id": "unsloth/Qwen3.8-27B-GGUF",
+  "likes": 5367,
+  "downloads": 6009562,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "BF16/Qwen3.8-27B-BF16-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "BF16/Qwen3.8-27B-BF16-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "MTP/mtp-Qwen3.8-27B-Q4_0.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Q4_0.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Q4_1.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Q8_0.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-IQ1_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-IQ1_S.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-IQ2_S.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-IQ2_XXS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-IQ3_S.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-IQ3_XXS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q2_K_XL.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q3_K_XL.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q4_K_S.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q4_K_XL.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q5_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q5_K_S.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q5_K_XL.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q6_K.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q6_K_L.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q6_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q6_K_XL.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q8_K_L.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-UD-Q8_K_XL.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "config.json"
+   },
+   {
+    "rfilename": "imatrix_unsloth.gguf"
+   },
+   {
+    "rfilename": "mmproj-BF16.gguf"
+   },
+   {
+    "rfilename": "mmproj-F16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a838b56859b6056ecfa5667",
+  "id": "cdiamond/Qwen3.8-27B-iMatrix-NVFP4-MTP-GGUF",
+  "likes": 45,
+  "downloads": 2876335,
+  "gguf": {
+   "total": 460730096,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "CITATION.cff"
+   },
+   {
+    "rfilename": "LICENSE"
+   },
+   {
+    "rfilename": "NOTICE"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-iMatrix-NVFP4-MTP.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "SHA256SUMS"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-27B-F16.gguf"
+   },
+   {
+    "rfilename": "recipe/llama.cpp-patches.md"
+   },
+   {
+    "rfilename": "recipe/tensor-types.txt"
+   }
+  ]
+ },
+ {
+  "_id": "6abf2829d63a211549668ae5",
+  "id": "SC117/Qwen3.8-Flash-Next-GSQ-RCO-abliterated-GGUF",
+  "likes": 466,
+  "downloads": 2786304,
+  "gguf": {
+   "total": 176943899520,
+   "architecture": "qwen4exp",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "IQ2_XS/Qwen3.8-Flash-Next-GSQ-RCO-abliterated-IQ2_XS-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "IQ2_XS/Qwen3.8-Flash-Next-GSQ-RCO-abliterated-IQ2_XS-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-abliterated-IQ3_S-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "IQ3_S/Qwen3.8-Flash-Next-GSQ-RCO-abliterated-IQ3_S-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-abliterated-IQ3_XXS-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "IQ3_XXS/Qwen3.8-Flash-Next-GSQ-RCO-abliterated-IQ3_XXS-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-abliterated-Q2_0-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "Q2_0/Qwen3.8-Flash-Next-GSQ-RCO-abliterated-Q2_0-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "README.zh-CN.md"
+   },
+   {
+    "rfilename": "assets/support-sc117.png"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-Flash-Next-BF16.gguf"
+   },
+   {
+    "rfilename": "mtp-Qwen3.8-Flash-Next-Q4_0.gguf"
+   },
+   {
+    "rfilename": "mtp-Qwen3.8-Flash-Next-Q8_0.gguf"
+   },
+   {
+    "rfilename": "mtp-q2_0.gguf"
+   },
+   {
+    "rfilename": "strata/README.md"
+   },
+   {
+    "rfilename": "strata/rt/dense.bin"
+   },
+   {
+    "rfilename": "strata/rt/dense.txt"
+   },
+   {
+    "rfilename": "strata/rt/draft_vocab.bin"
+   },
+   {
+    "rfilename": "strata/rt/experts.bin"
+   }
+  ]
+ },
+ {
+  "_id": "6a81b8bfa514d4eed962e012",
+  "id": "huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF",
+  "likes": 1538,
+  "downloads": 2730322,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-GSQ-RCO-IQ3_S-mtp.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-GSQ-RCO-IQ3_S.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-GSQ-RCO-IQ3_XXS-mtp.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-GSQ-RCO-IQ3_XXS.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Q2_K.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Q2_K_L.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Q3_K.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Q3_K_L.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Q4_K.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Q4_K_L.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Q5_K.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Q5_K_L.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Q6_K.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Q6_K_L.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Q8_0.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Q8_0_L.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Swift-1.5-GSQ-RCO-IQ2_S-mtp.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Swift-1.5-GSQ-RCO-IQ2_S.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Swift-1.5-GSQ-RCO-IQ2_XS-mtp.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Swift-1.5-GSQ-RCO-IQ2_XS.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Swift-1.5-GSQ-RCO-IQ3_S-mtp.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Swift-1.5-GSQ-RCO-IQ3_S.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Swift-1.5-GSQ-RCO-IQ3_XXS-mtp.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Swift-1.5-GSQ-RCO-IQ3_XXS.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Ternary-Bonsai-PQ2_0.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Ternary-Bonsai-PTQ1_0.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Ternary-Bonsai-f16.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-DW-IQ3_S.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-DW-IQ3_XXS.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-DW-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-DW-Q4_K_S.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-DW-Q6_K_L.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-DW-Q8_K_L.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-DW-bf16.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-IQ2_S-MTP.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-IQ2_S.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-IQ3_S.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-IQ3_XXS.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-Q2_K_XL.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-Q3_K_XL.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-Q4_K_XL.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-Q5_K_XL.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-Q6_K_XL.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-UD-Q8_K_XL.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Underdog-Saluki-Swift-1.5-IQ2-mtp.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-Underdog-Saluki-Swift-1.5-IQ2.gguf"
+   },
+   {
+    "rfilename": "Huihui-Qwen3.8-27B-abliterated-bf16.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-tensor_types-Q6_K_L.txt"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-tensor_types-Q8_0_L.txt"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-model-bf16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a7e8ee8b77fccb497299fb3",
+  "id": "JonathanColetti/Qwen3.8-27B-Uncensored-GGUF",
+  "likes": 1758,
+  "downloads": 2463788,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-IQ2_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-Q5_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-Q6_K.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-Q8_0.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-draft-Q4_0.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-draft-Q8_0.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-imatrix.dat"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-noMTP-IQ2_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-noMTP-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-noMTP-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-noMTP-Q5_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-noMTP-Q6_K.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-noMTP-Q8_0.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "heretic-study/abliteration_metrics.json"
+   },
+   {
+    "rfilename": "heretic-study/optuna-journal.jsonl"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-27B-Uncensored-F16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a832587e74e9a9edfb67ff9",
+  "id": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
+  "likes": 2115,
+  "downloads": 2350580,
+  "gguf": {
+   "total": 1863907840,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "FastMTP-PROVENANCE.json"
+   },
+   {
+    "rfilename": "FastMTP-PROVENANCE.json.sig"
+   },
+   {
+    "rfilename": "HauhauCS-FastMTP-Ed25519-PUBLIC.pem"
+   },
+   {
+    "rfilename": "HauhauCS-FastMTP-llama.cpp.patch"
+   },
+   {
+    "rfilename": "HauhauCS-RELEASE-MANIFEST.json"
+   },
+   {
+    "rfilename": "HauhauCS-RELEASE-MANIFEST.json.sig"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-FastMTP-32K.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-IQ2_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-IQ3_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-IQ3_XS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-Q2_K_P.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-Q3_K_P.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-Q4_K_P.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-Q5_K_P.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-Q6_K_P.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-Q8_K_P.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "SHA256SUMS"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-BF16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a7f31a8d0b754daf3d51692",
+  "id": "ggml-org/Qwen3.8-27B-GGUF",
+  "likes": 143,
+  "downloads": 2266925,
+  "gguf": {
+   "total": 26895998464,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": ".src_sha"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-BF16.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Q8_0.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "convert.log"
+   },
+   {
+    "rfilename": "dflash-Qwen3.8-27B-BF16.gguf"
+   },
+   {
+    "rfilename": "dflash-Qwen3.8-27B-Q4_0.gguf"
+   },
+   {
+    "rfilename": "dflash-Qwen3.8-27B-Q8_0.gguf"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-27B-BF16.gguf"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-27B-Q8_0.gguf"
+   },
+   {
+    "rfilename": "mtp-Qwen3.8-27B-BF16.gguf"
+   },
+   {
+    "rfilename": "mtp-Qwen3.8-27B-Q4_0.gguf"
+   },
+   {
+    "rfilename": "mtp-Qwen3.8-27B-Q8_0.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a849035fcf5142100762676",
+  "id": "byteshape/Qwen3.8-27B-GGUF",
+  "likes": 185,
+  "downloads": 2002988,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-IQ2_XXS-2.56bpw.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-IQ3_S-3.23bpw.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-IQ3_XS-3.01bpw.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-IQ3_XXS-2.88bpw.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-IQ4_XS-3.84bpw.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "img/RTX5090-speculative.png"
+   },
+   {
+    "rfilename": "img/RTX5090.png"
+   },
+   {
+    "rfilename": "mmproj-bf16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a9678354e2541b828b4a40e",
+  "id": "DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF",
+  "likes": 2137,
+  "downloads": 1713544,
+  "gguf": {
+   "total": 26895998464,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-IQ2_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-IQ3_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-LOW-MTP-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-LOW-MTP-Q6_K.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-IQ2_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-IQ3_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-Q4_K_S.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-Q5_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-Q5_K_S.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-Q6_K.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-MTP-Q8_0.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-Q4_K_S.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-Q5_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-Q5_K_S.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-Q6_K.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-TurboFCFusion-735-882-Here-Uncen-NEO-CODER-MAX-Q8_0.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-BF16.gguf"
+   },
+   {
+    "rfilename": "mmproj-F16.gguf"
+   },
+   {
+    "rfilename": "mmproj-F32.gguf"
+   },
+   {
+    "rfilename": "qwen38-27b-turbo-tfcf735.png"
+   },
+   {
+    "rfilename": "star-wars-hans-solo.gif"
+   }
+  ]
+ },
+ {
+  "_id": "6ab5220916dfdc8ef56bbd92",
+  "id": "ukisai/Swift-1.5-Qwen3.8-27B-GSQ-RCO-GGUF",
+  "likes": 448,
+  "downloads": 1571390,
+  "gguf": {
+   "total": 26895998464,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "LICENSE"
+   },
+   {
+    "rfilename": "LICENSE-APACHE-2.0"
+   },
+   {
+    "rfilename": "NOTICE"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "RECIPE.txt"
+   },
+   {
+    "rfilename": "SHA256SUMS"
+   },
+   {
+    "rfilename": "Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ2_S-mtp.gguf"
+   },
+   {
+    "rfilename": "Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ2_S.gguf"
+   },
+   {
+    "rfilename": "Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ2_XS-mtp.gguf"
+   },
+   {
+    "rfilename": "Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ2_XS.gguf"
+   },
+   {
+    "rfilename": "Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ3_S-mtp.gguf"
+   },
+   {
+    "rfilename": "Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ3_S.gguf"
+   },
+   {
+    "rfilename": "Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ3_XXS-mtp.gguf"
+   },
+   {
+    "rfilename": "Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ3_XXS.gguf"
+   },
+   {
+    "rfilename": "evaluation/data-screening.json"
+   },
+   {
+    "rfilename": "evaluation/heldout-kld.tsv"
+   },
+   {
+    "rfilename": "evaluation/report.json"
+   },
+   {
+    "rfilename": "imatrix-swift15-v1mix.gguf"
+   },
+   {
+    "rfilename": "release-manifest.json"
+   },
+   {
+    "rfilename": "tensor-allocation/Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ2_S-mtp.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ2_S.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ2_XS-mtp.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ2_XS.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ3_S-mtp.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ3_S.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ3_XXS-mtp.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Swift-1.5-Qwen3.8-27B-GSQ-RCO-IQ3_XXS.rco-allocation.txt"
+   },
+   {
+    "rfilename": "ukisai-banner.png"
+   }
+  ]
+ },
+ {
+  "_id": "6a7f364cccffc05984ed3c4f",
+  "id": "peculiar-ragdoll/Dirk-Qwen3.8-27B-GGUF",
+  "likes": 252,
+  "downloads": 1337555,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-GSQ-RCO-IQ2_S.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-GSQ-RCO-IQ2_XS.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-GSQ-RCO-IQ3_S.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-GSQ-RCO-IQ3_XXS.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-UD-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-UD-Q2_K_XL.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-UD-Q3_K_XL.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-UD-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-UD-Q4_K_S.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-UD-Q4_K_XL.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-UD-Q5_K_XL.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-UD-Q6_K.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-UD-Q6_K_XL.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-UD-Q8_K_L.gguf"
+   },
+   {
+    "rfilename": "Dirk-Qwen3.8-27B-UD-Q8_K_XL.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "assets/card_dirk_mmlu_live.png"
+   },
+   {
+    "rfilename": "assets/card_swe_bounds.png"
+   },
+   {
+    "rfilename": "assets/card_swe_sharp.png"
+   },
+   {
+    "rfilename": "assets/dirk_banner_eyebrow.png"
+   },
+   {
+    "rfilename": "mmproj-F16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a91d58bed327671e1699008",
+  "id": "ISTA-DASLab/Qwen3.8-27B-GSQ-RCO-GGUF",
+  "likes": 2412,
+  "downloads": 1249937,
+  "gguf": {
+   "total": 26895998464,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-GSQ-RCO-IQ2_S-mtp.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-GSQ-RCO-IQ2_S.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-GSQ-RCO-IQ2_XS-mtp.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-GSQ-RCO-IQ2_XS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-GSQ-RCO-IQ3_S-mtp.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-GSQ-RCO-IQ3_S.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-GSQ-RCO-IQ3_XXS-mtp.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-GSQ-RCO-IQ3_XXS.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "assets/banner.png"
+   },
+   {
+    "rfilename": "assets/plots/Qwen3.8-27B-aime25_vs_avg_bit_width.png"
+   },
+   {
+    "rfilename": "assets/plots/Qwen3.8-27B-gpqa_diamond_vs_avg_bit_width.png"
+   },
+   {
+    "rfilename": "assets/plots/Qwen3.8-27B-lcb_vs_avg_bit_width.png"
+   },
+   {
+    "rfilename": "assets/plots/Qwen3.8-27B-mtp_speculative_decoding.png"
+   },
+   {
+    "rfilename": "assets/plots/Qwen3.8-27B-task_avg_vs_avg_bit_width.png"
+   },
+   {
+    "rfilename": "imatrix-qwen3.8-27b.gguf"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-27B-BF16.gguf"
+   },
+   {
+    "rfilename": "tensor-allocation/Qwen3.8-27B-GSQ-RCO-IQ2_S-mtp.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Qwen3.8-27B-GSQ-RCO-IQ2_S.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Qwen3.8-27B-GSQ-RCO-IQ2_XS-mtp.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Qwen3.8-27B-GSQ-RCO-IQ2_XS.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Qwen3.8-27B-GSQ-RCO-IQ3_S-mtp.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Qwen3.8-27B-GSQ-RCO-IQ3_S.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Qwen3.8-27B-GSQ-RCO-IQ3_XXS-mtp.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Qwen3.8-27B-GSQ-RCO-IQ3_XXS.rco-allocation.txt"
+   }
+  ]
+ },
+ {
+  "_id": "6aaae6e6d3d58355442bd27b",
+  "id": "empero-ai/Qwen3.8-35B-A3B-Distill-GGUF",
+  "likes": 241,
+  "downloads": 1224773,
+  "gguf": {
+   "total": 35505251456,
+   "architecture": "qwen35moe",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3.8-35B-A3B-BF16.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-35B-A3B-IQ2_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-35B-A3B-IQ3_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-35B-A3B-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-35B-A3B-Q2_K.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-35B-A3B-Q3_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-35B-A3B-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-35B-A3B-Q5_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-35B-A3B-Q6_K.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-35B-A3B-Q8_0.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "SHA256SUMS"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-35B-A3B-F16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a7f62fadca4ab8bcc0a546e",
+  "id": "0bserverx/Qwen3.8-27B-Heretic-Abliterated-Uncensored-GGUF",
+  "likes": 776,
+  "downloads": 1130049,
+  "gguf": {
+   "total": 26895998464,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "GSQ-3bit/README.md"
+   },
+   {
+    "rfilename": "GSQ-3bit/config.json"
+   },
+   {
+    "rfilename": "GSQ-3bit/generation_config.json"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00001-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00002-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00003-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00004-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00005-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00006-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00007-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00008-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00009-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00010-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00011-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00012-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00013-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00014-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00015-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00016-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00017-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00018-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00019-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00020-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00021-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00022-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00023-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00024-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00025-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00026-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00027-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00028-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00029-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00030-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00031-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00032-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00033-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00034-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00035-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00036-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00037-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00038-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00039-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00040-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00041-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00042-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00043-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00044-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00045-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00046-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00047-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00048-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00049-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00050-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00051-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00052-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00053-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00054-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00055-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00056-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00057-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00058-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00059-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00060-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00061-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00062-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00063-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00064-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model-00065-of-00065.safetensors"
+   },
+   {
+    "rfilename": "GSQ-3bit/model.safetensors.index.json"
+   },
+   {
+    "rfilename": "GSQ-3bit/receipt.md"
+   },
+   {
+    "rfilename": "GSQ-3bit/tokenizer.json"
+   },
+   {
+    "rfilename": "GSQ-3bit/tokenizer_config.json"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Heretic-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "RVN-BF16-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-BF16.gguf"
+   },
+   {
+    "rfilename": "RVN-F16-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-F16.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ1_M-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ1_M-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ1_M-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ1_M.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ1_S-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ1_S-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ1_S-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ1_S.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_M-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_M-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_M-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_M.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_S-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_S-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_S-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_S.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_XS-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_XS-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_XS-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_XS.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_XXS-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_XXS-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_XXS-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ2_XXS.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_M-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_M-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_M-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_M.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_S-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_S-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_S-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_S.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_XS-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_XS-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_XS-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_XS.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_XXS-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_XXS-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_XXS-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ3_XXS.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ4_NL-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ4_NL-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ4_NL-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ4_NL.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ4_XS-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ4_XS-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ4_XS-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "RVN-Q2_K-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q2_K-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q2_K-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-Q2_K.gguf"
+   },
+   {
+    "rfilename": "RVN-Q2_K_S-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q2_K_S-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q2_K_S-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-Q2_K_S.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_L-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_L-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_L-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_L.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_M-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_M-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_M-multilingual-vision.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_M-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_M-vision.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_M.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_S-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_S-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_S-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-Q3_K_S.gguf"
+   },
+   {
+    "rfilename": "RVN-Q4_K_M-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q4_K_M-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q4_K_M-multilingual-vision.gguf"
+   },
+   {
+    "rfilename": "RVN-Q4_K_M-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-Q4_K_M-vision.gguf"
+   },
+   {
+    "rfilename": "RVN-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "RVN-Q4_K_S-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q4_K_S-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q4_K_S-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-Q4_K_S.gguf"
+   },
+   {
+    "rfilename": "RVN-Q5_K_M-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q5_K_M-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q5_K_M-multilingual-vision.gguf"
+   },
+   {
+    "rfilename": "RVN-Q5_K_M-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-Q5_K_M-vision.gguf"
+   },
+   {
+    "rfilename": "RVN-Q5_K_M.gguf"
+   },
+   {
+    "rfilename": "RVN-Q5_K_S-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q5_K_S-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q5_K_S-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-Q5_K_S.gguf"
+   },
+   {
+    "rfilename": "RVN-Q6_K-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q6_K-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q6_K-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-Q6_K.gguf"
+   },
+   {
+    "rfilename": "RVN-Q8_0-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q8_0-multilingual-mtp.gguf"
+   },
+   {
+    "rfilename": "RVN-Q8_0-multilingual.gguf"
+   },
+   {
+    "rfilename": "RVN-Q8_0.gguf"
+   },
+   {
+    "rfilename": "chat_template.jinja"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-27B-Q8_0.gguf"
+   },
+   {
+    "rfilename": "mtp-RVN.gguf"
+   },
+   {
+    "rfilename": "xet_speed_test.bin"
+   },
+   {
+    "rfilename": "xet_test_100mb.bin"
+   }
+  ]
+ },
+ {
+  "_id": "6a7f2d9752ecf5558942e80c",
+  "id": "lmstudio-community/Qwen3.8-27B-GGUF",
+  "likes": 79,
+  "downloads": 1119796,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Q6_K.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-Q8_0.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-27B-BF16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a8ecac19808154a6906b9bd",
+  "id": "orcarouter/Qwen3.8-Flash-Next-Uncensored-GGUF",
+  "likes": 1150,
+  "downloads": 1065641,
+  "gguf": {
+   "total": 176943899520,
+   "architecture": "qwen4exp",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ2_M-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ2_M-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ2_XXS-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ2_XXS-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ3_M-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ3_M-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ3_XXS-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ3_XXS-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ4_XS-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ4_XS-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ4_XS-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ4_XS-MTP-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ4_XS-MTP-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-IQ4_XS-MTP-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-MTP-draft.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q2_K-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q2_K-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q3_K_L-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q3_K_L-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q3_K_L-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q3_K_M-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q3_K_M-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q3_K_M-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q3_K_S-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q3_K_S-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q4_K_M-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q4_K_M-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q4_K_M-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q4_K_S-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q4_K_S-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q4_K_S-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q5_K_M-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q5_K_M-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q5_K_M-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q5_K_S-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q5_K_S-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q5_K_S-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q6_K-00001-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q6_K-00002-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q6_K-00003-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q6_K-00004-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q6_K-00005-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q8_0-00001-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q8_0-00002-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q8_0-00003-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q8_0-00004-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q8_0-00005-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q8_0-MTP-00001-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q8_0-MTP-00002-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q8_0-MTP-00003-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q8_0-MTP-00004-of-00005.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-Flash-Next-Uncensored-Q8_0-MTP-00005-of-00005.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-Flash-Next-Uncensored-F16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a8edc2c225d22c0ee0fdab6",
+  "id": "unsloth/Qwen3.8-Flash-Next-GGUF",
+  "likes": 1275,
+  "downloads": 1064465,
+  "gguf": {
+   "total": 176943899520,
+   "architecture": "qwen4exp",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "BF16/Qwen3.8-Flash-Next-BF16-00001-of-00008.gguf"
+   },
+   {
+    "rfilename": "BF16/Qwen3.8-Flash-Next-BF16-00002-of-00008.gguf"
+   },
+   {
+    "rfilename": "BF16/Qwen3.8-Flash-Next-BF16-00003-of-00008.gguf"
+   },
+   {
+    "rfilename": "BF16/Qwen3.8-Flash-Next-BF16-00004-of-00008.gguf"
+   },
+   {
+    "rfilename": "BF16/Qwen3.8-Flash-Next-BF16-00005-of-00008.gguf"
+   },
+   {
+    "rfilename": "BF16/Qwen3.8-Flash-Next-BF16-00006-of-00008.gguf"
+   },
+   {
+    "rfilename": "BF16/Qwen3.8-Flash-Next-BF16-00007-of-00008.gguf"
+   },
+   {
+    "rfilename": "BF16/Qwen3.8-Flash-Next-BF16-00008-of-00008.gguf"
+   },
+   {
+    "rfilename": "MTP/README.md"
+   },
+   {
+    "rfilename": "MTP/mtp-Qwen3.8-Flash-Next-BF16.gguf"
+   },
+   {
+    "rfilename": "MTP/mtp-Qwen3.8-Flash-Next-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "MTP/mtp-Qwen3.8-Flash-Next-Q8_0.gguf"
+   },
+   {
+    "rfilename": "MTP/mtp-Qwen3.8-Flash-Next-shared-BF16.gguf"
+   },
+   {
+    "rfilename": "MTP/mtp-Qwen3.8-Flash-Next-shared-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "MTP/mtp-Qwen3.8-Flash-Next-shared-Q8_0.gguf"
+   },
+   {
+    "rfilename": "Q8_0/Qwen3.8-Flash-Next-Q8_0-00001-of-00006.gguf"
+   },
+   {
+    "rfilename": "Q8_0/Qwen3.8-Flash-Next-Q8_0-00002-of-00006.gguf"
+   },
+   {
+    "rfilename": "Q8_0/Qwen3.8-Flash-Next-Q8_0-00003-of-00006.gguf"
+   },
+   {
+    "rfilename": "Q8_0/Qwen3.8-Flash-Next-Q8_0-00004-of-00006.gguf"
+   },
+   {
+    "rfilename": "Q8_0/Qwen3.8-Flash-Next-Q8_0-00005-of-00006.gguf"
+   },
+   {
+    "rfilename": "Q8_0/Qwen3.8-Flash-Next-Q8_0-00006-of-00006.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "UD-IQ1_M/Qwen3.8-Flash-Next-UD-IQ1_M-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-IQ1_M/Qwen3.8-Flash-Next-UD-IQ1_M-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-IQ1_M/Qwen3.8-Flash-Next-UD-IQ1_M-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-IQ1_S/Qwen3.8-Flash-Next-UD-IQ1_S-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-IQ1_S/Qwen3.8-Flash-Next-UD-IQ1_S-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-IQ1_S/Qwen3.8-Flash-Next-UD-IQ1_S-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-IQ3_XXS/Qwen3.8-Flash-Next-UD-IQ3_XXS-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-IQ3_XXS/Qwen3.8-Flash-Next-UD-IQ3_XXS-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-IQ3_XXS/Qwen3.8-Flash-Next-UD-IQ3_XXS-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-IQ4_XS/Qwen3.8-Flash-Next-UD-IQ4_XS-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-IQ4_XS/Qwen3.8-Flash-Next-UD-IQ4_XS-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-IQ4_XS/Qwen3.8-Flash-Next-UD-IQ4_XS-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-Q2_K_XL/Qwen3.8-Flash-Next-UD-Q2_K_XL-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-Q2_K_XL/Qwen3.8-Flash-Next-UD-Q2_K_XL-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-Q2_K_XL/Qwen3.8-Flash-Next-UD-Q2_K_XL-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-Q3_K_XL/Qwen3.8-Flash-Next-UD-Q3_K_XL-00001-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-Q3_K_XL/Qwen3.8-Flash-Next-UD-Q3_K_XL-00002-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-Q3_K_XL/Qwen3.8-Flash-Next-UD-Q3_K_XL-00003-of-00003.gguf"
+   },
+   {
+    "rfilename": "UD-Q4_K_XL/Qwen3.8-Flash-Next-UD-Q4_K_XL-00001-of-00004.gguf"
+   },
+   {
+    "rfilename": "UD-Q4_K_XL/Qwen3.8-Flash-Next-UD-Q4_K_XL-00002-of-00004.gguf"
+   },
+   {
+    "rfilename": "UD-Q4_K_XL/Qwen3.8-Flash-Next-UD-Q4_K_XL-00003-of-00004.gguf"
+   },
+   {
+    "rfilename": "UD-Q4_K_XL/Qwen3.8-Flash-Next-UD-Q4_K_XL-00004-of-00004.gguf"
+   },
+   {
+    "rfilename": "UD-Q5_K_XL/Qwen3.8-Flash-Next-UD-Q5_K_XL-00001-of-00006.gguf"
+   },
+   {
+    "rfilename": "UD-Q5_K_XL/Qwen3.8-Flash-Next-UD-Q5_K_XL-00002-of-00006.gguf"
+   },
+   {
+    "rfilename": "UD-Q5_K_XL/Qwen3.8-Flash-Next-UD-Q5_K_XL-00003-of-00006.gguf"
+   },
+   {
+    "rfilename": "UD-Q5_K_XL/Qwen3.8-Flash-Next-UD-Q5_K_XL-00004-of-00006.gguf"
+   },
+   {
+    "rfilename": "UD-Q5_K_XL/Qwen3.8-Flash-Next-UD-Q5_K_XL-00005-of-00006.gguf"
+   },
+   {
+    "rfilename": "UD-Q5_K_XL/Qwen3.8-Flash-Next-UD-Q5_K_XL-00006-of-00006.gguf"
+   },
+   {
+    "rfilename": "UD-Q6_K_XL/Qwen3.8-Flash-Next-UD-Q6_K_XL-00001-of-00006.gguf"
+   },
+   {
+    "rfilename": "UD-Q6_K_XL/Qwen3.8-Flash-Next-UD-Q6_K_XL-00002-of-00006.gguf"
+   },
+   {
+    "rfilename": "UD-Q6_K_XL/Qwen3.8-Flash-Next-UD-Q6_K_XL-00003-of-00006.gguf"
+   },
+   {
+    "rfilename": "UD-Q6_K_XL/Qwen3.8-Flash-Next-UD-Q6_K_XL-00004-of-00006.gguf"
+   },
+   {
+    "rfilename": "UD-Q6_K_XL/Qwen3.8-Flash-Next-UD-Q6_K_XL-00005-of-00006.gguf"
+   },
+   {
+    "rfilename": "UD-Q6_K_XL/Qwen3.8-Flash-Next-UD-Q6_K_XL-00006-of-00006.gguf"
+   },
+   {
+    "rfilename": "imatrix_unsloth.gguf_file"
+   },
+   {
+    "rfilename": "mmproj-BF16.gguf"
+   },
+   {
+    "rfilename": "mmproj-F16.gguf"
+   },
+   {
+    "rfilename": "mtp-Qwen3.8-Flash-Next-Q8_0.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6ab7939bff5de70b9ff8761d",
+  "id": "ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-Coder-GGUF",
+  "likes": 520,
+  "downloads": 1024454,
+  "gguf": {
+   "total": 116514464640,
+   "architecture": "qwen4exp",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "IQ1_M/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "IQ1_M/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "assets/banner.png"
+   },
+   {
+    "rfilename": "assets/pelican-on-bike.svg"
+   },
+   {
+    "rfilename": "assets/plots/Qwen3.8-Flash-Next-Coder-coding_benchmarks.png"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-Flash-Next-BF16.gguf"
+   },
+   {
+    "rfilename": "tensor-allocation/Qwen3.8-Flash-Next-GSQ-RCO-IQ1_M-00001-of-00002.rco-allocation.txt"
+   }
+  ]
+ },
+ {
+  "_id": "6ab3f6c757658a9505f06cc9",
+  "id": "bottlecapai/ThinkingCap-Qwen3.8-27B-GGUF",
+  "likes": 94,
+  "downloads": 943179,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "LICENSE"
+   },
+   {
+    "rfilename": "LICENSE-Apache-2.0-Qwen.txt"
+   },
+   {
+    "rfilename": "LICENSE-PolyForm-Small-Business-1.0.0.txt"
+   },
+   {
+    "rfilename": "NOTICE"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "ThinkingCap-Qwen3.8-27B-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "ThinkingCap-Qwen3.8-27B-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "ThinkingCap-Qwen3.8-27B-Q6_K.gguf"
+   },
+   {
+    "rfilename": "ThinkingCap-Qwen3.8-27B-Q8_0.gguf"
+   },
+   {
+    "rfilename": "ThinkingCap-Qwen3.8-27B-f16.gguf"
+   },
+   {
+    "rfilename": "cap_header.png"
+   },
+   {
+    "rfilename": "mmproj-ThinkingCap-Qwen3.8-27B-f16.gguf"
+   },
+   {
+    "rfilename": "social-instagram.png"
+   },
+   {
+    "rfilename": "social-linkedin.png"
+   },
+   {
+    "rfilename": "social-web.png"
+   },
+   {
+    "rfilename": "social-x.png"
+   }
+  ]
+ },
+ {
+  "_id": "6ab2ab0dfe5614d2e08dbff8",
+  "id": "agentionai/Qwen3.8-27B-AP-GGUF",
+  "likes": 98,
+  "downloads": 877671,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-AP-IQ2_S.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-AP-IQ3_S.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-AP-IQ3_XS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-AP-IQ3_XXS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-AP-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-AP-Q3_K_XL.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-AP-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-27B-AP-Q4_K_XL.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "assets/gain-vs-unsloth.png"
+   },
+   {
+    "rfilename": "assets/kld-vs-size-linear.png"
+   },
+   {
+    "rfilename": "assets/kld-vs-size.png"
+   },
+   {
+    "rfilename": "assets/pagoda-poster.png"
+   },
+   {
+    "rfilename": "assets/top1-vs-size.png"
+   },
+   {
+    "rfilename": "imatrix-mixed-v2.gguf"
+   },
+   {
+    "rfilename": "mmproj-BF16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6ab52f8603b03a61f6e814d3",
+  "id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+  "likes": 228,
+  "downloads": 700213,
+  "gguf": {
+   "total": 176943899520,
+   "architecture": "qwen4exp",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "LICENSE"
+   },
+   {
+    "rfilename": "LICENSE-QWEN"
+   },
+   {
+    "rfilename": "NOTICE"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "SHA256SUMS"
+   },
+   {
+    "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00001-of-00002.gguf"
+   },
+   {
+    "rfilename": "Swift-Qwen3.8-Flash-Next-GSQ-RCO-Q2_0-00002-of-00002.gguf"
+   },
+   {
+    "rfilename": "evaluation/heldout-kld.tsv"
+   },
+   {
+    "rfilename": "evaluation/report.json"
+   },
+   {
+    "rfilename": "exact-source-recovery/IQ2_XS.exit.json"
+   },
+   {
+    "rfilename": "exact-source-recovery/IQ2_XS.json"
+   },
+   {
+    "rfilename": "exact-source-recovery/IQ2_XS.verification.log"
+   },
+   {
+    "rfilename": "exact-source-recovery/IQ3_S.exit.json"
+   },
+   {
+    "rfilename": "exact-source-recovery/IQ3_S.json"
+   },
+   {
+    "rfilename": "exact-source-recovery/IQ3_S.verification.log"
+   },
+   {
+    "rfilename": "exact-source-recovery/IQ3_XXS.exit.json"
+   },
+   {
+    "rfilename": "exact-source-recovery/IQ3_XXS.json"
+   },
+   {
+    "rfilename": "exact-source-recovery/IQ3_XXS.verification.log"
+   },
+   {
+    "rfilename": "exact-source-recovery/Q2_0.exit.json"
+   },
+   {
+    "rfilename": "exact-source-recovery/Q2_0.json"
+   },
+   {
+    "rfilename": "exact-source-recovery/Q2_0.verification.log"
+   },
+   {
+    "rfilename": "exact-source-recovery/README.md"
+   },
+   {
+    "rfilename": "exact-source-recovery/SHA256SUMS"
+   },
+   {
+    "rfilename": "exact-source-recovery/VERIFIED.json"
+   },
+   {
+    "rfilename": "exact-source-recovery/gguf_shard_recovery.py"
+   },
+   {
+    "rfilename": "imatrix-provenance.json"
+   },
+   {
+    "rfilename": "imatrix-swiftfn-v1mix.gguf"
+   },
+   {
+    "rfilename": "mmproj-Swift-Qwen3.8-Flash-Next-BF16.gguf"
+   },
+   {
+    "rfilename": "recipe-summary.json"
+   },
+   {
+    "rfilename": "release-manifest.json"
+   },
+   {
+    "rfilename": "tensor-allocation/Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ2_XS.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_S.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Swift-Qwen3.8-Flash-Next-GSQ-RCO-IQ3_XXS.rco-allocation.txt"
+   },
+   {
+    "rfilename": "tensor-allocation/Swift-Qwen3.8-Flash-Next-GSQ-RCO-Q2_0.rco-allocation.txt"
+   },
+   {
+    "rfilename": "ukisai-banner.png"
+   }
+  ]
+ },
+ {
+  "_id": "6a80ab2d946968d5f2596452",
+  "id": "empero-ai/Qwen3.8-4B-Distill-GGUF",
+  "likes": 189,
+  "downloads": 568019,
+  "gguf": {
+   "total": 4326350848,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3.8-4B-BF16.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-4B-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-4B-Q5_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-4B-Q6_K.gguf"
+   },
+   {
+    "rfilename": "Qwen3.8-4B-Q8_0.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "SHA256SUMS"
+   }
+  ]
+ },
+ {
+  "_id": "6abbbd2bcc82ae441ebd96a4",
+  "id": "jegreene/Swift-1.5-Qwen3.8-27B-heretic-GSQ-RCO-GGUF",
+  "likes": 21,
+  "downloads": 552448,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "LICENSE"
+   },
+   {
+    "rfilename": "LICENSE-APACHE-2.0"
+   },
+   {
+    "rfilename": "NOTICE"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "Swift-1.5-Qwen3.8-27B-heretic-GSQ-RCO-IQ2_S-mtp.gguf"
+   },
+   {
+    "rfilename": "Swift-1.5-Qwen3.8-27B-heretic-GSQ-RCO-IQ3_S-mtp.gguf"
+   },
+   {
+    "rfilename": "Swift-1.5-Qwen3.8-27B-heretic-GSQ-RCO-IQ3_XXS-mtp.gguf"
+   },
+   {
+    "rfilename": "Swift-1.5-Qwen3.8-27B-heretic-chat-template.jinja"
+   },
+   {
+    "rfilename": "Swift-1.5-Qwen3.8-27B-heretic-mmproj-F16.gguf"
+   },
+   {
+    "rfilename": "evaluation/data/gsm8k_250.jsonl"
+   },
+   {
+    "rfilename": "evaluation/data/mmlu_pro_300.jsonl"
+   },
+   {
+    "rfilename": "evaluation/prep.py"
+   },
+   {
+    "rfilename": "evaluation/results/gsm8k_250.jsonl"
+   },
+   {
+    "rfilename": "evaluation/results/ifeval.jsonl"
+   },
+   {
+    "rfilename": "evaluation/results/mmlu_pro_300.jsonl"
+   },
+   {
+    "rfilename": "evaluation/run.py"
+   },
+   {
+    "rfilename": "evaluation/score.py"
+   },
+   {
+    "rfilename": "evaluation/scores.json"
+   }
+  ]
+ }
+]

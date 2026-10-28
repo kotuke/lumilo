@@ -1,0 +1,8 @@
+22:02:04 Weights loaded in 4.04 s.
+22:02:04 Decode cycles verify every row of the draft's block (--verify-rows auto, as orcarouter/OrcaCyber-Nano-1.0:Mix-15.7G is dense).
+22:02:05 SSD cache: up to 32.0 GiB of temporary files in /var/folders/xx/T/ (its automatic quota, while its volume has room beyond the 10.0 GiB it keeps free); KV pages of 1040 KiB and states of 152 MiB, a state's write staging through 152 MiB of the memory plan; --max-cache-disk 0 turns it off.
+22:02:05 Kernel policy for GPU family 10 with 40 cores.
+22:02:05 Setting up the Neural Engine FFN split (splash serve --disable-ane keeps the FFN on the GPU).
+22:02:06 Neural Engine FFN split at share 0.24 for chunks of 785 rows or more, 2.7% from the GPU alone on the Neural Engine's part (set up as calibrated before in 1.0 s).
+22:02:09 Memory: growth paused; waiting=0; suspended=0
+exit 0

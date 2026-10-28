@@ -1,0 +1,3 @@
+No GGUF is named for :Abliterated-Q4_K_M alone; using AREX-2-Abliterated-Q4_K_M.gguf, the only one whose name ends in -Abliterated-Q4_K_M.
+error: the GGUF repository has no BF16, F32 or F16 vision projector (no GGUF named mmproj); use --language-only to serve text only
+exit 1

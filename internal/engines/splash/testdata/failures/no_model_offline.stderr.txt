@@ -1,0 +1,3 @@
+error: cannot resolve orcarouter/NoSuchModel-1.0: HF_HUB_OFFLINE is set; neither this installation nor the Hub cache records a commit for the default branch
+error: model download or verification failed
+exit 1

@@ -1,0 +1,10 @@
+0.00.001.700 I srv  llama_server: initializing ...
+0.04.122.036 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.04.128.924 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.23.753.239 I srv    load_model: loading model 'ggml-org/Qwen3-0.6B-GGUF:Q8_0'
+0.23.939.632 W load: control-looking token: 128247 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.24.433.821 I cmn          init: llama threadpool init, n_threads = 6
+0.24.644.892 I srv    load_model: initializing, n_slots = 4, n_ctx_slot = 40960, kv_unified = 'true'
+0.24.652.206 I srv  llama_server: model loaded
+0.24.652.208 I srv  llama_server: listening on http://127.0.0.1:18200
+0.25.145.929 I srv    operator(): operator(): cleaning up before exit...

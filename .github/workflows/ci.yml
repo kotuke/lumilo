@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - name: Format
+        run: test -z "$(gofmt -l .)" || { gofmt -l .; exit 1; }
+      - name: Build
+        run: go build ./...
+      - name: Vet
+        run: |
+          go vet ./...
+          go vet -tags live ./...
+          go tool mygo vet .
+      - name: Catalogs
+        run: go tool mygo i18n check
+      - name: Test
+        run: CGO_ENABLED=0 go test ./...
+      - name: Race
+        # The panel's screenshot tests take minutes under -race; they run above.
+        run: go test -race $(go list ./... | grep -v /internal/panel)
+      - name: App bundle
+        # CI has neither the Developer ID certificate nor the update key.
+        run: go tool mygo build -skip-dmg -skip-notarize -sign -

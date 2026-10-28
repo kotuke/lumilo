@@ -1,0 +1,8 @@
+/build/
+/.mygo/
+mygo_windows_*.syso
+# Local working notes (not part of the project)
+/.notes/
+/PROGRESS.md
+/NEW_SESSION_PROMPT.md
+/.claude/

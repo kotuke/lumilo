@@ -1,0 +1,265 @@
+[
+ {
+  "_id": "6a9e86d1dab7f88030e2af20",
+  "id": "ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+  "likes": 1059,
+  "downloads": 7296902,
+  "gguf": {
+   "total": 176943899520,
+   "architecture": "qwen4exp",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a7d8038d813eea1a14a8db4",
+  "id": "unsloth/Qwen3.8-27B-GGUF",
+  "likes": 5366,
+  "downloads": 6009562,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a838b56859b6056ecfa5667",
+  "id": "cdiamond/Qwen3.8-27B-iMatrix-NVFP4-MTP-GGUF",
+  "likes": 45,
+  "downloads": 2876335,
+  "gguf": {
+   "total": 460730096,
+   "architecture": "clip"
+  }
+ },
+ {
+  "_id": "6abf2829d63a211549668ae5",
+  "id": "SC117/Qwen3.8-Flash-Next-GSQ-RCO-abliterated-GGUF",
+  "likes": 465,
+  "downloads": 2786304,
+  "gguf": {
+   "total": 176943899520,
+   "architecture": "qwen4exp",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a81b8bfa514d4eed962e012",
+  "id": "huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF",
+  "likes": 1538,
+  "downloads": 2730322,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a7e8ee8b77fccb497299fb3",
+  "id": "JonathanColetti/Qwen3.8-27B-Uncensored-GGUF",
+  "likes": 1757,
+  "downloads": 2463788,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a832587e74e9a9edfb67ff9",
+  "id": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
+  "likes": 2115,
+  "downloads": 2350580,
+  "gguf": {
+   "total": 1863907840,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a7f31a8d0b754daf3d51692",
+  "id": "ggml-org/Qwen3.8-27B-GGUF",
+  "likes": 143,
+  "downloads": 2266925,
+  "gguf": {
+   "total": 26895998464,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a849035fcf5142100762676",
+  "id": "byteshape/Qwen3.8-27B-GGUF",
+  "likes": 185,
+  "downloads": 2002988,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a9678354e2541b828b4a40e",
+  "id": "DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NEO-CODER-MAX-MTP-GGUF",
+  "likes": 2137,
+  "downloads": 1713544,
+  "gguf": {
+   "total": 26895998464,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6ab5220916dfdc8ef56bbd92",
+  "id": "ukisai/Swift-1.5-Qwen3.8-27B-GSQ-RCO-GGUF",
+  "likes": 448,
+  "downloads": 1571390,
+  "gguf": {
+   "total": 26895998464,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a7f364cccffc05984ed3c4f",
+  "id": "peculiar-ragdoll/Dirk-Qwen3.8-27B-GGUF",
+  "likes": 252,
+  "downloads": 1337555,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a91d58bed327671e1699008",
+  "id": "ISTA-DASLab/Qwen3.8-27B-GSQ-RCO-GGUF",
+  "likes": 2412,
+  "downloads": 1249937,
+  "gguf": {
+   "total": 26895998464,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6aaae6e6d3d58355442bd27b",
+  "id": "empero-ai/Qwen3.8-35B-A3B-Distill-GGUF",
+  "likes": 241,
+  "downloads": 1224773,
+  "gguf": {
+   "total": 35505251456,
+   "architecture": "qwen35moe",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a7f62fadca4ab8bcc0a546e",
+  "id": "0bserverx/Qwen3.8-27B-Heretic-Abliterated-Uncensored-GGUF",
+  "likes": 776,
+  "downloads": 1130049,
+  "gguf": {
+   "total": 26895998464,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a7f2d9752ecf5558942e80c",
+  "id": "lmstudio-community/Qwen3.8-27B-GGUF",
+  "likes": 79,
+  "downloads": 1119796,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a8ecac19808154a6906b9bd",
+  "id": "orcarouter/Qwen3.8-Flash-Next-Uncensored-GGUF",
+  "likes": 1148,
+  "downloads": 1065641,
+  "gguf": {
+   "total": 176943899520,
+   "architecture": "qwen4exp",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a8edc2c225d22c0ee0fdab6",
+  "id": "unsloth/Qwen3.8-Flash-Next-GGUF",
+  "likes": 1275,
+  "downloads": 1064465,
+  "gguf": {
+   "total": 176943899520,
+   "architecture": "qwen4exp",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6ab7939bff5de70b9ff8761d",
+  "id": "ISTA-DASLab/Qwen3.8-Flash-Next-GSQ-RCO-Coder-GGUF",
+  "likes": 520,
+  "downloads": 1024454,
+  "gguf": {
+   "total": 116514464640,
+   "architecture": "qwen4exp",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6ab3f6c757658a9505f06cc9",
+  "id": "bottlecapai/ThinkingCap-Qwen3.8-27B-GGUF",
+  "likes": 94,
+  "downloads": 943179,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6ab2ab0dfe5614d2e08dbff8",
+  "id": "agentionai/Qwen3.8-27B-AP-GGUF",
+  "likes": 98,
+  "downloads": 877671,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6ab52f8603b03a61f6e814d3",
+  "id": "ukisai/Swift-1.5-Qwen3.8-Flash-Next-GSQ-RCO-GGUF",
+  "likes": 228,
+  "downloads": 700213,
+  "gguf": {
+   "total": 176943899520,
+   "architecture": "qwen4exp",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6a80ab2d946968d5f2596452",
+  "id": "empero-ai/Qwen3.8-4B-Distill-GGUF",
+  "likes": 189,
+  "downloads": 568019,
+  "gguf": {
+   "total": 4326350848,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ },
+ {
+  "_id": "6abbbd2bcc82ae441ebd96a4",
+  "id": "jegreene/Swift-1.5-Qwen3.8-27B-heretic-GSQ-RCO-GGUF",
+  "likes": 21,
+  "downloads": 552448,
+  "gguf": {
+   "total": 27320697856,
+   "architecture": "qwen35",
+   "context_length": 262144
+  }
+ }
+]

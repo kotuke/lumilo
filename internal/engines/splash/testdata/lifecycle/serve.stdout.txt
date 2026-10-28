@@ -1,0 +1,15 @@
+Splash model orcarouter/OrcaCyber-Nano-1.0:Mix-15.7G is already installed in /Users/user/Library/Application Support/Splash/models/orcarouter/OrcaCyber-Nano-1.0:Mix-15.7G
+21:58:45 Loading · orcarouter/OrcaCyber-Nano-1.0:Mix-15.7G
+21:58:45 Chat template · patched to render later system messages in place (the original template rejects them), generation prompt 5-7 tokens
+21:58:55 Ready · orcarouter/OrcaCyber-Nano-1.0:Mix-15.7G · context 256K · http://127.0.0.1:8000
+21:58:55 Started · input 82 · cached 0 · effort absent · thinking on
+21:59:17 Done · input 82 · cached 0 · output 1,200 · TTFT 0.2s · 55.7 tok/s · 2.6 tok/cycle
+21:59:17 Started · input 82 · cached 64 · effort absent · thinking on
+21:59:18 Done · input 82 · cached 64 · output 64 · TTFT 0.1s · 77.1 tok/s · 3.7 tok/cycle
+21:59:18 Started · input 82 · cached 64 · effort absent · thinking on
+21:59:26 Done · input 82 · cached 64 · output 400 · TTFT 0.1s · 50.8 tok/s · 2.6 tok/cycle
+21:59:26 Started · input 82 · cached 64 · effort absent · thinking on
+21:59:27 Done · input 82 · cached 64 · output 64 · TTFT 0.1s · 68.1 tok/s · 3.6 tok/cycle
+21:59:27 Started · input 82 · cached 64 · effort absent · thinking on
+21:59:45 Done · input 82 · cached 64 · output 800 · TTFT 0.1s · 45.1 tok/s · 2.3 tok/cycle
+21:59:47 Stopping · releasing engine resources

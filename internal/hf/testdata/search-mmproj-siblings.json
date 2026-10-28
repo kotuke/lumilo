@@ -1,0 +1,1047 @@
+[
+ {
+  "_id": "6825edc44331767cb1b12ee8",
+  "id": "concedo/llama-joycaption-beta-one-hf-llava-mmproj-gguf",
+  "likes": null,
+  "downloads": 23712,
+  "gguf": {
+   "total": 8030261312,
+   "architecture": "llama",
+   "context_length": 131072
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Llama-Joycaption-Beta-One-Hf-Llava-F16.gguf"
+   },
+   {
+    "rfilename": "Llama-Joycaption-Beta-One-Hf-Llava-Q4_K.gguf"
+   },
+   {
+    "rfilename": "Llama-Joycaption-Beta-One-Hf-Llava-Q8_0.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "llama-joycaption-beta-one-llava-mmproj-model-f16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "65ef20c619c45cd9c0277e36",
+  "id": "koboldcpp/mmproj",
+  "likes": null,
+  "downloads": 7866,
+  "gguf": {
+   "total": 421290864,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "LLaMA3-8B_mmproj-Q4_1.gguf"
+   },
+   {
+    "rfilename": "Ministral-3-3B-Instruct-2512-mmproj-Q8_0.gguf"
+   },
+   {
+    "rfilename": "Qwen2-VL-2B-mmproj-q5_1.gguf"
+   },
+   {
+    "rfilename": "Qwen2-VL-7B-mmproj-q5_1.gguf"
+   },
+   {
+    "rfilename": "Qwen2.5-Omni-3B-mmproj-Q8_0.gguf"
+   },
+   {
+    "rfilename": "Qwen2.5-Omni-7B-mmproj-Q8_0.gguf"
+   },
+   {
+    "rfilename": "Qwen3.5-4B-mmproj-Q8_0.gguf"
+   },
+   {
+    "rfilename": "Qwen3.5-9B-mmproj-Q8_0.gguf"
+   },
+   {
+    "rfilename": "Qwen3.6-27B-mmproj-Q8_0.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "gemma3-12b-mmproj.gguf"
+   },
+   {
+    "rfilename": "gemma3-27b-mmproj.gguf"
+   },
+   {
+    "rfilename": "gemma3-4b-mmproj-q8.gguf"
+   },
+   {
+    "rfilename": "gemma3-4b-mmproj.gguf"
+   },
+   {
+    "rfilename": "gemma4-26B-A4B-mmproj-BF16.gguf"
+   },
+   {
+    "rfilename": "gemma4-E4B-mmproj-BF16.gguf"
+   },
+   {
+    "rfilename": "glm-4.6v-mmproj-q4.gguf"
+   },
+   {
+    "rfilename": "llama-13b-mmproj-v1.5.Q4_1.gguf"
+   },
+   {
+    "rfilename": "llama-7b-mmproj-v1.5-Q4_0.gguf"
+   },
+   {
+    "rfilename": "minicpm-mmproj-model-f16.gguf"
+   },
+   {
+    "rfilename": "mistral-7b-mmproj-v1.5-Q4_1.gguf"
+   },
+   {
+    "rfilename": "mmproj-mistralai_Mistral-Small-3.1-24B-Instruct-2503-f16.gguf"
+   },
+   {
+    "rfilename": "obsidian-3b_mmproj-Q4_1.gguf"
+   },
+   {
+    "rfilename": "pixtral-12b-mmproj-f16.gguf"
+   },
+   {
+    "rfilename": "qwen2.5-vl-7b-vision-mmproj-f16.gguf"
+   },
+   {
+    "rfilename": "yi-34b-mmproj-v1.6-Q4_1.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a965827c9955f15d2771f61",
+  "id": "HermiHg/Qwen3.8-27B-mmproj-Q5_K-MIX-GGUF",
+  "likes": null,
+  "downloads": 5264,
+  "gguf": {
+   "total": 463717376,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-27B-Q5_K-MIX.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "69760df9fa73695307e8aeb2",
+  "id": "Anthonyg5005/gemma-3n-e4b-mmproj-gguf",
+  "likes": null,
+  "downloads": 809,
+  "gguf": {
+   "total": 983281504,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "gemma-3n-mmproj.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "68c5cc3f01e4f78be39e5b77",
+  "id": "cinnabrad/llama-joycaption-beta-one-hf-llava-mmproj-gguf",
+  "likes": null,
+  "downloads": 484,
+  "gguf": {
+   "total": 8030261312,
+   "architecture": "llama",
+   "context_length": 131072
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Llama-Joycaption-Beta-One-Hf-Llava-F16.gguf"
+   },
+   {
+    "rfilename": "Llama-Joycaption-Beta-One-Hf-Llava-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Llama-Joycaption-Beta-One-Hf-Llava-Q8_0.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "llama-joycaption-beta-one-llava-mmproj-model-f16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a6b4d9edcecf15784b762d2",
+  "id": "AVert888/Qwen3.5-9B-mmproj-q8_0-GGUF",
+  "likes": null,
+  "downloads": 354,
+  "gguf": {
+   "total": 456010480,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-Q8_0.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "69e9709722690e88da72f8d3",
+  "id": "Youseff1987/Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled-GGUF-with-mmproj",
+  "likes": null,
+  "downloads": 326,
+  "gguf": {
+   "total": 34660610688,
+   "architecture": "qwen35moe",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled.Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled.Q5_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled.Q6_K.gguf"
+   },
+   {
+    "rfilename": "Qwen3.6-35B-A3B-Claude-4.6-Opus-Reasoning-Distilled.Q8_0.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-BF16.gguf"
+   },
+   {
+    "rfilename": "mmproj-F16.gguf"
+   },
+   {
+    "rfilename": "mmproj-F32.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "69f4ca8ce9d397afe709fe1c",
+  "id": "juan1995-dev/gemma-4-26B-A4B-it.mmproj-f16-GGUF",
+  "likes": null,
+  "downloads": 258,
+  "gguf": {
+   "total": 572794416,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "gemma-4-26B-A4B-it.mmproj-f16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "68a60ce2e1803cdd0778faee",
+  "id": "Zoont/InternVL3-2B-4-Bit-GGUF-with-mmproj",
+  "likes": null,
+  "downloads": 250,
+  "gguf": {
+   "total": 1776283136,
+   "architecture": "qwen2",
+   "context_length": 32768
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "InternVL3-2B-IQ4_NL.gguf"
+   },
+   {
+    "rfilename": "InternVL3-2B-IQ4_XS.gguf"
+   },
+   {
+    "rfilename": "InternVL3-2B-Q4_0.gguf"
+   },
+   {
+    "rfilename": "InternVL3-2B-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "imatrix-InternVL3-2B.gguf"
+   },
+   {
+    "rfilename": "mmproj-InternVL3-2B-BF16.gguf"
+   },
+   {
+    "rfilename": "mmproj-InternVL3-2B-Q8_0.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6ad14e7da97a814b3e8df97d",
+  "id": "lucatarik/Qwen3.5-4B-heretic-i1-GGUF-mmproj",
+  "likes": null,
+  "downloads": 243,
+  "gguf": {
+   "total": 4205751296,
+   "architecture": "qwen35",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3.5-4B-heretic.i1-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "Qwen3.5-4B-heretic.mmproj-Q8_0.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   }
+  ]
+ },
+ {
+  "_id": "6a89bb29bbda4b0542dde6e0",
+  "id": "sartajbhuvaji/GLM-4.6V-Flash-mmproj-GGUF",
+  "likes": null,
+  "downloads": 234,
+  "gguf": {
+   "total": 892498432,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-GLM-4.6V-Flash-BF16.gguf"
+   },
+   {
+    "rfilename": "mmproj-GLM-4.6V-Flash-F16.gguf"
+   },
+   {
+    "rfilename": "mmproj-GLM-4.6V-Flash-F32.gguf"
+   },
+   {
+    "rfilename": "mmproj-GLM-4.6V-Flash-Q8_0.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6728aa595e376ae8c8acd898",
+  "id": "Hongik-Project-2024/mmproj-model-f16.gguf",
+  "likes": null,
+  "downloads": 201,
+  "gguf": {
+   "total": 300091904,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "mmproj-model-f16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "69c7f78d17242a3b23759bbc",
+  "id": "beleata74/BgGPT-Gemma-3-27B-IT-GGUF-Q4_K_M-mmproj",
+  "likes": null,
+  "downloads": 200,
+  "gguf": {
+   "total": 27009346304,
+   "architecture": "gemma3",
+   "context_length": 131072
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "BgGPT-Gemma-3-27B-IT-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-bggpt-gemma3-27b-it-BF16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "69f4de075691bf744d69fa59",
+  "id": "juan1995-dev/Qwen3.5-35B-A3B-mmproj-BF16-GGUF",
+  "likes": null,
+  "downloads": 151,
+  "gguf": {
+   "total": 446571248,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "mmproj-BF16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a2bcdb22a21e8b0b506c194",
+  "id": "seinx/qwen3vl-4b-instruct-mmproj",
+  "likes": null,
+  "downloads": 138,
+  "gguf": {
+   "total": 415347712,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "qwen3vl-4b-instruct-mmproj-f16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a8ee3d6622c3b955b5bd4c8",
+  "id": "sbakus1528/gemma-4-E4B-it-mmproj-vision",
+  "likes": null,
+  "downloads": 129,
+  "gguf": {
+   "total": 169331136,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "LICENSE"
+   },
+   {
+    "rfilename": "NOTICE"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "gemma-4-E4B-it-mmproj-vision.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6907e46b68d79d142863697c",
+  "id": "EnderCrypt/Qwen3-VL-30B-A3B-Instruct-GGUF-mmproj",
+  "likes": null,
+  "downloads": 128,
+  "gguf": {
+   "total": 30532122624,
+   "architecture": "qwen3vlmoe",
+   "context_length": 262144
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3-VL-30B-A3B-Instruct-Q2_K.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-Qwen3-VL-30B-A3B-Instruct-Q2_K.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a2b3f1aece19ff968c53181",
+  "id": "qikp/Qwen3.5-0.8B-Base-mmproj-GGUF",
+  "likes": null,
+  "downloads": 109,
+  "gguf": {
+   "total": 100592896,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a33caa8dae9a748f08db63d",
+  "id": "VaslD/mmproj-Gemma-4-31B-StyleTune-GGUF",
+  "likes": null,
+  "downloads": 99,
+  "gguf": {
+   "total": 575743536,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-Gemma-4-31B-StyleTune.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a660502857f8efa56358f4d",
+  "id": "Erin55688/mmproj-Qwen2-VL-2B-Instruct-f16.gguf",
+  "likes": null,
+  "downloads": 98,
+  "gguf": {
+   "total": 665271396,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-Qwen2-VL-2B-Instruct-f16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "69c98932aec5787d6bfad3ee",
+  "id": "beleata74/BgGPT-Gemma-3-27B-IT-V2-GGUF-mmproj",
+  "likes": null,
+  "downloads": 94,
+  "gguf": {
+   "total": 27009346304,
+   "architecture": "gemma3",
+   "context_length": 131072
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "BgGPT-Gemma-3-27B-IT-V2-Q4_K_M.gguf"
+   },
+   {
+    "rfilename": "BgGPT-Gemma-3-27B-IT-V2-Q8_0.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-out-bggpt27b-full-uncensor-v2-F16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6850ce58d76a90b2d1da35e4",
+  "id": "Luigi/SmolVLM2-quantized-mmproj-GGUF",
+  "likes": null,
+  "downloads": 83,
+  "gguf": {
+   "total": 434220912,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-SmolVLM2-2.2B-Instruct-f16.gguf"
+   },
+   {
+    "rfilename": "mmproj-SmolVLM2-256M-Video-Instruct-f16.gguf"
+   },
+   {
+    "rfilename": "mmproj-SmolVLM2-500M-Video-Instruct-f16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "69f50dbba9a1808e97f27a43",
+  "id": "juan1995-dev/Qwen3.6-27B-UD-Q5_K_L-mmproj-BF16-GGUF",
+  "likes": null,
+  "downloads": 74,
+  "gguf": {
+   "total": 460730096,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3.6-27B-UD-Q5_K_L-mmproj-BF16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6ab127f8df11b331d2753a45",
+  "id": "argos1111/sarashina2.2-vision-3b-mmproj-jev-f16",
+  "likes": null,
+  "downloads": 58,
+  "gguf": {
+   "total": 445866096,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "LICENSE.sarashina2.2-vision-3b"
+   },
+   {
+    "rfilename": "LICENSE.siglip"
+   },
+   {
+    "rfilename": "NOTICE.md"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "SHA256SUMS"
+   },
+   {
+    "rfilename": "sarashina-reference.json"
+   },
+   {
+    "rfilename": "sarashina2.2-vision-3b.mmproj-jev-official-f16.gguf"
+   },
+   {
+    "rfilename": "sarashina2.2-vision-3b.mmproj-jev-official-f16.gguf.json"
+   }
+  ]
+ },
+ {
+  "_id": "69ec8667fd071215f83b5223",
+  "id": "joni3/qwen3.5-2b-mmproj-Q8_0",
+  "likes": null,
+  "downloads": 47,
+  "gguf": {
+   "total": 331416576,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "mmproj-Qwen_Qwen3.5-2B-Q8_0.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6803a4ab253294ff2dd9c007",
+  "id": "ngxson/gemma-3-mmproj-gguf-q8_0-TEST",
+  "likes": null,
+  "downloads": 46,
+  "gguf": {
+   "total": 419816304,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "mmproj-q8_0.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "69fe3b7006ce950552fdd1ca",
+  "id": "DAXZEIT/Qwen3.6-27B-mmproj-hybrid-Q8_0-F16-gguf",
+  "likes": null,
+  "downloads": 42,
+  "gguf": {
+   "total": 460730096,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Qwen3.6-27B-mmproj-hybrid-Q8_0-F16.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   }
+  ]
+ },
+ {
+  "_id": "6a2ee45cbfd3dc9c38e3d2f7",
+  "id": "Orionix03/llama-cpp-clip-mmproj-gguf-oob-poc",
+  "likes": null,
+  "downloads": 42,
+  "gguf": {
+   "total": 0
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "asan-poison-v1.txt"
+   },
+   {
+    "rfilename": "asan-poison-v2.txt"
+   },
+   {
+    "rfilename": "benign_imgmean.gguf"
+   },
+   {
+    "rfilename": "benign_mmproj.gguf"
+   },
+   {
+    "rfilename": "build_and_run.sh"
+   },
+   {
+    "rfilename": "control-benign-v1.txt"
+   },
+   {
+    "rfilename": "control-benign-v2.txt"
+   },
+   {
+    "rfilename": "craft_clip_mmproj.py"
+   },
+   {
+    "rfilename": "poc_clip.cpp"
+   },
+   {
+    "rfilename": "poison_imgmean.gguf"
+   },
+   {
+    "rfilename": "poison_mmproj.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a526336ddd6e16d5c45a39c",
+  "id": "jkyamog/MiniMax-M3-mmproj-GGUF",
+  "likes": null,
+  "downloads": 40,
+  "gguf": {
+   "total": 865567232,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-minimax-m3-vl-f16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a3327e7846496e5daee6079",
+  "id": "Serpen/Minimax_M3_MMPROJ_GGUF",
+  "likes": null,
+  "downloads": 39,
+  "gguf": {
+   "total": 865567232,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "M3-mmproj.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   }
+  ]
+ },
+ {
+  "_id": "665a70874becf40ae6ef34e1",
+  "id": "ChaoticNeutrals/Llama-3-Update-3.0-mmproj-model-f16",
+  "likes": null,
+  "downloads": 37,
+  "gguf": {
+   "total": 311888896,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "Llama-3-Update-3.0-mmproj-model-f16.gguf"
+   },
+   {
+    "rfilename": "README.md"
+   }
+  ]
+ },
+ {
+  "_id": "66289b388aa9ed3235f6f4a1",
+  "id": "ChaoticNeutrals/LLaVA-Llama-3-8B-mmproj-Updated",
+  "likes": null,
+  "downloads": 35,
+  "gguf": {
+   "total": 311888896,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "llava-v1.5-8B-Updated-Stop-Token/mmproj-model-f16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6ad82f124f93a379ba527582",
+  "id": "juan1995-dev/mmproj-Qwen3.8-Flash-Next",
+  "likes": null,
+  "downloads": 32,
+  "gguf": {
+   "total": 448931056,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "mmproj-Qwen3.8-Flash-Next-BF16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6adbfdcda171e3197490ec68",
+  "id": "roman220220/Nemotron-3.5-Bolt-E4B-mmproj-GGUF",
+  "likes": null,
+  "downloads": 32,
+  "gguf": {
+   "total": 478088384,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "LICENSE"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "llmtray-banner.png"
+   },
+   {
+    "rfilename": "mmproj-nemotron-bolt-e4b-f16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "66287fdb8bfc90408aa364e2",
+  "id": "ChaoticNeutrals/mlm-filter-llava-llama-3-8b-gpt4v-mmproj-outdated",
+  "likes": null,
+  "downloads": 28,
+  "gguf": {
+   "total": 311561216,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-model-f16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a2fac091aa2f5a724627745",
+  "id": "pyys/Qwen3.6-27B-mmproj-GGUF",
+  "likes": null,
+  "downloads": 28,
+  "gguf": {
+   "total": 460730096,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "qwen3.6-27b-mmproj.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6ab0eb51b0cbda9656f1bada",
+  "id": "shibadogcap/maple-mmproj",
+  "likes": null,
+  "downloads": 28,
+  "gguf": {
+   "total": 97382144,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "chat_template_nothink.jinja"
+   },
+   {
+    "rfilename": "mmproj-maple-step4500.gguf"
+   },
+   {
+    "rfilename": "mmproj-maple-step8000.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6625862a773d4d30fa35ba5b",
+  "id": "ChaoticNeutrals/Llava_1.5_Llama3_mmproj-outdated",
+  "likes": null,
+  "downloads": 27,
+  "gguf": {
+   "total": 311888896,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-model-f16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "69a7155ec83bf52b64d664da",
+  "id": "billylo/medgemma-1.5-4b-it-mmproj-gguf",
+  "likes": null,
+  "downloads": 27,
+  "gguf": {
+   "total": 419816304,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-medgemma-1.5-4b-it-BF16.gguf"
+   }
+  ]
+ },
+ {
+  "_id": "6a899932cd22fe9f68d0eff5",
+  "id": "cdanis/dots3-note-prev-GGUF-mmproj",
+  "likes": null,
+  "downloads": 27,
+  "gguf": {
+   "total": 7757477600,
+   "architecture": "clip"
+  },
+  "siblings": [
+   {
+    "rfilename": ".gitattributes"
+   },
+   {
+    "rfilename": "README.md"
+   },
+   {
+    "rfilename": "mmproj-dots3-note-prev-f16.gguf"
+   },
+   {
+    "rfilename": "mmproj-dots3-note-prev-q8_0.gguf"
+   }
+  ]
+ }
+]

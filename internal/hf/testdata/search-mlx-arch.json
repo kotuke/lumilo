@@ -1,0 +1,282 @@
+[
+ {
+  "_id": "6a7f2f68690f1dca70192078",
+  "id": "lmstudio-community/Qwen3.8-27B-MLX-4bit",
+  "likes": 115,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 3586440
+ },
+ {
+  "_id": "6a7f32034d5469f88eb03323",
+  "id": "lmstudio-community/Qwen3.8-27B-MLX-8bit",
+  "likes": 51,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 3433027
+ },
+ {
+  "_id": "6a7f30cdfc702f8cdd315355",
+  "id": "lmstudio-community/Qwen3.8-27B-MLX-6bit",
+  "likes": 39,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 3415784
+ },
+ {
+  "_id": "6a7f3010e36b4ccbde6178db",
+  "id": "lmstudio-community/Qwen3.8-27B-MLX-5bit",
+  "likes": 17,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 3403192
+ },
+ {
+  "_id": "6a7f347755b7bacd513b0565",
+  "id": "mlx-community/Qwen3.8-27B-4bit",
+  "likes": 227,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 881446
+ },
+ {
+  "_id": "6a85c354733ca524c25bd6b5",
+  "id": "OBLITERATUS/Qwen3.8-27B-OBLITERATED",
+  "likes": 1570,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 520142
+ },
+ {
+  "_id": "6a83166a2d112a3a129032c3",
+  "id": "orcarouter/Qwen3.8-27B-Uncensored-MLX",
+  "likes": 1597,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 57721
+ },
+ {
+  "_id": "6a8ffbc96e4534fbab870521",
+  "id": "Jundot/Qwen3.8-Flash-Next-oQ4e-mtp",
+  "likes": 110,
+  "config": {
+   "architectures": [
+    "Qwen4ExpForConditionalGeneration"
+   ],
+   "model_type": "qwen4_exp"
+  },
+  "downloads": 36086
+ },
+ {
+  "_id": "6a7ec4d7468728158a8028a5",
+  "id": "Youssofal/Qwen3.8-27B-MTPLX-Optimized-Speed",
+  "likes": 170,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 28266
+ },
+ {
+  "_id": "6a7f335ba7c5971df278f36a",
+  "id": "mlx-community/Qwen3.8-27B-8bit",
+  "likes": 85,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 27595
+ },
+ {
+  "_id": "6a83593d98411618d686d175",
+  "id": "Jundot/Qwen3.8-27B-oQ4e-mtp",
+  "likes": 75,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 19636
+ },
+ {
+  "_id": "6a8d32ca6ef63498f38e7253",
+  "id": "mlx-community/Qwen3.8-27B-Uncensored-OptiQ-4bit",
+  "likes": 40,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 15152
+ },
+ {
+  "_id": "6a9081a991a84f791fd82dad",
+  "id": "sh0wie/Qwen3.8-Flash-Next-REAP-288-MLX-4bit",
+  "likes": 65,
+  "config": {
+   "architectures": [
+    "Qwen4ExpForConditionalGeneration"
+   ],
+   "model_type": "qwen4_exp"
+  },
+  "downloads": 14713
+ },
+ {
+  "_id": "6a91338861afd6001ed32b41",
+  "id": "Youssofal/Qwen3.8-Flash-Next-MTPLX-Optimized-Speed",
+  "likes": 44,
+  "config": {
+   "architectures": [
+    "Qwen4ExpForConditionalGeneration"
+   ],
+   "model_type": "qwen4_exp"
+  },
+  "downloads": 11785
+ },
+ {
+  "_id": "6a84a8dd6c9f6867cec758c0",
+  "id": "Foresee/Qwen3.8-9B-heretic-uncensored-4bit-MTPLX",
+  "likes": 33,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 11633
+ },
+ {
+  "_id": "6a7f6e43bfab0eca4303dc00",
+  "id": "mlx-community/Qwen3.8-27B-MTP-4bit",
+  "likes": 42,
+  "config": {
+   "model_type": "qwen3_5_mtp"
+  },
+  "downloads": 11587
+ },
+ {
+  "_id": "6a8689eae1a791779be952c7",
+  "id": "mradermacher/Qwen3.8-27B-OBLITERATED-GGUF",
+  "likes": 48,
+  "config": {},
+  "downloads": 10388
+ },
+ {
+  "_id": "6a8fa51a8a93807568c83400",
+  "id": "ddalcu/Qwen3.8-Flash-Next-MLX-Serve-mixed-4-8bit",
+  "likes": 58,
+  "config": {
+   "architectures": [
+    "Qwen4ExpForConditionalGeneration"
+   ],
+   "model_type": "qwen4_exp"
+  },
+  "downloads": 9756
+ },
+ {
+  "_id": "6a7fdf6404ea32057bd8c99f",
+  "id": "mlx-community/Qwen3.8-27B-OptiQ-4bit",
+  "likes": 22,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 9518
+ },
+ {
+  "_id": "6a7f2e8de8d99d17d2dd2225",
+  "id": "TensorFold/Qwen3.8-27B-MLX-4bit",
+  "likes": 1,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 8859
+ },
+ {
+  "_id": "6a8f31968b55b7d5a178435d",
+  "id": "TensorFold/Qwen3.8-Flash-Next-MLX-4bit-MTP",
+  "likes": 13,
+  "config": {
+   "architectures": [
+    "Qwen4ExpForConditionalGeneration"
+   ],
+   "model_type": "qwen4_exp"
+  },
+  "downloads": 8589
+ },
+ {
+  "_id": "6ab14a146c54573d0dfaf7fc",
+  "id": "naklitechie/Qwen3.8-27B-DFlash2-ternary-bonsai2",
+  "likes": 6,
+  "config": {
+   "architectures": [
+    "DFlash2DraftModel"
+   ],
+   "model_type": "qwen3"
+  },
+  "downloads": 8290
+ },
+ {
+  "_id": "6a985517ee93eaf146d4c92c",
+  "id": "Solstice-AI/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NM-DAU-mlx-oQ8e-1M",
+  "likes": 28,
+  "config": {
+   "architectures": [
+    "Qwen3_5ForConditionalGeneration"
+   ],
+   "model_type": "qwen3_5"
+  },
+  "downloads": 8287
+ },
+ {
+  "_id": "6a90d27dd7d95ea3eeb235c9",
+  "id": "ARC4NUM/Qwen3.8-Flash-Next-Uncensored-MLX-Serve-4bit",
+  "likes": 26,
+  "config": {
+   "architectures": [
+    "Qwen4ExpForConditionalGeneration"
+   ],
+   "model_type": "qwen4_exp"
+  },
+  "downloads": 7705
+ }
+]

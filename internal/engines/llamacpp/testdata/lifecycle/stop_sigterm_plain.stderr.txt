@@ -1,0 +1,12 @@
+0.00.000.444 I srv  llama_server: initializing ...
+0.00.074.043 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.074.215 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.075.672 I srv    load_model: loading model '/Users/user/.cache/huggingface/hub/models--ggml-org--Qwen3-0.6B-GGUF/snapshots/13ac06624948e4d8589cb4b6f90100837342fcb8/Qwen3-0.6B-Q8_0.gguf'
+0.00.248.669 W load: control-looking token: 128247 '</s>' was not control-type; this is probably a bug in the model. its type will be overridden
+0.00.342.872 I cmn          init: llama threadpool init, n_threads = 6
+0.00.362.915 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 8192, kv_unified = 'false'
+0.00.366.065 I srv  llama_server: model loaded
+0.00.366.068 I srv  llama_server: listening on http://127.0.0.1:18221
+0.00.375.110 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 0, t_last = -1
+0.00.375.125 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+0.01.381.822 I srv    operator(): operator(): cleaning up before exit...

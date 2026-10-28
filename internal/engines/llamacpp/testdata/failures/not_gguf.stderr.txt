@@ -1,0 +1,16 @@
+0.00.000.416 I srv  llama_server: initializing ...
+0.00.064.192 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)
+0.00.064.365 W srv  llama_server: security: no API key is set and CORS allows all origins (see https://github.com/ggml-org/llama.cpp/pull/25655)
+0.00.065.794 I srv    load_model: loading model '/tmp/x/not-a-model.gguf'
+0.00.065.854 E gguf_init_from_reader: invalid magic characters: 'this', expected 'GGUF'
+0.00.065.900 E llama_model_load: error loading model: llama_model_loader: failed to load model from /tmp/x/not-a-model.gguf
+0.00.065.939 E llama_model_load_from_file_impl: failed to load model
+0.00.065.970 E common_fit_params: encountered an error while trying to fit params to free device memory: failed to load model
+0.00.065.990 E gguf_init_from_reader: invalid magic characters: 'this', expected 'GGUF'
+0.00.066.015 E llama_model_load: error loading model: llama_model_loader: failed to load model from /tmp/x/not-a-model.gguf
+0.00.066.016 E llama_model_load_from_file_impl: failed to load model
+0.00.066.016 E cmn  common_init_: failed to load model '/tmp/x/not-a-model.gguf'
+0.00.066.017 E srv    load_model: failed to load model, '/tmp/x/not-a-model.gguf'
+0.00.066.018 I srv    operator(): operator(): cleaning up before exit...
+0.00.066.230 E srv  llama_server: exiting due to model loading error
+exit 1
