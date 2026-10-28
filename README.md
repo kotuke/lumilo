@@ -1,19 +1,73 @@
+<div align="center">
+
 # Lumilo
 
-Lumilo is a macOS menu-bar panel for local LLM engines. It starts and stops
-the engine's server, shows its state, memory and generation speed, launches
-coding agents against it, and installs or updates the engine.
+**A menu-bar panel for the LLM engines on your Mac.**<br>
+Start the server, watch memory and speed, get models from Hugging Face,
+and point coding agents at it, without a terminal.
 
-Supported engines are [Splash](https://github.com/incoai/splash) and
-[llama.cpp](https://github.com/ggml-org/llama.cpp) (`llama-server`). One
-runs at a time; you choose it in Settings. Engines are pluggable; mlx-serve
-is planned.
+[![CI](https://github.com/kotuke/lumilo/actions/workflows/ci.yml/badge.svg)](https://github.com/kotuke/lumilo/actions/workflows/ci.yml)
+![macOS on Apple silicon](https://img.shields.io/badge/macOS-Apple%20silicon-black?logo=apple)
+![Engines: Splash and llama.cpp](https://img.shields.io/badge/engines-Splash%20%C2%B7%20llama.cpp-f26b4f)
+![8 languages](https://img.shields.io/badge/languages-8-4b6bfb)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-dark.png">
+  <img src="docs/images/hero-light.png" alt="Lumilo panels: a model downloading, the server generating, the Hugging Face model search">
+</picture>
+
+</div>
+
+Lumilo runs [Splash](https://github.com/incoai/splash) or
+[llama.cpp](https://github.com/ggml-org/llama.cpp) (`llama-server`) for you.
+It starts and stops the server, shows its state, memory and generation
+speed, downloads and deletes models, launches coding agents against it, and
+installs or updates the engine. One engine runs at a time; you choose it in
+Settings. Engines are pluggable; mlx-serve is planned.
 
 > **Unofficial.** Lumilo is an independent project. It is not affiliated with,
 > endorsed by, or supported by the authors of Splash or any other engine it
 > controls. Engine names and logos belong to their owners.
 
-## Features
+## Highlights
+
+- **One click to serve.** Start, stop and restart the server; see whether it
+  is loading, ready, generating or unloaded, and why a start failed.
+- **Live numbers.** Memory against the engine's budget, tokens per second,
+  time to first token, the last 20 requests as a chart, in the menu bar too.
+- **Models from Hugging Face.** Search as you type, see each variant's size
+  and whether it fits in memory, download beside a running server, delete
+  with the space it frees.
+- **Coding agents.** Claude Code, Codex, OpenCode or Pi in Terminal, Ghostty
+  or Rex, already pointed at the local Splash server.
+- **Private by default.** The server listens on this Mac only; network access
+  needs an API key, kept in the Keychain.
+- **Native and translated.** Liquid Glass, light and dark themes, eight
+  languages with a right-to-left layout for Arabic.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/features-dark.png">
+  <img src="docs/images/features-light.png" alt="First-run model suggestions, network settings with an API key, the delete dialog, llama.cpp running">
+</picture>
+
+## Languages
+
+English, Russian, German, French, Spanish, Japanese, Chinese (Simplified) and
+Arabic. Lumilo follows the system language, or the one you pick in Settings.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/languages-dark.png">
+  <img src="docs/images/languages-light.png" alt="The Lumilo panel in eight languages">
+</picture>
+
+## Install
+
+Signed and notarized builds will be published on the
+[Releases](https://github.com/kotuke/lumilo/releases) page as a disk image.
+Until the first release, [build Lumilo from source](#build).
+
+## All features
 
 - **Server control.** Start, stop and restart the server with the selected
   model. Lumilo runs it as a child process in its own process group and
@@ -97,6 +151,14 @@ go tool mygo build      # build/darwin-arm64/Lumilo.app
 Test the server lifecycle, Homebrew and the login item from the built app in
 `/Applications`: `mygo dev` runs the app with your shell's environment and
 kills its process group on every rebuild.
+
+The images of this README come from the panel's screenshot tests:
+`python3 scripts/readme-images.py` (it needs Pillow) renders them again into
+`docs/images`.
+
+A release build is signed with Developer ID, its disk image notarized and its
+update archive signed: `scripts/setup-release-signing.sh` sets up the
+certificate and keys once, then `scripts/release.sh` builds.
 
 A live test against a real Splash server (it loads a model) runs with:
 
