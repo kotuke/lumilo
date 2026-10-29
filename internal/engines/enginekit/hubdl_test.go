@@ -176,3 +176,36 @@ func TestHubDownloadCancel(t *testing.T) {
 		t.Error("DropHubParts left the part")
 	}
 }
+
+// A plain Git file (no LFS checksum) is stored under its Git blob id and
+// checked against it: "hello\n" is blob ce01362… (git hash-object).
+func TestHubDownloadGitBlob(t *testing.T) {
+	cfg := []byte("hello\n")
+	const id = "ce013625030ba8dba906f756967f9e9ca394464a"
+	srv := newHubServer(t, map[string][]byte{"config.json": cfg})
+	cache := t.TempDir()
+	url := func(f string) string { return srv.URL + "/" + f }
+	paths, err := HubDownload(context.Background(), nil, url, cache, "a/b", "r1",
+		[]HubFile{{Path: "config.json", Size: int64(len(cfg)), BlobID: id}}, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got, err := os.ReadFile(paths["config.json"])
+	if err != nil || !bytes.Equal(got, cfg) {
+		t.Fatalf("config.json = %q, %v", got, err)
+	}
+	if _, err := os.Stat(filepath.Join(cache, "models--a--b", "blobs", id)); err != nil {
+		t.Errorf("blob not named by its Git id: %v", err)
+	}
+
+	_, err = HubDownload(context.Background(), nil, url, t.TempDir(), "a/b", "r1",
+		[]HubFile{{Path: "config.json", Size: int64(len(cfg)), BlobID: strings.Repeat("0", 40)}}, nil)
+	if err == nil || !strings.Contains(err.Error(), "checksum mismatch") {
+		t.Errorf("err = %v, want a checksum mismatch", err)
+	}
+	_, err = HubDownload(context.Background(), nil, url, t.TempDir(), "a/b", "r1",
+		[]HubFile{{Path: "config.json", Size: int64(len(cfg))}}, nil)
+	if err == nil {
+		t.Error("a file with neither checksum was accepted")
+	}
+}

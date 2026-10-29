@@ -195,6 +195,28 @@ func TestParseFormula(t *testing.T) {
 	}
 }
 
+func TestParseTapFormula(t *testing.T) {
+	// ashhart/homebrew-tensorfold Formula/tensorfold.rb on 2026-10-29.
+	live, err := os.ReadFile("testdata/formula-tensorfold.rb")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for in, want := range map[string]string{
+		string(live): "1.1.9",
+		"  url \"https://example.com/releases/download/2.0.0/x.tgz\"\n":                       "2.0.0",
+		"  url \"https://example.com/releases/download/v2.0.0/x.tgz\"\n  version \"2.0.1\"\n": "2.0.1",
+	} {
+		if got, err := ParseTapFormula([]byte(in)); err != nil || got != want {
+			t.Errorf("%q: %q, %v", in, got, err)
+		}
+	}
+	for _, in := range []string{``, `url "https://example.com/x.tgz"`, `class X < Formula`} {
+		if _, err := ParseTapFormula([]byte(in)); err == nil {
+			t.Errorf("%q: no error", in)
+		}
+	}
+}
+
 func TestFeeds(t *testing.T) {
 	var ua, accept string
 	port := serve(t, map[string]http.HandlerFunc{

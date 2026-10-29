@@ -2,6 +2,7 @@ package enginekit
 
 import (
 	"context"
+	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
@@ -11,6 +12,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -29,6 +31,19 @@ type HubFile struct {
 	Path   string // from the repository root, e.g. "Qwen3-0.6B-Q4_0.gguf"
 	Size   int64
 	SHA256 string // the Git LFS checksum, which names the blob
+	// BlobID is the Git blob id (SHA-1) of a plain Git file, one without
+	// SHA256 (an MLX checkpoint's config.json, its tokenizer): the hub
+	// cache names its blob by it, as huggingface_hub does.
+	BlobID string
+}
+
+// blob is the name of f's blob in the hub cache: the LFS checksum, else
+// the Git blob id.
+func (f HubFile) blob() string {
+	if f.SHA256 != "" {
+		return strings.ToLower(f.SHA256)
+	}
+	return strings.ToLower(f.BlobID)
 }
 
 // HubClient is an HTTP client for large downloads: no deadline for the
@@ -55,7 +70,8 @@ func HubClient() *http.Client {
 // right size is not fetched again. A blob is fetched into
 // "<sha256>.lumilo-part", resumed with a Range request from what that part
 // holds, checked against its SHA-256 (read back once complete) and renamed
-// into place. progress gets
+// into place. A plain Git file goes the same way under its Git blob id
+// (HubFile.BlobID), checked as Git hashes a blob. progress gets
 // the bytes there so far (cached blobs included) and the total, at most
 // every 200 ms and once at the end; it may be nil.
 //
@@ -78,8 +94,8 @@ func HubDownload(ctx context.Context, hc *http.Client, url func(file string) str
 
 	var total int64
 	for _, f := range files {
-		if !validSHA(f.SHA256) {
-			return nil, fmt.Errorf("hub: %s has no SHA-256", f.Path)
+		if !validSHA(f.SHA256) && (f.SHA256 != "" || !validBlobID(f.BlobID)) {
+			return nil, fmt.Errorf("hub: %s has no SHA-256 or Git blob id", f.Path)
 		}
 		if !safePath(f.Path) {
 			return nil, fmt.Errorf("hub: unsafe path %q", f.Path)
@@ -90,7 +106,7 @@ func HubDownload(ctx context.Context, hc *http.Client, url func(file string) str
 
 	paths := map[string]string{}
 	for _, f := range files {
-		blob := filepath.Join(blobs, strings.ToLower(f.SHA256))
+		blob := filepath.Join(blobs, f.blob())
 		if st, err := os.Stat(blob); err == nil && st.Mode().IsRegular() && st.Size() == f.Size {
 			rep.base += f.Size
 			rep.report(0, false)
@@ -102,7 +118,7 @@ func HubDownload(ctx context.Context, hc *http.Client, url func(file string) str
 			return nil, err
 		}
 		// ../../blobs/<sha>, one more ../ per folder of the path.
-		target := strings.Repeat("../", 2+strings.Count(f.Path, "/")) + "blobs/" + strings.ToLower(f.SHA256)
+		target := strings.Repeat("../", 2+strings.Count(f.Path, "/")) + "blobs/" + f.blob()
 		if cur, err := os.Readlink(link); err != nil || cur != target {
 			_ = os.Remove(link)
 			if err := os.Symlink(target, link); err != nil {
@@ -171,13 +187,19 @@ func fetchBlob(ctx context.Context, hc *http.Client, u, blob string, f HubFile, 
 	if st.Size() != f.Size {
 		return fmt.Errorf("hub: %s: got %d of %d bytes", f.Path, st.Size(), f.Size)
 	}
-	sum, err := fileSHA(part)
+	kind, want, sum := "sha256", f.SHA256, ""
+	if want == "" {
+		kind, want = "git blob", f.BlobID
+		sum, err = fileBlobID(part, f.Size)
+	} else {
+		sum, err = fileSHA(part)
+	}
 	if err != nil {
 		return err
 	}
-	if !strings.EqualFold(sum, f.SHA256) {
+	if !strings.EqualFold(sum, want) {
 		_ = os.Remove(part)
-		return fmt.Errorf("hub: %s: checksum mismatch: got sha256 %s, want %s", f.Path, sum, f.SHA256)
+		return fmt.Errorf("hub: %s: checksum mismatch: got %s %s, want %s", f.Path, kind, sum, want)
 	}
 	if err := os.Rename(part, blob); err != nil {
 		return err
@@ -276,6 +298,30 @@ func fileSHA(p string) (string, error) {
 		return "", err
 	}
 	return hex.EncodeToString(h.Sum(nil)), nil
+}
+
+// fileBlobID is the Git blob id of the file at p: the SHA-1 of
+// "blob <size>\x00" and the content.
+func fileBlobID(p string, size int64) (string, error) {
+	f, err := os.Open(p)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+	h := sha1.New()
+	io.WriteString(h, "blob "+strconv.FormatInt(size, 10)+"\x00")
+	if _, err := io.Copy(h, f); err != nil {
+		return "", err
+	}
+	return hex.EncodeToString(h.Sum(nil)), nil
+}
+
+func validBlobID(s string) bool {
+	if len(s) != 40 {
+		return false
+	}
+	_, err := hex.DecodeString(s)
+	return err == nil
 }
 
 func validSHA(s string) bool {
