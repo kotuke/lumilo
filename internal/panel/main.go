@@ -269,7 +269,9 @@ func (p *Panel) engineSwitch(c *ui.Context, f *frame, hdr ui.Element, title func
 			pop.Left(7)
 		}
 		popSurface(pop.Bind(&p.popup).Width(330).Padding(6), f).Role(ui.RolePopup)
-		ui.Column(c).Children(func() {
+		// 2 pt between rows, as in the model list, so a highlighted row
+		// never touches the next one.
+		ui.Column(c).Gap(2).Children(func() {
 			for _, e := range p.view.Engines {
 				p.engineRow(c, f, e, true, false)
 			}
