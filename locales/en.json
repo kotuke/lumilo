@@ -72,9 +72,9 @@
       }
     }
   },
-  "dlLeft": "about {duration} left",
+  "dlLeft": "~{duration}",
   "@dlLeft": {
-    "description": "Time left of a download. {duration} is a short duration such as \"6 min\".",
+    "description": "Time left of a download, after the size and speed: \"~6 min\". {duration} is a short duration such as \"6 min\"; \"~\" says it is an estimate.",
     "placeholders": {
       "duration": {
         "type": "String",
@@ -1557,6 +1557,10 @@
   "dlResume": "Resume",
   "@dlResume": {
     "description": "Button of a paused download: goes on from what it fetched."
+  },
+  "dlPause": "Pause",
+  "@dlPause": {
+    "description": "Button of a running or queued download: stops it and keeps what it fetched, for Resume."
   },
   "addModelNothing": "Nothing found on Hugging Face",
   "@addModelNothing": {

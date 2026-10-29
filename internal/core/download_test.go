@@ -487,3 +487,89 @@ func TestFailModelOffline(t *testing.T) {
 		t.Errorf("online failure %+v", v.Failure)
 	}
 }
+
+// Pause stops a running download and keeps what it fetched: the job is
+// paused at once with its bytes, nothing is dropped, the queued one after
+// it starts, and DownloadModel resumes the paused one after that. A
+// queued job pauses without starting.
+func TestDownloadPause(t *testing.T) {
+	eng := newDLEngine()
+	h := newHarnessAs(t, eng.fakeEngine, eng)
+	h.s.DownloadModel("hf/a:Q4", engine.ModelOptions{})
+	a := eng.next(t)
+	h.s.DownloadModel("hf/b:Q4", engine.ModelOptions{})
+	h.s.DownloadModel("hf/c:Q4", engine.ModelOptions{})
+	a.progress(300, 1000)
+	h.wait("a running, b and c queued", func(v View) bool { return job0(v).Done == 300 && len(v.Downloads) == 3 })
+
+	h.s.PauseDownload("hf/c:Q4") // queued: paused, never started
+	h.s.PauseDownload("hf/a:Q4")
+	v := h.wait("a paused", func(v View) bool { return job0(v).State == DownloadPaused })
+	if j := job0(v); j.Done != 300 || j.Total != 1000 {
+		t.Errorf("paused a: %+v", j)
+	}
+	if a.ctx.Err() == nil {
+		t.Error("the download's context was not cancelled")
+	}
+	b := eng.next(t)
+	if b.req.Model != "hf/b:Q4" {
+		t.Fatalf("after the pause: %s", b.req.Model)
+	}
+	if d := eng.droppedList(); len(d) != 0 {
+		t.Errorf("DropPartial %v", d)
+	}
+	h.s.PauseDownload("hf/a:Q4") // paused already: nothing changes
+
+	// Resumed: it waits for b, then goes on.
+	h.s.DownloadModel("hf/a:Q4", engine.ModelOptions{})
+	h.wait("a queued", func(v View) bool { return job0(v).State == DownloadQueued })
+	b.result <- dlResult{id: "hf/b:Q4"}
+	if c := eng.next(t); c.req.Model != "hf/a:Q4" {
+		t.Errorf("resumed %s", c.req.Model)
+	}
+	v = h.s.View()
+	for _, j := range v.Downloads {
+		if j.Model.ID == "hf/c:Q4" && j.State != DownloadPaused {
+			t.Errorf("c: %+v", j)
+		}
+	}
+}
+
+// A resume while the paused download still stops queues it: it runs once
+// the engine has stopped, and does not end up paused.
+func TestDownloadPauseResumeWhileStopping(t *testing.T) {
+	eng := newDLEngine()
+	h := newHarnessAs(t, eng.fakeEngine, eng)
+	slow := &slowStop{dlEngine: eng, release: make(chan struct{})}
+	h.s.mu.Lock()
+	h.s.eng = slow
+	h.s.mu.Unlock()
+	h.s.DownloadModel("hf/a:Q4", engine.ModelOptions{})
+	eng.next(t)
+	h.s.PauseDownload("hf/a:Q4")
+	h.wait("paused", func(v View) bool { return job0(v).State == DownloadPaused })
+	h.s.DownloadModel("hf/a:Q4", engine.ModelOptions{})
+	h.wait("queued", func(v View) bool { return job0(v).State == DownloadQueued })
+	close(slow.release)
+	if c := eng.next(t); c.req.Model != "hf/a:Q4" {
+		t.Errorf("resumed %s", c.req.Model)
+	}
+}
+
+// slowStop is dlEngine whose Download returns from a cancel only once
+// release closes, as an engine that takes a while to stop.
+type slowStop struct {
+	*dlEngine
+	release chan struct{}
+}
+
+func (e *slowStop) Download(ctx context.Context, req engine.DownloadRequest, progress func(done, total int64)) (string, error) {
+	id, err := e.dlEngine.Download(ctx, req, progress)
+	if ctx.Err() != nil {
+		select {
+		case <-e.release:
+		case <-time.After(3 * time.Second):
+		}
+	}
+	return id, err
+}

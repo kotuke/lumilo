@@ -43,6 +43,7 @@ func (r *recorder) Download(id string, o engine.ModelOptions) {
 }
 func (r *recorder) CancelDownload(id string)  { r.add("CancelDownload %s", id) }
 func (r *recorder) DismissDownload(id string) { r.add("DismissDownload %s", id) }
+func (r *recorder) PauseDownload(id string)   { r.add("PauseDownload %s", id) }
 func (r *recorder) PlanRemove(id string)      { r.add("PlanRemove %s", id) }
 func (r *recorder) CancelRemove()             { r.add("CancelRemove") }
 func (r *recorder) RemoveModel(id string)     { r.add("RemoveModel %s", id) }

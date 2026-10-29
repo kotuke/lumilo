@@ -12,10 +12,11 @@ import (
 
 // A model downloaded apart from the server (core.View.Downloads) shows in
 // the model list, or among the suggestions while there is no model, as a
-// row of its own: the progress bar and a Cancel button while it fetches,
-// "Queued" and Cancel while it waits for the one before it, "Paused" with
-// what it fetched and Resume and Remove after Lumilo quit or the engine
-// changed, the reason and Retry and Remove once it failed. It cannot be
+// row of its own: the progress bar and Pause and Cancel buttons while it
+// fetches, "Queued" with Pause and Cancel while it waits for the one before
+// it, "Paused" with what it fetched and Resume and Remove buttons of the
+// same kind after a Pause, a quit of Lumilo or a change of engine, the
+// reason and Retry and Remove under it once it failed. It cannot be
 // picked until it is done; then it is an ordinary model row with a
 // "Downloaded" tag.
 
@@ -115,11 +116,11 @@ func (p *Panel) jobRow(c *ui.Context, f *frame, j core.DownloadJob, logo []byte,
 				switch j.State {
 				case core.DownloadRunning:
 					total := p.jobTotal(j)
-					text := m.DlPreparing()
+					text, left := m.DlPreparing(), ""
 					if total > 0 || j.Done > 0 {
-						text = p.progressText(f, total, j.Done)
+						text, left = p.progressText(f, total, j.Done)
 					}
-					txt(c, text, 11).TextColor(t.muted).SingleLine().Role(ui.RoleStatus)
+					progressLine(c, f, text, left, 11)
 				case core.DownloadCancelling:
 					txt(c, m.DlCancelling(), 11).TextColor(t.muted).Role(ui.RoleStatus)
 				case core.DownloadQueued:
@@ -147,19 +148,41 @@ func (p *Panel) jobRow(c *ui.Context, f *frame, j core.DownloadJob, logo []byte,
 			switch j.State {
 			case core.DownloadRunning:
 				p.jobBar(c, f, j)
-			case core.DownloadFailed, core.DownloadPaused:
+			case core.DownloadFailed:
 				p.jobActions(c, f, j, id, opts)
 			}
 		})
-		if j.State == core.DownloadRunning || j.State == core.DownloadQueued {
-			x := btn(c).Key("job-cancel-"+id).Size(22, 22).Radius(6).Shrink(0).TextColor(t.muted).
-				Label(m.DlCancel() + " " + name).Tooltip(m.DlCancel())
-			if x.Hovered() || x.FocusVisible() {
-				x.Background(t.rowHover).TextColor(t.text)
+		switch j.State {
+		case core.DownloadRunning, core.DownloadQueued:
+			jobButton(c, f, "job-pause-"+id, "player-pause", m.DlPause(), name, func() { p.act.PauseDownload(id) })
+			jobButton(c, f, "job-cancel-"+id, "x", m.DlCancel(), name, func() { p.act.CancelDownload(id) })
+		case core.DownloadPaused:
+			resume := func() { p.act.Download(id, opts) }
+			if p.downloadBlocked() {
+				resume = nil
 			}
-			x.OnClick(func() { p.act.CancelDownload(id) }).Children(func() { ico(c, "x", 2.2, 14) })
+			jobButton(c, f, "job-retry-"+id, "player-play", m.DlResume(), name, resume)
+			jobButton(c, f, "job-remove-"+id, "x", m.DlRemove(), name, func() { p.act.DismissDownload(id) })
 		}
 	})
+}
+
+// jobButton is a small icon button of a job's row: label names what it
+// does, and with the model's name it is what a screen reader says. A nil
+// click shows it disabled (a download cannot start now).
+func jobButton(c *ui.Context, f *frame, key, icon, label, name string, click func()) {
+	t := f.pal
+	x := btn(c).Key(key).Size(22, 22).Radius(6).Shrink(0).TextColor(t.muted).
+		Label(label + " " + name).Tooltip(label)
+	if click == nil {
+		x.Disabled(true).Cursor(ui.CursorDefault).Opacity(0.6)
+	} else {
+		if x.Hovered() || x.FocusVisible() {
+			x.Background(t.rowHover).TextColor(t.text)
+		}
+		x.OnClick(click)
+	}
+	x.Children(func() { ico(c, icon, 2.2, 14) })
 }
 
 // jobBar is the progress bar of a running job: filled up to the fetched
@@ -182,18 +205,14 @@ func (p *Panel) jobBar(c *ui.Context, f *frame, j core.DownloadJob) {
 	bar.Role(ui.RoleProgress).Label(label).Range(0, float64(total), float64(min(j.Done, total)))
 }
 
-// jobActions are the buttons of a failed or paused job: Retry, or
-// download for text only when the model's image input failed, or Resume;
-// and Remove.
+// jobActions are the buttons of a failed job: Retry, or download for text
+// only when the model's image input failed; and Remove.
 func (p *Panel) jobActions(c *ui.Context, f *frame, j core.DownloadJob, id string, opts engine.ModelOptions) {
 	t, m := f.pal, f.m
 	retry, icon := m.ActRetry(), "refresh"
 	if _, noVision := jobReason(f, j); noVision && j.State == core.DownloadFailed {
 		retry = m.DlTextOnly()
 		opts.NoVision = true
-	}
-	if j.State == core.DownloadPaused {
-		retry, icon = m.DlResume(), "download"
 	}
 	blocked := p.downloadBlocked()
 	ui.Row(c).Gap(6).Children(func() {

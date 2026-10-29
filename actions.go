@@ -94,6 +94,9 @@ func (a *app) CancelDownload(id string) { a.sup.CancelDownload(id) }
 // DismissDownload removes a failed or finished download from the list.
 func (a *app) DismissDownload(id string) { a.sup.DismissDownload(id) }
 
+// PauseDownload stops a download apart from the server, keeping its files.
+func (a *app) PauseDownload(id string) { a.sup.PauseDownload(id) }
+
 // PlanRemove counts what deleting an installed model frees, for the
 // confirmation; CancelRemove forgets the count; RemoveModel deletes the
 // model (onRemove forgets its settings).

@@ -223,16 +223,18 @@ func (msgs Messages) DlSpeed(size string) string {
 	return Catalog.Format(msgs.locale, "dlSpeed", map[string]any{"size": size})
 }
 
-// DlLeft says "about {duration} left"
+// DlLeft says "~{duration}"
 // in the language the app shows.
 //
-// Time left of a download. {duration} is a short duration such as "6 min".
+// Time left of a download, after the size and speed: "~6 min". {duration}
+// is a short duration such as "6 min"; "~" says it is an estimate.
 func DlLeft(duration string) string { return In(i18n.Locale()).DlLeft(duration) }
 
-// DlLeft says "about {duration} left"
+// DlLeft says "~{duration}"
 // in the language of msgs.
 //
-// Time left of a download. {duration} is a short duration such as "6 min".
+// Time left of a download, after the size and speed: "~6 min". {duration}
+// is a short duration such as "6 min"; "~" says it is an estimate.
 func (msgs Messages) DlLeft(duration string) string {
 	return Catalog.Format(msgs.locale, "dlLeft", map[string]any{"duration": duration})
 }
@@ -3617,6 +3619,22 @@ func DlResume() string { return In(i18n.Locale()).DlResume() }
 // Button of a paused download: goes on from what it fetched.
 func (msgs Messages) DlResume() string {
 	return Catalog.Format(msgs.locale, "dlResume", nil)
+}
+
+// DlPause says "Pause"
+// in the language the app shows.
+//
+// Button of a running or queued download: stops it and keeps what it
+// fetched, for Resume.
+func DlPause() string { return In(i18n.Locale()).DlPause() }
+
+// DlPause says "Pause"
+// in the language of msgs.
+//
+// Button of a running or queued download: stops it and keeps what it
+// fetched, for Resume.
+func (msgs Messages) DlPause() string {
+	return Catalog.Format(msgs.locale, "dlPause", nil)
 }
 
 // AddModelNothing says "Nothing found on Hugging Face"

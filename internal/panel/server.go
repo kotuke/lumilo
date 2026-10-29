@@ -54,12 +54,17 @@ func (p *Panel) serverCard(c *ui.Context, f *frame, s *mainState) {
 		}
 		if s.isProgress {
 			ui.Column(c).Gap(6).Children(func() {
+				label := joinLeft(s.progressText, s.progressLeft)
 				if pct := p.downloadPercent(); s.downloading && pct >= 0 {
-					p.downloadBar(c, f, s.progressText, pct)
+					p.downloadBar(c, f, label, pct)
 				} else {
-					sweep(c, f, s.progressText)
+					sweep(c, f, label)
 				}
-				txt(c, s.progressText, 11.5).TextColor(t.muted)
+				if s.progressLeft != "" {
+					progressLine(c, f, s.progressText, s.progressLeft, 11.5)
+				} else {
+					txt(c, s.progressText, 11.5).TextColor(t.muted)
+				}
 				if s.cmd != "" {
 					command(c, f, s.cmd)
 				}

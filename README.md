@@ -141,8 +141,9 @@ which prints `accepted` and `source=Notarized Developer ID`.
 - **Models.** Pick an installed model, or add one by its Hugging Face name
   (`owner/repo:variant`). It downloads in the model list, apart from the
   server, which keeps serving its model: a progress bar with the speed and
-  the time left, a Cancel button, the reason and Retry or Remove when it
-  fails. Several downloads queue: one runs per engine, the others wait as
+  the time left, Pause and Cancel buttons, the reason and Retry or Remove
+  when it fails. A paused download shows "Paused" with what it fetched,
+  Resume and Remove. Several downloads queue: one runs per engine, the others wait as
   "Queued". Downloads that did not finish survive quitting Lumilo
   (`downloads.json` beside the settings) and show as "Paused" with what they
   fetched, Resume and Remove; nothing starts on its own at launch. A switch

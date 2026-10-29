@@ -6,6 +6,8 @@
 - The README shows Lumilo starting a server in a demo GIF.
 - Splash's model list shows the models already on this Mac, for example
   downloaded for llama.cpp, and adds one from those files in seconds.
+- Pause a model download from its row and resume it later from what it
+  fetched.
 
 ## 0.1.0
 

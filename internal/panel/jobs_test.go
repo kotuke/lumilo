@@ -1,10 +1,12 @@
 package panel
 
 import (
+	"testing"
 	"time"
 
 	"github.com/kotuke/lumilo/internal/core"
 	"github.com/kotuke/lumilo/internal/engine"
+	"github.com/kotuke/lumilo/internal/format"
 	"github.com/kotuke/lumilo/internal/hf"
 	"github.com/kotuke/lumilo/locales"
 )
@@ -56,6 +58,8 @@ func jobBoards() []board {
 			b.want("AREX-2-Abliterated-GGUF", "Ready", "6.6 of 16.6 GB · 50 MB/s · "+en.DlLeft("4 min"))
 			b.click("AREX-2-Abliterated-GGUF")
 			b.notCalled("SelectModel " + arexModel.ID)
+			b.click(en.DlPause() + " AREX-2-Abliterated-GGUF")
+			b.called("PauseDownload " + arexModel.ID)
 			b.click(en.DlCancel() + " AREX-2-Abliterated-GGUF")
 			b.called("CancelDownload " + arexModel.ID)
 		}},
@@ -124,12 +128,15 @@ func jobBoards() []board {
 				core.DownloadJob{Model: pausedModel, State: core.DownloadPaused, Done: 3_240_000_000, Total: 17_400_000_000})
 			b.openModels(v)
 		}, check: func(b *bench) {
-			b.want(en.DlQueued(), en.DlPaused()+" · 3.2 of 17.4 GB", en.DlResume(), en.DlRemove())
+			paused := b.p.jobName(core.DownloadJob{Model: pausedModel})
+			b.want(en.DlQueued(), en.DlPaused()+" · 3.2 of 17.4 GB", en.DlResume()+" "+paused, en.DlRemove()+" "+paused)
+			b.click(en.DlPause() + " " + tinyModel.Name)
+			b.called("PauseDownload " + tinyModel.ID)
 			b.click(en.DlCancel() + " " + tinyModel.Name)
 			b.called("CancelDownload " + tinyModel.ID)
-			b.click(en.DlResume())
+			b.click(en.DlResume() + " " + paused)
 			b.called("Download " + pausedModel.ID)
-			b.click(en.DlRemove())
+			b.click(en.DlRemove() + " " + paused)
 			b.called("DismissDownload " + pausedModel.ID)
 		}},
 		{name: "picker-queued-paused-ru", lang: "ru", build: func(b *bench) {
@@ -139,7 +146,7 @@ func jobBoards() []board {
 			b.openModels(v)
 		}, check: func(b *bench) {
 			ru := locales.In("ru")
-			b.want(ru.DlQueued(), ru.DlPaused()+" · 3,2 из 17,4 ГБ", ru.DlResume())
+			b.want(ru.DlQueued(), ru.DlPaused()+" · 3,2 из 17,4 ГБ", ru.DlResume()+" "+b.p.jobName(core.DownloadJob{Model: pausedModel}))
 		}},
 		// The search found nothing, or could not reach the hub.
 		{name: "add-model-nothing-found", build: func(b *bench) {
@@ -198,5 +205,31 @@ func jobBoards() []board {
 			b.want(en.ErrTitleModelOnline())
 			b.none(en.ErrTitleModel())
 		}},
+	}
+}
+
+// The time left of a download always shows: with large numbers and long
+// words, the size and speed give way first, in every language.
+func TestProgressLeftShows(t *testing.T) {
+	big := engine.Model{ID: "acme/Very-Long-Model-Name-Instruct-2T-MLX-8bit", Owner: "acme", Name: "Very-Long-Model-Name-Instruct-2T-MLX-8bit"}
+	for _, lang := range []string{"en", "ru", "de", "fr", "es", "ja", "zh-Hans", "ar"} {
+		m := locales.In(format.Tag(lang))
+		b := newBench(t, lang)
+		v := withJob(withPhase(core.PhaseReady), big, core.DownloadRunning, 123_400_000_000, 1_245_600_000_000)
+		b.openModels(v)
+		b.clock = b.clock.Add(10 * time.Second)
+		v.Downloads[0].Done += 1_125_000_000 // 112.5 MB/s
+		b.p.SetView(v)
+		b.tt.Frame()
+		_, left := b.p.progressText(&frame{m: m, loc: format.Tag(lang)}, v.Downloads[0].Total, v.Downloads[0].Done)
+		left = " · " + left
+		r, ok := b.tt.Find(left)
+		if !ok || left == " · " {
+			t.Errorf("%s: no %q in %q", lang, left, b.tt.Texts())
+			continue
+		}
+		if r.W == 0 || r.X < 0 || r.X+r.W > Width {
+			t.Errorf("%s: %q is cut off or off the panel: %+v", lang, left, r)
+		}
 	}
 }

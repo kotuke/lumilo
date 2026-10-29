@@ -64,6 +64,8 @@ type Actions interface {
 	// failed or finished one from the list.
 	CancelDownload(id string)
 	DismissDownload(id string)
+	// PauseDownload stops the download of id, keeping what it fetched.
+	PauseDownload(id string)
 	// PlanRemove counts what deleting the installed model id frees; the
 	// count comes in View.Removal. CancelRemove forgets it when the user
 	// does not delete; RemoveModel deletes the model from the disk.
