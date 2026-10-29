@@ -219,6 +219,7 @@
   "memShorter": "完整上下文约需 {size}，可用 {total}：服务器会使用更短的上下文",
   "vision": "图像输入",
   "visionTip": "加载视觉投影器（{size}）。关闭后模型只读取文本",
+  "visionNoJPEG": "此处无法读取 JPEG 图片：TensorFold 需要 libjpeg-turbo 3.1.4.1，而 Homebrew 不提供该版本。PNG 和 WebP 可用",
   "draft": "推测解码",
   "draftAlways": "{engine} 始终使用其草稿模型 {name}",
   "draftOff": "关闭",

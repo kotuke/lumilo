@@ -3239,6 +3239,22 @@ func (msgs Messages) VisionTip(size string) string {
 	return Catalog.Format(msgs.locale, "visionTip", map[string]any{"size": size})
 }
 
+// VisionNoJPEG says "JPEG images are not read here: TensorFold needs libjpeg-turbo 3.1.4.1, which Homebrew does not offer. PNG and WebP im…"
+// in the language the app shows.
+//
+// Added to the image input tooltip when the engine refuses JPEG images on
+// this Mac.
+func VisionNoJPEG() string { return In(i18n.Locale()).VisionNoJPEG() }
+
+// VisionNoJPEG says "JPEG images are not read here: TensorFold needs libjpeg-turbo 3.1.4.1, which Homebrew does not offer. PNG and WebP im…"
+// in the language of msgs.
+//
+// Added to the image input tooltip when the engine refuses JPEG images on
+// this Mac.
+func (msgs Messages) VisionNoJPEG() string {
+	return Catalog.Format(msgs.locale, "visionNoJPEG", nil)
+}
+
 // Draft says "Speculative decoding"
 // in the language the app shows.
 //

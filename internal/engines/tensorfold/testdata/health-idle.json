@@ -1,0 +1,1 @@
+{"status": "ok", "model": "Qwen3.5-2B-MLX-4bit", "model_ids": ["Qwen3.5-2B-MLX-4bit"], "max_batch_size": 8, "warming": false, "memory": {"active": 4981754592, "cache": 0, "peak": 4982000352}, "live": {"connections": 0, "waiting": 0, "decode_tokens_per_second": 0.0, "prefill_tokens_per_second": 0.0}, "version": "1.1.9", "backend": "metal", "device": "Apple M5 Max"}

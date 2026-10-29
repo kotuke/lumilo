@@ -402,6 +402,7 @@
   "memShorter": "コンテキスト全体では約 {size} 必要です。使えるのは {total} のため、サーバーは短いコンテキストを使います",
   "vision": "画像入力",
   "visionTip": "ビジョンプロジェクター（{size}）を読み込みます。オフにするとテキストのみを扱います",
+  "visionNoJPEG": "ここでは JPEG 画像を読めません。TensorFold には libjpeg-turbo 3.1.4.1 が必要ですが、Homebrew にはありません。PNG と WebP は使えます",
   "draft": "投機的デコード",
   "draftAlways": "{engine} はドラフトモデル {name} を常に使います",
   "draftOff": "オフ",

@@ -402,6 +402,7 @@
   "memShorter": "Con el contexto completo necesita unos {size}, hay {total} disponibles: el servidor usará un contexto más corto",
   "vision": "Entrada de imágenes",
   "visionTip": "Carga el proyector de visión, {size}. Desactivado, el modelo solo lee texto",
+  "visionNoJPEG": "Aquí no se leen imágenes JPEG: TensorFold necesita libjpeg-turbo 3.1.4.1, que Homebrew no ofrece. PNG y WebP funcionan",
   "draft": "Decodificación especulativa",
   "draftAlways": "{engine} siempre usa su modelo borrador {name}",
   "draftOff": "Desactivado",

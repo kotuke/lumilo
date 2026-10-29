@@ -1,0 +1,69 @@
+[tensorfold] prompt chunks of up to 128 tokens, cut at replies 256+ tokens apart
+[tensorfold] serving Qwen3.5-2B-MLX-4bit at http://127.0.0.1:18084/v1 (sampling: greedy; drafts: copies only; context: 262144; loaded in 1.1s)
+[tensorfold] thinking on (the chat template's default): replies reason in reasoning_content before the answer in content, and max_tokens counts both. --no-thinking turns it off; a request can send chat_template_kwargs {"enable_thinking": false}
+[tensorfold] idle unload on: the engine closes after 10 s idle and the next request reloads it (a full model load)
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 200 - key=unauthenticated
+[tensorfold] done cmpl-91a94f9c9814157e6590aeced208855e prompt=1 cached=0 thinking=False effort=none tokens=5 sha=cb71c58821df finish=length rounds=4 accepted=0/0 ttft=0.009 decode=0.022 elapsed=0.030 queued=0.000 tok/s=185.1
+[tensorfold] 127.0.0.1 "POST /v1/completions HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 200 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 200 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 200 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 200 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 200 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 200 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 200 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 200 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 200 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 200 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] idle unload: the engine is closed; the next request reloads it
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] 127.0.0.1 "GET /memory HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /metrics HTTP/1.1" 200 - key=env-1
+[tensorfold] 127.0.0.1 "GET /v1/models HTTP/1.1" 200 - key=env-1
+[tensorfold] idle reload: the model is resident again
+[tensorfold] 127.0.0.1 "POST /v1/chat/completions HTTP/1.1" 200 - key=env-1
+[tensorfold] shutting down (SIGINT): draining: new requests get 503; 1 request(s) in progress may finish within 20.0 s
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 503 - key=unauthenticated
+[tensorfold] done chatcmpl-ff9897f65d5d3e0b86d8d94a44f1c8b1 prompt=17 cached=0 thinking=False effort=none tokens=2000 sha=ee6dca4c39a6 finish=length rounds=1824 accepted=175/373 ttft=0.012 decode=10.129 elapsed=10.141 queued=0.000 tok/s=197.4
+[tensorfold] shutting down: drained
+[tensorfold] shutting down: stopped

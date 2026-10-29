@@ -1435,6 +1435,10 @@
       }
     }
   },
+  "visionNoJPEG": "JPEG images are not read here: TensorFold needs libjpeg-turbo 3.1.4.1, which Homebrew does not offer. PNG and WebP images work",
+  "@visionNoJPEG": {
+    "description": "Added to the image input tooltip when the engine refuses JPEG images on this Mac."
+  },
   "draft": "Speculative decoding",
   "@draft": {
     "description": "Settings, Model card: switch or select of the draft that speeds up generation (speculative decoding). Also the label of the bolt badge in the model list."

@@ -6,8 +6,16 @@
 - The README shows Lumilo starting a server in a demo GIF.
 - Splash's model list shows the models already on this Mac, for example
   downloaded for llama.cpp, and adds one from those files in seconds.
+- Claude Code, Codex, OpenCode and Pi also launch against llama.cpp and
+  TensorFold servers, without changes to the agents' own settings. Claude
+  Code's button is off while the context is under the 100K it needs.
 - Pause a model download from its row and resume it later from what it
   fetched.
+- A third engine: [TensorFold](https://github.com/ashhart/TensorFold), the
+  native server for MLX checkpoints. Lumilo installs it with Homebrew,
+  downloads its models into the Hugging Face cache, unloads the model when
+  idle, and downloads Qwen3.8-27B with its DFlash2 drafter, which runs by
+  default and turns off in the model's settings.
 
 ## 0.1.0
 

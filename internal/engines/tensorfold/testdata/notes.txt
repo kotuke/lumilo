@@ -1,0 +1,42 @@
+Recorded on 2026-10-29 with TensorFold 1.1.9 (brew install ashhart/tensorfold/tensorfold),
+Apple M5 Max, 48 GB, macOS 27, model mlx-community/Qwen3.5-2B-MLX-4bit@93760be4f1f6.
+
+capabilities.json         tensorfold capabilities --json
+models.txt, info-*.txt    tensorfold models; tensorfold info REPO
+pull-qwen35-2b.txt        tensorfold pull REPO@REV (stdout and stderr, not a terminal; 43.6 s)
+pull-refused-lfm3.txt     tensorfold pull LiquidAI/LFM3-1.7B-MLX-4bit (exit 1)
+configs/                  config.json of the repositories named, from the hub
+
+Server without a key: tensorfold serve REPO --port 18080 --idle-unload 30
+  health-idle.json, metrics-idle.txt, memory.json, models.json   after start
+  health-busy.jsonl, metrics-busy.txt                            during a streamed request of 1500 tokens
+  metrics-after.txt                                              after it
+  health-unloaded.json, memory-unloaded.json, metrics-unloaded.txt  after the idle unload
+  lifecycle/serve.stdout, .stderr   the whole run: request, idle unload, a one-token
+                                    request that reloaded it (0.51 s), SIGINT (stopped in 0.12 s, exit 0)
+  lifecycle/stop_twice.*            SIGINT during a stream, a second SIGINT 0.5 s later:
+                                    the stream ended "cancelled", gone 3.13 s after the first (exit 0)
+  lifecycle/vision.*                --vision with Qwen3.5-2B: refused at start (exit 1)
+
+Server with a key: TENSORFOLD_API_KEY=test-key-123 tensorfold serve REPO --port 18081
+  --allowed-host mymac.local --context 16384
+  keyed/health.txt   /health without key (200 {"status": "ok"}), /metrics without key (401),
+                     /metrics with a wrong key (401), Host mymac.local:18081 (200),
+                     Host evil.example (403)
+  keyed/metrics.txt, memory.json, models.json, metrics-busy.txt   with the key
+  SIGINT during a stream of 3000 tokens: the drain waited for it, stopped in 10.05 s, exit 0
+Then with --idle-unload 10, polled /health and /metrics (with the key) once a second:
+  keyed/idle-poll.txt, idle.stdout   unloaded at 10 s despite the polls
+  keyed/health-unloaded.json, memory-unloaded.json, metrics-unloaded.txt
+  keyed/health-draining.json          /health 0.3 s after SIGINT with a request in progress
+
+failures/ (stdout, stderr; exit codes):
+  port_busy        port held by another program            exit 1
+  no_model         serve nobody/NoSuchModel-MLX-4bit       exit 1
+  offline_missing  HF_HUB_OFFLINE=1, model not cached      exit 1
+  huge_context     --context 100000000                     exit 1
+  bad_drafter      --drafter nobody/NoDrafter              exit 1
+  bad_port         --port 99999                            exit 2
+  no_memory        TensorFold/Qwen3.8-27B-MLX-4bit --context 131072 --vision
+                   --drafter z-lab/Qwen3.8-27B-DFlash2 --parallel 1   exit 1
+                   (without --parallel: "--parallel 8 needs 73.7 GiB")

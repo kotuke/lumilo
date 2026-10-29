@@ -1,0 +1,1 @@
+tensorfold: nobody/NoSuchModel-MLX-4bit is not in the Hugging Face cache; the native engine does not download: run tensorfold pull nobody/NoSuchModel-MLX-4bit first

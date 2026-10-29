@@ -76,13 +76,18 @@ func (b *brands) logo(l engine.Logo, dark bool) ui.ImageSource {
 }
 
 // engineTile is the engine's logo as a rounded square of size DIPs: a tile
-// logo fills it, a mark sits on the panel's tint. marginEnd is the space
+// logo fills it, a mark sits on the panel's tint, a bare mark takes the
+// square without it. marginEnd is the space
 // after it.
 func engineTile(c *ui.Context, f *frame, l engine.Logo, size, marginEnd float32) {
 	src := f.brands.logo(l, c.Theme().Dark)
 	radius := size * 7 / 24
 	if l.Tile && src != nil {
 		ui.Image(c, src).Size(size, size).Fit(ui.Cover).Radius(radius).MarginEnd(marginEnd).Shrink(0)
+		return
+	}
+	if l.Bare && src != nil {
+		ui.Image(c, src).Size(size, size).MarginEnd(marginEnd).Shrink(0)
 		return
 	}
 	ui.Box(c).Size(size, size).Radius(radius).Background(f.pal.tint).MarginEnd(marginEnd).Center().Shrink(0).

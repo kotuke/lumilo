@@ -95,10 +95,10 @@ var logo = func() engine.Logo {
 // MAX_YARN_CONTEXT_TOKENS, "up to 1010000" in "splash serve --help").
 const maxContext = 1_010_000
 
-// caps: Splash releases weights on request (POST /v1/memory/release, see
-// probe.go), checks the Host header against --allowed-host (ref §1.1),
-// counts output tokens while it makes them and keeps conversations on
-// disk (probe.go).
+// caps: Splash has a chat page (ChatURL), releases weights on request
+// (POST /v1/memory/release, see probe.go), checks the Host header against
+// --allowed-host (ref §1.1), counts output tokens while it makes them and
+// keeps conversations on disk (probe.go).
 //
 // Memory, from /status of OrcaCyber-Nano-1.0 (testdata/lifecycle): the KV
 // cache is int8 with an f32 scale per 256 elements (identity.kv.format
@@ -112,7 +112,7 @@ func caps() engine.Caps {
 	// VisionNeedsProjector: a GGUF repository of a vision family without a
 	// BF16, F32 or F16 mmproj is refused unless --language-only
 	// (install/upstream.py select_vision; testdata/failures/no_vision.*).
-	return engine.Caps{Release: true, AllowedHosts: true, LiveSpeed: true, DiskCache: true, MaxContext: maxContext,
+	return engine.Caps{Chat: true, ModelUpdates: true, Release: true, AllowedHosts: true, LiveSpeed: true, DiskCache: true, MaxContext: maxContext,
 		VisionNeedsProjector: true,
 		Memory: engine.MemoryCaps{KVBytesPerElement: 1 + 4.0/256, Reserve: 2_200_000_000, ShrinksContext: true,
 			// The DFlash2 draft of a model to download, before its family

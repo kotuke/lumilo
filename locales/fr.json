@@ -402,6 +402,7 @@
   "memShorter": "Avec le contexte complet il faut environ {size}, {total} disponibles\u202f: le serveur prendra un contexte plus court",
   "vision": "Entrée d’images",
   "visionTip": "Charge le projecteur de vision, {size}. Désactivé, le modèle ne lit que du texte",
+  "visionNoJPEG": "Les images JPEG ne sont pas lues ici : TensorFold a besoin de libjpeg-turbo 3.1.4.1, que Homebrew ne propose pas. PNG et WebP fonctionnent",
   "draft": "Décodage spéculatif",
   "draftAlways": "{engine} utilise toujours son modèle brouillon {name}",
   "draftOff": "Désactivé",

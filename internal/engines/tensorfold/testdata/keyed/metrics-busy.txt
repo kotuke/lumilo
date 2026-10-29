@@ -1,0 +1,3 @@
+tensorfold:requests_running 1
+tensorfold:generation_tokens_running 341
+tensorfold:generation_tokens_total 0

@@ -1,12 +1,14 @@
 package panel
 
 import (
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/egoist/mygo/ui"
 
 	"github.com/kotuke/lumilo/internal/core"
+	"github.com/kotuke/lumilo/internal/engines/tensorfold"
 	"github.com/kotuke/lumilo/internal/format"
 	"github.com/kotuke/lumilo/locales"
 )
@@ -289,4 +291,48 @@ func TestHeaderEngineSwitchFits(t *testing.T) {
 			t.Errorf("%s: the list is cut off: %+v (shown %v), window %d", lang, row, ok, b.p.height)
 		}
 	}
+}
+
+// TensorFold has no chat page: the header has no chat button, and the
+// engine list shows it beside the others.
+func TestHeaderTensorFold(t *testing.T) {
+	m := locales.In("en")
+	b := newBench(t, "en")
+	v := withPhase(core.PhaseReady)
+	e := tensorfold.New()
+	core.Describe(&v, e)
+	v.Version, v.ChatURL = "1.1.9", ""
+	info := e.Info()
+	v.Engines = append(engineList(), core.EngineInfo{ID: info.ID, Name: info.Name, Logo: info.Logo,
+		Installed: true, Version: "1.1.9", Install: e.Installer().Describe()})
+	b.show(v, time.Hour)
+	b.none(m.Chat(), m.NoUpdates(), m.UpdatesOn()) // no chat page; nothing to update on start
+	b.want(m.Log(), m.Settings())
+	b.openEngines("TensorFold 1.1.9")
+	b.want("Splash", "llama.cpp", "TensorFold")
+}
+
+// Claude Code needs a context of 100K or more: against a server of 32K
+// its chip is off and says why; the other agents launch.
+func TestAgentNeedsContext(t *testing.T) {
+	if got := locales.In("en").AgentNeedsContext("Claude", "100K", "33K"); !strings.Contains(got, "100K") {
+		t.Errorf("message %q", got)
+	}
+	b := newBench(t, "en")
+	v := withPhase(core.PhaseReady)
+	core.Describe(&v, tensorfold.New())
+	v.Version, v.ChatURL = "1.1.9", ""
+	v.Snapshot.ContextTokens = 32768
+	b.show(v, time.Hour)
+	// The reason is the chip's tooltip and description, which the tester
+	// does not list; the chip does not launch.
+	b.click("Claude")
+	b.notCalled("RunAgent claude")
+	b.click("Codex")
+	b.called("RunAgent codex")
+
+	v.Snapshot.ContextTokens = 131072
+	b.show(v, time.Hour)
+	b.click("Claude")
+	b.called("RunAgent claude")
 }

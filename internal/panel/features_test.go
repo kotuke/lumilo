@@ -6,6 +6,7 @@ import (
 	"github.com/kotuke/lumilo/internal/core"
 	"github.com/kotuke/lumilo/internal/engine"
 	"github.com/kotuke/lumilo/internal/engines/llamacpp"
+	"github.com/kotuke/lumilo/internal/engines/tensorfold"
 )
 
 // orcaFeatures is OrcaCyber-Nano-1.0 as Splash lists it: its F16 vision
@@ -36,6 +37,20 @@ func llamaFeatures() core.View {
 			}}}
 	plain := v.Model
 	v.Model, v.Models = md, []engine.Model{md, plain}
+	v.Snapshot.Model = md.ID
+	return v
+}
+
+// tensorFoldFeatures is Qwen3.8-27B under TensorFold, with its DFlash2
+// drafter in the cache: the default draft, 1.73 GB in memory.
+func tensorFoldFeatures(v core.View) core.View {
+	core.Describe(&v, tensorfold.New())
+	v.Version = "1.1.9"
+	md := engine.Model{ID: "TensorFold/Qwen3.8-27B-MLX-4bit", Name: "Qwen3.8-27B-MLX-4bit", Owner: "TensorFold",
+		SizeBytes: 16_054_541_349, ContextLength: 262144, KVElements: 32768, Features: engine.Features{Vision: true,
+			Drafts: []engine.Draft{{Kind: engine.DraftDFlash, Name: "z-lab/Qwen3.8-27B-DFlash2", ID: "z-lab/Qwen3.8-27B-DFlash2",
+				SizeBytes: 1_731_967_053, Default: true}}}}
+	v.Model, v.Models = md, []engine.Model{md}
 	v.Snapshot.Model = md.ID
 	return v
 }
@@ -139,6 +154,41 @@ func featureBoards() []board {
 				b.t.Errorf("the fixed draft stored %+v", b.lastPrefs())
 			}
 			b.notCalled("SelectModel " + b.p.view.Model.ID)
+		}},
+		// TensorFold: the cached DFlash2 drafter runs by default; turning it
+		// off stores DraftOff, turning it on again the default ("").
+		{name: "settings-features-tensorfold", build: func(b *bench) {
+			b.show(tensorFoldFeatures(withPhase(core.PhaseReady)), 0)
+			b.click("Settings")
+		}, check: func(b *bench) {
+			id := b.p.view.Model.ID
+			// 16.05 GB + 1.73 GB drafter + 3.25 bytes per KV element of 256K
+			// (27.9 GB) + 4 GB: more than the budget (here 38 GB, the
+			// server's report), so the server picks a shorter context.
+			b.want("Speculative decoding", "Needs about 49.7 GB with the full context, more than the 38 GB available: the server will use a shorter context")
+			b.click("Speculative decoding")
+			b.tt.Frame()
+			if o := b.lastPrefs().Options[id]; o.Draft != engine.DraftOff {
+				b.t.Errorf("draft off: %+v", o)
+			}
+			b.want("Needs about 48 GB with the full context, more than the 38 GB available: the server will use a shorter context")
+			b.click("Speculative decoding")
+			b.tt.Frame()
+			if o, ok := b.lastPrefs().Options[id]; ok && o.Draft != "" {
+				b.t.Errorf("draft on: %+v", o)
+			}
+		}},
+		{name: "model-popup-toggles-tensorfold", build: func(b *bench) {
+			b.show(tensorFoldFeatures(withPhase(core.PhaseStopped)), 0)
+			b.click("Qwen3.8-27B-MLX-4bit")
+		}, check: func(b *bench) {
+			b.want("Speculative decoding: on")
+			b.click("Speculative decoding: on")
+			b.tt.Frame()
+			if o := b.lastPrefs().Options[b.p.view.Model.ID]; o.Draft != engine.DraftOff {
+				b.t.Errorf("draft off: %+v", o)
+			}
+			b.want("Speculative decoding: off")
 		}},
 		// The clear button of "Add model…".
 		{name: "add-model-clear", build: func(b *bench) {

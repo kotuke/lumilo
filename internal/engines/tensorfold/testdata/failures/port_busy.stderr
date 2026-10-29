@@ -1,0 +1,2 @@
+info: qwen3.5: 4.3 GiB kept wired between requests, inside 70% of 48 GiB of RAM
+tensorfold: cannot listen on 127.0.0.1:18090 (AddressInUse)

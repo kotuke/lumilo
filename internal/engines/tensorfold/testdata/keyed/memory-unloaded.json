@@ -1,0 +1,1 @@
+{"schema_version": 1, "context_window": 262144, "context_fitted": false, "process": {"source": "darwin_rusage_info_v4", "physical_footprint_bytes": 257967088, "lifetime_peak_physical_footprint_bytes": 5713169504}}

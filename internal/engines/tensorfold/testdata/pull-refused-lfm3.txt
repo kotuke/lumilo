@@ -1,0 +1,2 @@
+LiquidAI/LFM3-1.7B-MLX-4bit: no registered Zig family serves model_type lfm3; the 0.6 line may: tensorfold@0.6
+[tensorfold] downloading LiquidAI/LFM3-1.7B-MLX-4bit@main from Hugging Face

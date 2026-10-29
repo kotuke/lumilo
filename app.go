@@ -19,6 +19,7 @@ import (
 	"github.com/kotuke/lumilo/internal/engine"
 	"github.com/kotuke/lumilo/internal/engines/llamacpp"
 	"github.com/kotuke/lumilo/internal/engines/splash"
+	"github.com/kotuke/lumilo/internal/engines/tensorfold"
 	"github.com/kotuke/lumilo/internal/format"
 	"github.com/kotuke/lumilo/internal/hf"
 	"github.com/kotuke/lumilo/internal/panel"
@@ -100,7 +101,7 @@ func (a *app) ready() {
 		mygo.Theme.SetSource(src)
 	}
 
-	engines := []engine.Engine{splash.New(), llamacpp.New()}
+	engines := []engine.Engine{splash.New(), llamacpp.New(), tensorfold.New()}
 	eng := engines[0]
 	for _, e := range engines {
 		if e.Info().ID == a.st.Engine {

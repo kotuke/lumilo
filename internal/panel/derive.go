@@ -388,13 +388,15 @@ func (p *Panel) derive(c *ui.Context, f *frame) mainState {
 	s.showPill = !s.isInstall
 	s.suggest = !s.isInstall && !s.isUpdating && p.suggesting()
 	s.hasModel = !s.isInstall && !s.suggest
-	s.showChat = !s.isInstall
+	s.showChat = !s.isInstall && v.Caps.Chat
 	s.chatOff = !s.served
 	s.hasControls = !s.isInstall && !s.isUpdating && !s.suggest
 	s.showAgents = !s.isInstall && !s.isUpdating && !s.suggest && len(v.Agents) > 0
 	// The model-updates chip toggles a panel setting; it says nothing of a
 	// foreign server.
-	s.showUpdChip = !s.isExternal && v.Download == "" // a download runs online
+	// A download runs online; an engine that never contacts the hub
+	// (Caps.ModelUpdates off) has no use for it.
+	s.showUpdChip = !s.isExternal && v.Download == "" && v.Caps.ModelUpdates
 	s.modelCanOpen = s.hasModel && modelCanOpen(v)
 	if v.Phase == core.PhaseExternal && !s.isUpdating {
 		s.modelTitle = m.ModelLocked()

@@ -1,0 +1,4 @@
+family: Qwen3.5-2B or Qwen3.8-27B (qwen3_5)
+format: 4-bit, group 64
+weights: 1.63 GiB (1749081964 bytes)
+memory floor: 3.63 GiB (weights plus a 2.00 GiB runtime margin)

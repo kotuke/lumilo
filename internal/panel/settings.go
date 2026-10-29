@@ -267,7 +267,9 @@ func (p *Panel) settingsBody(c *ui.Context, f *frame) {
 			}
 			return m.SettingsIdleAfter(format.Duration(f.loc, d))
 		}, 200)
-		switchRow(c, f, "updates", m.CheckModelUpdates(), &s.updates)
+		if p.view.Caps.ModelUpdates {
+			switchRow(c, f, "updates", m.CheckModelUpdates(), &s.updates)
+		}
 		p.modelNeed(c, f)
 	})
 

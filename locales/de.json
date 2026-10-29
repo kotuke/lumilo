@@ -402,6 +402,7 @@
   "memShorter": "Braucht mit vollem Kontext etwa {size}, verfügbar sind {total}: der Server nimmt einen kürzeren Kontext",
   "vision": "Bildeingabe",
   "visionTip": "Lädt den Vision-Projektor, {size}. Aus liest das Modell nur Text",
+  "visionNoJPEG": "JPEG-Bilder werden hier nicht gelesen: TensorFold braucht libjpeg-turbo 3.1.4.1, die Homebrew nicht anbietet. PNG und WebP funktionieren",
   "draft": "Spekulatives Dekodieren",
   "draftAlways": "{engine} nutzt immer sein Entwurfsmodell {name}",
   "draftOff": "Aus",

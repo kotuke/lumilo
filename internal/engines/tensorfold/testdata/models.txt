@@ -1,0 +1,1 @@
+mlx-community/Qwen3.5-2B-MLX-4bit: Qwen3.5-2B or Qwen3.8-27B (qwen3_5)

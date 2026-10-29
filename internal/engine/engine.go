@@ -259,6 +259,9 @@ type Features struct {
 	// Config.NoVision; VisionBytes is its size.
 	Vision      bool
 	VisionBytes int64
+	// NoJPEG: the engine refuses JPEG images on this computer (a decoder
+	// it needs is missing); other images serve.
+	NoJPEG bool
 	// Drafts are the speculative decoding drafts the engine can run with
 	// the model, in the order to offer them.
 	Drafts []Draft
@@ -294,6 +297,9 @@ type Draft struct {
 	// Always: the engine always runs it and has no way to turn it off;
 	// Config.Draft is ignored.
 	Always bool
+	// Default: the engine runs it when Config.Draft is "" (its default);
+	// DraftOff turns it off.
+	Default bool
 }
 
 // DraftOff is the Config.Draft that turns speculative decoding off.
@@ -317,11 +323,20 @@ type Logo struct {
 	// background, drawn edge to edge; otherwise it is a mark that sits on
 	// the panel's own tile.
 	Tile bool
+	// Bare: the image is a mark of an odd shape, drawn across the whole
+	// tile without the panel's tile under it.
+	Bare bool
 }
 
 // Caps are what an engine supports of Lumilo's controls. The panel hides
 // a control the engine does not support.
 type Caps struct {
+	// Chat: the server has a chat page (Engine.ChatURL).
+	Chat bool
+	// ModelUpdates: the server contacts the model hub on start unless
+	// Config.ModelUpdates is off (it downloads or refreshes a model then),
+	// so the setting changes something.
+	ModelUpdates bool
 	// Release: Release unloads the weights on request.
 	Release bool
 	// AllowedHosts: the server checks the HTTP Host header and accepts the

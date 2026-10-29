@@ -17,6 +17,10 @@ type MemoryCaps struct {
 	// size is not known yet (a model still to download, whose Features say
 	// DraftsUnknown); 0 = no such draft. Estimate counts it.
 	DefaultDraft int64
+	// Share is the part of the computer's memory the engine keeps within
+	// when it reports no budget of its own (Snapshot.MemoryLimit); 0 = the
+	// default, three quarters (Budget).
+	Share float64
 }
 
 // MinFitContext is the context Estimate judges a model by when the engine
@@ -38,10 +42,10 @@ type Need struct {
 func (n Need) Total() int64 { return n.Weights + n.Vision + n.Draft + n.KV + n.Reserve }
 
 // ActiveDraft is the draft cfg runs with m: the chosen one, else one the
-// engine always runs; nil for none.
+// engine always runs, else its default one when draft is ""; nil for none.
 func ActiveDraft(m Model, draft string) *Draft {
 	for i, d := range m.Features.Drafts {
-		if d.Always || (draft != "" && draft != DraftOff && d.ID == draft) {
+		if d.Always || (draft == "" && d.Default) || (draft != "" && draft != DraftOff && d.ID == draft) {
 			return &m.Features.Drafts[i]
 		}
 	}
@@ -79,12 +83,16 @@ func Estimate(m Model, cfg Config, mc MemoryCaps) Need {
 }
 
 // Budget is the memory the engine may use: what it reports (Snapshot.
-// MemoryLimit), else three quarters of the computer's memory, about what
-// Metal recommends as the GPU's working set on Apple silicon
-// (recommendedMaxWorkingSetSize: 40.2 GB of 48 GiB, Splash's /status).
-func Budget(ram, reported int64) int64 {
+// MemoryLimit), else share of the computer's memory (MemoryCaps.Share),
+// by default three quarters, about what Metal recommends as the GPU's
+// working set on Apple silicon (recommendedMaxWorkingSetSize: 40.2 GB of
+// 48 GiB, Splash's /status).
+func Budget(ram, reported int64, share float64) int64 {
 	if reported > 0 {
 		return reported
+	}
+	if share > 0 {
+		return int64(float64(ram) * share)
 	}
 	return ram / 4 * 3
 }
