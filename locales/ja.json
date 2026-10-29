@@ -126,6 +126,7 @@
   "hoverReq": "リクエスト",
   "hoverCur": "このリクエスト",
   "agentsTitle": "エージェントを起動",
+  "agentNeedsContext": "{agent} には {need} トークン以上のコンテキストが必要ですが、モデルは {have} で動作しています。設定 → モデルで増やしてから再起動してください",
   "agentStart": "サーバーとエージェントを起動します",
   "agentOffError": "まずサーバーのエラーを解決してください",
   "agentOffUnresponsive": "サーバーが応答していません",

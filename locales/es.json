@@ -126,6 +126,7 @@
   "hoverReq": "Solicitud",
   "hoverCur": "Esta solicitud",
   "agentsTitle": "Iniciar agente",
+  "agentNeedsContext": "{agent} necesita un contexto de {need} tokens o más, y el modelo se sirve con {have}. Auméntalo en Ajustes → Modelo y reinicia",
   "agentStart": "Iniciará el servidor y el agente",
   "agentOffError": "Primero corrige el error del servidor",
   "agentOffUnresponsive": "El servidor no responde",

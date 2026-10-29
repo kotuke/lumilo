@@ -1891,6 +1891,26 @@ func (msgs Messages) AgentsTitle() string {
 	return Catalog.Format(msgs.locale, "agentsTitle", nil)
 }
 
+// AgentNeedsContext says "{agent} needs a context of {need} tokens or more, and the model is served with {have}. Raise it in Settings → Model…"
+// in the language the app shows.
+//
+// Tooltip of an agent chip that is off because the server's context is too
+// small. {agent} is e.g. "Claude"; {need} and {have} are sizes such as
+// "100K" and "33K".
+func AgentNeedsContext(agent string, need string, have string) string {
+	return In(i18n.Locale()).AgentNeedsContext(agent, need, have)
+}
+
+// AgentNeedsContext says "{agent} needs a context of {need} tokens or more, and the model is served with {have}. Raise it in Settings → Model…"
+// in the language of msgs.
+//
+// Tooltip of an agent chip that is off because the server's context is too
+// small. {agent} is e.g. "Claude"; {need} and {have} are sizes such as
+// "100K" and "33K".
+func (msgs Messages) AgentNeedsContext(agent string, need string, have string) string {
+	return Catalog.Format(msgs.locale, "agentNeedsContext", map[string]any{"agent": agent, "need": need, "have": have})
+}
+
 // AgentStart says "Starts the server and the agent"
 // in the language the app shows.
 //

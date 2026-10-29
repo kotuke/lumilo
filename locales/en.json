@@ -892,6 +892,15 @@
   "@agentsTitle": {
     "description": "Title of the agents card."
   },
+  "agentNeedsContext": "{agent} needs a context of {need} tokens or more, and the model is served with {have}. Raise it in Settings → Model, then restart",
+  "@agentNeedsContext": {
+    "description": "Tooltip of an agent chip that is off because the server's context is too small. {agent} is e.g. \"Claude\"; {need} and {have} are sizes such as \"100K\" and \"33K\".",
+    "placeholders": {
+      "agent": {"type": "String"},
+      "need": {"type": "String"},
+      "have": {"type": "String"}
+    }
+  },
   "agentStart": "Starts the server and the agent",
   "@agentStart": {
     "description": "Tooltip of agent buttons when the server is stopped or unloaded."

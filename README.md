@@ -54,7 +54,7 @@ brew install --cask kotuke/tap/lumilo
   and whether it fits in memory, download beside a running server, delete
   with the space it frees.
 - **Coding agents.** Claude Code, Codex, OpenCode or Pi in Terminal, Ghostty
-  or Rex, already pointed at the local Splash server.
+  or Rex, already pointed at the local server of any engine.
 - **Private by default.** The server listens on this Mac only; network access
   needs an API key, kept in the Keychain.
 - **Native and translated.** Liquid Glass, light and dark themes, eight

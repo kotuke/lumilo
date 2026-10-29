@@ -55,8 +55,10 @@ func (l *LlamaCpp) ServeCommand(cfg engine.Config) (argv []string, env []string)
 	if !filepath.IsAbs(cfg.Model) {
 		model = "-hf"
 	}
+	served := alias(cfg.Model)
 	argv = []string{l.binPath(),
 		model, cfg.Model,
+		"--alias", served,
 		"--host", host,
 		"--port", strconv.Itoa(cfg.Port),
 		"--metrics",
@@ -80,13 +82,34 @@ func (l *LlamaCpp) ServeCommand(cfg engine.Config) (argv []string, env []string)
 	if s := sleepSeconds(cfg.IdleRelease); s > 0 {
 		argv = append(argv, "--sleep-idle-seconds", strconv.Itoa(s))
 	}
-	l.remember(cfg.Port, cfg.IdleRelease)
+	l.remember(cfg.Port, cfg.IdleRelease, served)
 
 	env = environ()
 	if cfg.APIKey != "" {
 		env = append(env, "LLAMA_API_KEY="+cfg.APIKey)
 	}
 	return argv, env
+}
+
+// alias is the name the API serves model by (--alias, "set model name
+// aliases ... (to be used by API)", help of 0.8.0), for the agents to ask
+// for: the GGUF file's name without ".gguf" and a split part's
+// "-00001-of-0000n", else the -hf name without its owner
+// ("Qwen3.8-27B-GGUF:UD-Q4_K_M"). Without it /v1/models names the model by
+// its full path (fixture ready.v1models).
+func alias(model string) string {
+	if !filepath.IsAbs(model) {
+		_, name, ok := strings.Cut(model, "/")
+		if !ok {
+			return model
+		}
+		return name
+	}
+	name := gguf.Stem(filepath.Base(model))
+	if m := splitRe.FindStringSubmatch(filepath.Base(model)); m != nil {
+		name = m[1]
+	}
+	return name
 }
 
 // sleepSeconds is d in whole seconds, rounded up; 0 means never (the

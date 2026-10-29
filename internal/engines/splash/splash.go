@@ -31,7 +31,7 @@ const (
 	releasePageURL = "https://github.com/incoai/splash/releases/tag/"
 )
 
-//go:embed logos/*.svg logos/*.png
+//go:embed logos/*.png
 var logos embed.FS
 
 // Splash is the Splash engine. The zero value is not usable; call New.

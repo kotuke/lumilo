@@ -32,7 +32,8 @@ func TestServeCommandDownloadAndContext(t *testing.T) {
 	e := New()
 	argv, _ := e.ServeCommand(engine.Config{Model: "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_M", Port: 18300,
 		ModelUpdates: true, ContextTokens: 65536})
-	want := []string{e.binPath(), "-hf", "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_M", "--host", "127.0.0.1", "--port", "18300",
+	want := []string{e.binPath(), "-hf", "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_M", "--alias", "Qwen3.8-27B-GGUF:UD-Q4_K_M",
+		"--host", "127.0.0.1", "--port", "18300",
 		"--metrics", "-c", "65536", "--cors-origins", "localhost"}
 	if !slices.Equal(argv, want) {
 		t.Errorf("argv\n got %q\nwant %q", argv, want)

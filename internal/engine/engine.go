@@ -564,4 +564,8 @@ type Agent struct {
 	Name  string // e.g. "Claude"
 	Logo  []byte // SVG
 	Color string // logo fill as "#RRGGBB"; "" = the text colour
+	// MinContext is the smallest context window, in tokens, the agent
+	// works in; 0 = any. The panel does not launch it against a server
+	// that serves less.
+	MinContext int
 }

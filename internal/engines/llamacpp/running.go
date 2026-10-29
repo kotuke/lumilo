@@ -208,6 +208,9 @@ func (l *LlamaCpp) FindRunning() ([]engine.Running, error) {
 			l.mu.Lock()
 			m := l.memo(port)
 			m.pid, m.idle = p.pid, p.idle()
+			if a, ok := flag(p.args, "-a", "--alias"); ok {
+				m.served, _, _ = strings.Cut(a, ",") // the first of the aliases
+			}
 			l.mu.Unlock()
 			found = append(found, engine.Running{PID: p.pid, Port: port, Model: p.modelArg()})
 			break

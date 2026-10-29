@@ -126,6 +126,7 @@
   "hoverReq": "طلب",
   "hoverCur": "هذا الطلب",
   "agentsTitle": "تشغيل وكيل",
+  "agentNeedsContext": "يحتاج {agent} إلى سياق من {need} رمز أو أكثر، والنموذج يعمل بـ {have}. زِده في الإعدادات ← النموذج ثم أعد التشغيل",
   "agentStart": "سيشغّل الخادم والوكيل",
   "agentOffError": "عالج خطأ الخادم أولًا",
   "agentOffUnresponsive": "الخادم لا يستجيب",

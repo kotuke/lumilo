@@ -126,6 +126,7 @@
   "hoverReq": "Requête",
   "hoverCur": "Cette requête",
   "agentsTitle": "Lancer un agent",
+  "agentNeedsContext": "{agent} a besoin d’un contexte d’au moins {need} jetons, et le modèle tourne avec {have}. Augmentez-le dans Réglages → Modèle, puis redémarrez",
   "agentStart": "Lance le serveur et l’agent",
   "agentOffError": "Corrigez d’abord l’erreur du serveur",
   "agentOffUnresponsive": "Le serveur ne répond pas",

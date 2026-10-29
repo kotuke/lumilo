@@ -126,6 +126,7 @@
   "hoverReq": "Anfrage",
   "hoverCur": "Diese Anfrage",
   "agentsTitle": "Agent starten",
+  "agentNeedsContext": "{agent} braucht einen Kontext von mindestens {need} Tokens, das Modell läuft mit {have}. Erhöhen Sie ihn unter Einstellungen → Modell und starten Sie neu",
   "agentStart": "Startet Server und Agent",
   "agentOffError": "Beheben Sie zuerst den Serverfehler",
   "agentOffUnresponsive": "Der Server antwortet nicht",

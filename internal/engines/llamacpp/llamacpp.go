@@ -88,7 +88,7 @@ func New() *LlamaCpp {
 		ports:      map[int]*portMemo{},
 	}
 	l.info = engine.Info{ID: "llamacpp", Name: "llama.cpp", Logo: logo, Caps: caps(),
-		Suggestions: suggestions(), ModelSearch: modelSearch()}
+		Suggestions: suggestions(), ModelSearch: modelSearch(), Agents: enginekit.Agents()}
 	l.inst = &enginekit.Homebrew{
 		Formula: formula,
 		Size:    installSize,
@@ -119,8 +119,8 @@ func flatDirs(home string) []string {
 	return enginekit.Uniq([]string{os.Getenv("LLAMA_CACHE"), filepath.Join(home, "Library", "Caches", "llama.cpp")})
 }
 
-// Info: llama.cpp with its logo, controls and suggestions; it has no
-// agents (agents.go).
+// Info: llama.cpp with its logo, controls, suggestions and agents
+// (agents.go).
 func (l *LlamaCpp) Info() engine.Info { return l.info }
 
 // Installer is Homebrew with the llama.cpp formula of homebrew-core. The

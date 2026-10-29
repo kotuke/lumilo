@@ -126,6 +126,7 @@
   "hoverReq": "请求",
   "hoverCur": "本次请求",
   "agentsTitle": "启动智能体",
+  "agentNeedsContext": "{agent} 需要至少 {need} 个词元的上下文，而模型以 {have} 运行。请在“设置 → 模型”中调大后重新启动",
   "agentStart": "将启动服务器和智能体",
   "agentOffError": "请先解决服务器错误",
   "agentOffUnresponsive": "服务器无响应",
