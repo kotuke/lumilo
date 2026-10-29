@@ -129,7 +129,7 @@ var logo = func() engine.Logo {
 //     with 403 unless --allowed-host names it (api.md "Browser request
 //     headers"; fixture keyed/health.txt).
 //   - LiveSpeed: the tokens in flight (generation_tokens_running) and a
-//     decode clock of Lumilo's own (probe.go liveDecode) grow while a
+//     decode clock of Lumilo's own (probe.go inflight) grow while a
 //     request runs.
 //   - no conversation cache on disk: --spill-gib and --learn-conversations
 //     are off by default.

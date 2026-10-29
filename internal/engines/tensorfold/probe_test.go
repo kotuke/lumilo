@@ -44,9 +44,8 @@ func TestProbeIdle(t *testing.T) {
 	if s.Completed != 1 || s.OutputTokens != 1500 || s.PrefillTokens != 22 || s.Active != 0 || s.Queued != 0 {
 		t.Errorf("counters = %+v", s)
 	}
-	// Decode time is Lumilo's live clock (liveDecode): nothing ran while
-	// it watched.
-	if s.DecodeTime != 0 || s.PrefillTime != 21416*time.Microsecond {
+	// Nothing is in flight: the server's decode seconds.
+	if s.DecodeTime != 4830984*time.Microsecond || s.PrefillTime != 21416*time.Microsecond {
 		t.Errorf("times: decode %v, prefill %v", s.DecodeTime, s.PrefillTime)
 	}
 	// The one TTFT (0.022 s) is in the 0.01–0.05 bucket: the median is
@@ -219,9 +218,9 @@ func TestProbeEfforts(t *testing.T) {
 	}
 }
 
-// The live decode clock runs over the probe intervals with tokens in
-// flight at either end, never goes back, and starts over with a new start.
-func TestLiveDecode(t *testing.T) {
+// The clock of the tokens in flight starts at the first probe that sees
+// them and stops when none are; a new start resets it.
+func TestInflight(t *testing.T) {
 	tf := newTest(t)
 	t0 := time.Unix(1000, 0)
 	sec := func(n int) time.Time { return t0.Add(time.Duration(n) * time.Second) }
@@ -230,20 +229,24 @@ func TestLiveDecode(t *testing.T) {
 		running int64
 		want    time.Duration
 	}{
-		{0, 0, 0},             // idle
-		{1, 0, 0},             // idle
-		{2, 300, time.Second}, // started within (1, 2]
+		{0, 0, 0},   // idle, or reading the prompt
+		{1, 300, 0}, // first tokens seen
 		{3, 600, 2 * time.Second},
-		{4, 0, 3 * time.Second},  // ended within (3, 4]
-		{5, 0, 3 * time.Second},  // idle again
-		{6, 50, 4 * time.Second}, // the next request
+		{4, 0, 0},  // ended: the server's decode seconds take over
+		{6, 50, 0}, // the next request
+		{7, 80, time.Second},
 	} {
-		if got := tf.liveDecode(8000, sec(c.at), c.running); got != c.want {
+		if got := tf.inflight(8000, sec(c.at), c.running); got != c.want {
 			t.Errorf("t=%d running=%d: %v, want %v", c.at, c.running, got, c.want)
 		}
 	}
-	tf.remember(8000, fixtureRepo, "Qwen3.5-2B-MLX-4bit", 0, false)
-	if got := tf.liveDecode(8000, sec(7), 10); got != 0 {
+	// Found again as it was: the clock goes on.
+	tf.remember(8000, "", "", 0, false)
+	if got := tf.inflight(8000, sec(8), 90); got != 2*time.Second {
+		t.Errorf("after FindRunning: %v", got)
+	}
+	tf.forget(8000) // a start
+	if got := tf.inflight(8000, sec(9), 10); got != 0 {
 		t.Errorf("after a new start: %v", got)
 	}
 }

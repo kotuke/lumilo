@@ -77,6 +77,7 @@ func (tf *TensorFold) ServeCommand(cfg engine.Config) (argv []string, env []stri
 			argv = append(argv, "--drafter", ds[0].ID)
 		}
 	}
+	tf.forget(cfg.Port)
 	tf.remember(cfg.Port, cfg.Model, servedName(cfg.Model), cfg.IdleRelease, vision)
 
 	env = environ()

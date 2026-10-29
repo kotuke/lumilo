@@ -39,12 +39,10 @@ type portMemo struct {
 	// per server, the first time a probe is authorized (asked).
 	efforts []string
 	asked   bool
-	// The live decode clock (liveDecode): the time spent while tokens
-	// were being generated, summed between probes, and the last probe's
-	// time and tokens in flight.
-	decoding time.Duration
-	lastAt   time.Time
-	lastRun  int64
+	// runSince is when a probe first saw tokens in flight
+	// (generation_tokens_running) since none were; zero while none are
+	// (inflight).
+	runSince time.Time
 }
 
 func (tf *TensorFold) memo(port int) *portMemo {
@@ -57,35 +55,54 @@ func (tf *TensorFold) memo(port int) *portMemo {
 }
 
 // remember records what a server on port was started with: model, the
-// name it serves it by, its idle unload and whether it reads images.
+// name it serves it by, its idle unload and whether it reads images. A
+// server found again as it was (FindRunning runs over and over) keeps
+// what the probes learned: its efforts and the clock of the tokens in
+// flight; a new one (ServeCommand, or another model) starts afresh.
 func (tf *TensorFold) remember(port int, model, served string, idle time.Duration, vision bool) {
 	tf.mu.Lock()
 	defer tf.mu.Unlock()
 	m := tf.memo(port)
+	same := m.model == model && m.served == served && m.idle == idle && m.vision == vision
 	m.model, m.served, m.idle, m.vision = model, served, idle, vision
-	m.efforts, m.asked = nil, false
-	m.decoding, m.lastAt, m.lastRun = 0, time.Time{}, 0
+	if !same {
+		m.efforts, m.asked = nil, false
+		m.runSince = time.Time{}
+	}
 }
 
-// liveDecode advances the decode clock of the server on port to now, with
-// running tokens in flight, and returns it. TensorFold adds a request's
-// tokens and decode time to generation_tokens_total and
-// request_decode_seconds_sum only when it ends (fixture metrics-busy.txt:
-// 0 and 0 with 1029 generated); generation_tokens_running counts the
-// tokens of the requests in flight. So the clock runs over every probe
-// interval in which tokens were in flight at either end: wall time while
-// the server generates, which with several requests at once is their
-// common time and makes the speed theirs together. It never goes back,
-// so the speed meter sees no reset when a request ends.
-func (tf *TensorFold) liveDecode(port int, now time.Time, running int64) time.Duration {
+// forget drops what the probes learned of the server on port, for a
+// server about to start there (ServeCommand).
+func (tf *TensorFold) forget(port int) {
 	tf.mu.Lock()
 	defer tf.mu.Unlock()
 	m := tf.memo(port)
-	if !m.lastAt.IsZero() && (m.lastRun > 0 || running > 0) && now.After(m.lastAt) {
-		m.decoding += now.Sub(m.lastAt)
+	m.efforts, m.asked = nil, false
+	m.runSince = time.Time{}
+}
+
+// inflight is the decode time of the tokens in flight on the server on
+// port, as of now: the time since a probe first saw them. TensorFold adds
+// a request's tokens and decode time to generation_tokens_total and
+// request_decode_seconds_sum only when it ends (fixture metrics-busy.txt:
+// 0 and 0 with 1029 generated); generation_tokens_running counts the
+// tokens of the requests in flight. The clock starts at the first probe
+// that sees tokens, after the prompt was read, so it never runs ahead of
+// the server's own decode time: when the request ends, its decode seconds
+// (at least the clock's last reading) replace it, and the sum never goes
+// back. The speed over the tail of a request is then exact.
+func (tf *TensorFold) inflight(port int, now time.Time, running int64) time.Duration {
+	tf.mu.Lock()
+	defer tf.mu.Unlock()
+	m := tf.memo(port)
+	if running <= 0 {
+		m.runSince = time.Time{}
+		return 0
 	}
-	m.lastAt, m.lastRun = now, running
-	return m.decoding
+	if m.runSince.IsZero() {
+		m.runSince = now
+	}
+	return now.Sub(m.runSince)
 }
 
 // servedName is the name "tensorfold serve" serves model by without
@@ -134,8 +151,8 @@ type memoryDoc struct {
 //     generation_tokens_total, prompt_tokens_total and the sums of
 //     request_decode_seconds and request_prefill_seconds move when a
 //     request ends; time_to_first_token_seconds is a histogram. The output
-//     tokens include those in flight and the decode time is the live
-//     clock of liveDecode, so the speed shows while a request runs.
+//     tokens include those in flight and the decode time their clock
+//     (inflight), so the speed shows while a request runs.
 //     MemoryUsed is process_footprint_bytes, the process's physical
 //     footprint with its Metal buffers.
 func (tf *TensorFold) Probe(ctx context.Context, t engine.Target) engine.Snapshot {
@@ -201,7 +218,7 @@ func (tf *TensorFold) Probe(ctx context.Context, t engine.Target) engine.Snapsho
 		snap.Completed = p.Num("tensorfold:request_latency_seconds_count")
 		running := p.Num("tensorfold:generation_tokens_running")
 		snap.OutputTokens = p.Num("tensorfold:generation_tokens_total") + running
-		snap.DecodeTime = tf.liveDecode(t.Port, snap.At, running)
+		snap.DecodeTime = p.Seconds("tensorfold:request_decode_seconds_sum") + tf.inflight(t.Port, snap.At, running)
 		snap.PrefillTokens = p.Num("tensorfold:prompt_tokens_total")
 		snap.PrefillTime = p.Seconds("tensorfold:request_prefill_seconds_sum")
 		snap.FirstToken = histMedian(p.Labeled["tensorfold:time_to_first_token_seconds_bucket"])
