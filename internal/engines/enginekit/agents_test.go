@@ -145,7 +145,7 @@ func TestAgentPi(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, want := range []string{`pi.registerProvider("lumilo-8000"`, `"apiKey": "$LUMILO_API_KEY"`,
-		`"baseUrl": "http://127.0.0.1:8000/v1"`, `"contextWindow": 32768`, `"api": "openai-completions"`} {
+		`"baseUrl": "http://127.0.0.1:8000/v1"`, `"contextWindow": 27852`, `"api": "openai-completions"`} {
 		if !strings.Contains(string(src), want) {
 			t.Errorf("no %s in\n%s", want, src)
 		}

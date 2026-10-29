@@ -296,6 +296,12 @@ func writePiExtension(s AgentServer) (string, error) {
 	if s.Vision {
 		input = append(input, "image")
 	}
+	// Pi counts the prompt with its own estimate, short of the server's:
+	// it saw 81.4% of a 32,768-token window used where TensorFold counted
+	// prompt=29160, and with what it thought left it asked for a reply
+	// the window no longer held (finish=length after 1 token, 2026-10-29).
+	// Told 85% of the window, it compacts before that.
+	window := s.Context * 85 / 100
 	model := map[string]any{
 		"type": "chat", "id": s.Model, "name": s.Model,
 		"reasoning": true,
@@ -305,8 +311,8 @@ func writePiExtension(s AgentServer) (string, error) {
 		"thinkingLevelMap": piLevelMap(s.Efforts),
 		"input":            input,
 		"cost":             map[string]int{"input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0},
-		"contextWindow":    s.Context,
-		"maxTokens":        agentOutput(s.Context),
+		"contextWindow":    window,
+		"maxTokens":        agentOutput(window),
 	}
 	cfg := map[string]any{
 		"name": s.Name, "baseUrl": "http://127.0.0.1:" + strconv.Itoa(s.Port) + "/v1",
