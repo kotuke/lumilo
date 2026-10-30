@@ -1,6 +1,8 @@
 package tensorfold
 
 import (
+	"context"
+	"encoding/binary"
 	"math"
 	"os"
 	"path/filepath"
@@ -21,8 +23,10 @@ import (
 //     server never downloads, so ModelUpdates has nothing to change.
 //   - ContextTokens is --context ("Bound prompt plus reply tokens; the
 //     model's window and memory checks still apply", README). Without it
-//     the server picks one (fixture lifecycle/serve.stdout: "context:
-//     262144" for Qwen3.5-2B; README: 32,768 for Qwen3.8-27B).
+//     the server would pick one of its own, 32,768 for Qwen3.8-27B
+//     whatever the memory (README; metal.zig openQwen27 "o.context orelse
+//     32768"), too small for Claude Code and Pi: Lumilo then passes the
+//     largest that fits (autoContext).
 //   - IdleRelease is --idle-unload SECONDS: "the engine closes after N s
 //     idle and the next request reloads it (a full model load)" (fixture
 //     keyed/idle.stdout). Only requests that use the engine count as
@@ -50,8 +54,12 @@ func (tf *TensorFold) ServeCommand(cfg engine.Config) (argv []string, env []stri
 		"--host", host,
 		"--port", strconv.Itoa(cfg.Port),
 	}
-	if cfg.ContextTokens > 0 {
-		argv = append(argv, "--context", strconv.Itoa(cfg.ContextTokens))
+	ctx := cfg.ContextTokens
+	if ctx <= 0 {
+		ctx = tf.autoContext(cfg)
+	}
+	if ctx > 0 {
+		argv = append(argv, "--context", strconv.Itoa(ctx))
 	}
 	if s := idleSeconds(cfg.IdleRelease); s > 0 {
 		argv = append(argv, "--idle-unload", strconv.Itoa(s))
@@ -85,6 +93,78 @@ func (tf *TensorFold) ServeCommand(cfg engine.Config) (argv []string, env []stri
 		env = append(env, "TENSORFOLD_API_KEY="+cfg.APIKey)
 	}
 	return argv, env
+}
+
+// autoContexts are the windows autoContext tries, largest first: the
+// sizes of the context select of Settings.
+var autoContexts = []int{256 << 10, 128 << 10, 64 << 10, 32 << 10}
+
+// autoContext is the largest of autoContexts, up to the model's own
+// window, that the memory estimate (engine.Judge with caps, which follows
+// the server's own plan) fits in this computer's memory, with the image
+// input and the draft of cfg; 0 when none does or the model or the memory
+// is unknown, which leaves the choice to the server. On 48 GiB,
+// Qwen3.8-27B with its drafter gets 64K with images and 128K without.
+func (tf *TensorFold) autoContext(cfg engine.Config) int {
+	md, ok := tf.modelOf(cfg.Model)
+	if !ok {
+		return 0
+	}
+	return fitContext(md, cfg, tf.info.Caps.Memory, tf.ram())
+}
+
+// fitContext is autoContext for the model md on a computer of ram bytes.
+func fitContext(md engine.Model, cfg engine.Config, mc engine.MemoryCaps, ram int64) int {
+	if ram <= 0 {
+		return 0
+	}
+	budget := engine.Budget(ram, 0, mc.Share)
+	for _, c := range autoContexts {
+		if md.ContextLength > 0 && c > md.ContextLength {
+			continue
+		}
+		try := cfg
+		try.ContextTokens = c
+		if _, fit := engine.Judge(md, try, mc, budget); fit == engine.Fits {
+			return c
+		}
+	}
+	return 0
+}
+
+// modelOf is the installed checkpoint repo as Models lists it, with its
+// drafters; ok is false when it is not installed.
+func (tf *TensorFold) modelOf(repo string) (engine.Model, bool) {
+	fams := tf.families(context.Background())
+	for _, d := range tf.hubDirs {
+		snap := pickSnapshot(filepath.Join(d, enginekit.RepoFolder(repo)))
+		if snap == "" {
+			continue
+		}
+		s := snapshot{repo: repo, dir: snap}
+		m, cp, ok := s.model(fams)
+		if !ok {
+			continue
+		}
+		if cp.drafterOK() {
+			m.Features.Drafts = tf.drafters(m.Name)
+		}
+		return m, true
+	}
+	return engine.Model{}, false
+}
+
+// physicalMemory is the computer's memory in bytes (sysctl hw.memsize, a
+// little-endian uint64), 0 when unknown. syscall.Sysctl drops one trailing
+// NUL byte, which hw.memsize has for every size below 2^56.
+func physicalMemory() int64 {
+	s, err := syscall.Sysctl("hw.memsize")
+	if err != nil || len(s) == 0 || len(s) > 8 {
+		return 0
+	}
+	var b [8]byte
+	copy(b[:], s)
+	return int64(binary.LittleEndian.Uint64(b[:]))
 }
 
 // idleSeconds is d in whole seconds, rounded up; 0 means never (the

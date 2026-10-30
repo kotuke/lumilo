@@ -19,7 +19,9 @@
   native server for MLX checkpoints. Lumilo installs it with Homebrew,
   downloads its models into the Hugging Face cache, unloads the model when
   idle, and downloads Qwen3.8-27B with its DFlash2 drafter, which runs by
-  default and turns off in the model's settings.
+  default and turns off in the model's settings. With the context on Auto,
+  Lumilo serves the largest that fits in memory (64K or 128K for Qwen3.8-27B
+  on 48 GB) instead of TensorFold's own 32K.
 
 ## 0.1.0
 

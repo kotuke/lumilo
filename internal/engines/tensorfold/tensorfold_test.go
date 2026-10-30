@@ -492,3 +492,63 @@ func TestCapabilitiesNoJPEG(t *testing.T) {
 		t.Error("JPEG refused without a reason")
 	}
 }
+
+// Auto (ContextTokens 0) passes the largest context the estimate fits:
+// on 48 GiB, Qwen3.8-27B with its drafter gets 64K with images and 128K
+// without, 32K on 32 GiB without images and drafter; the model's own
+// window caps it.
+func TestFitContext(t *testing.T) {
+	mc := caps().Memory
+	md := engine.Model{SizeBytes: 16_054_541_349, ContextLength: 262144, KVElements: 32768,
+		Features: engine.Features{Vision: true, VisionBytes: visionBytes,
+			Drafts: []engine.Draft{{Kind: engine.DraftDFlash, ID: "z-lab/Qwen3.8-27B-DFlash2", SizeBytes: drafterMemory(3_848_817_896), Default: true}}}}
+	for _, c := range []struct {
+		ram  int64
+		cfg  engine.Config
+		want int
+	}{
+		{48 << 30, engine.Config{}, 64 << 10},
+		{48 << 30, engine.Config{NoVision: true}, 128 << 10},
+		{48 << 30, engine.Config{NoVision: true, Draft: engine.DraftOff}, 128 << 10},
+		{128 << 30, engine.Config{}, 256 << 10},
+		{32 << 30, engine.Config{NoVision: true, Draft: engine.DraftOff}, 32 << 10},
+		{32 << 30, engine.Config{}, 0}, // nothing fits (27.2 GB of 24 GB): the server decides
+		{0, engine.Config{}, 0},
+	} {
+		if got := fitContext(md, c.cfg, mc, c.ram); got != c.want {
+			t.Errorf("%d GiB %+v: %d, want %d", c.ram>>30, c.cfg, got, c.want)
+		}
+	}
+	small := md
+	small.ContextLength = 40960
+	if got := fitContext(small, engine.Config{}, mc, 128<<30); got != 32<<10 {
+		t.Errorf("a 40K model: %d", got)
+	}
+}
+
+// ServeCommand passes the auto context; a chosen one as it is.
+func TestServeCommandAutoContext(t *testing.T) {
+	dir := t.TempDir()
+	putRepo(t, dir, "TensorFold/Qwen3.8-27B-MLX-4bit", "c27",
+		hubFile{"config.json", config(t, "qwen3.8-27b-mlx-4bit")}, hubFile{"model.safetensors", "1"})
+	tf := newTest(t, dir)
+	ctxOf := func(cfg engine.Config) string {
+		argv, _ := tf.ServeCommand(cfg)
+		if i := slices.Index(argv, "--context"); i >= 0 {
+			return argv[i+1]
+		}
+		return ""
+	}
+	cfg := engine.Config{Model: "TensorFold/Qwen3.8-27B-MLX-4bit", Port: 8000}
+	if got := ctxOf(cfg); got != "" {
+		t.Errorf("memory unknown: --context %s", got)
+	}
+	tf.ram = func() int64 { return 48 << 30 } // the fake model is tiny: all fits
+	if got := ctxOf(cfg); got != "262144" {
+		t.Errorf("auto: --context %s", got)
+	}
+	cfg.ContextTokens = 65536
+	if got := ctxOf(cfg); got != "65536" {
+		t.Errorf("chosen: --context %s", got)
+	}
+}

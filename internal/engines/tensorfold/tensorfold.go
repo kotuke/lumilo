@@ -59,6 +59,7 @@ type TensorFold struct {
 	client     *http.Client
 	ps         func() ([]byte, error)        // "ps" of all processes, see running.go
 	listeners  func(port int) ([]int, error) // PIDs listening on the TCP port
+	ram        func() int64                  // the computer's memory in bytes, 0 = unknown (autoContext)
 
 	// Download (download.go): the hub to ask ("" = huggingface.co) and the
 	// hub cache to download into.
@@ -86,6 +87,7 @@ func New() *TensorFold {
 		client:     enginekit.LocalClient(),
 		ps:         runPS,
 		listeners:  runLsof,
+		ram:        physicalMemory,
 		ports:      map[int]*portMemo{},
 	}
 	tf.info = engine.Info{ID: "tensorfold", Name: "TensorFold", Logo: logo, Caps: caps(),

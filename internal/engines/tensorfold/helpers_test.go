@@ -88,6 +88,7 @@ func newTest(t *testing.T, hubDirs ...string) *TensorFold {
 	tf.ps = func() ([]byte, error) { return nil, nil }
 	enginekit.AgentDir = func() string { return filepath.Join(t.TempDir(), "agents") }
 	tf.listeners = func(int) ([]int, error) { return nil, nil }
+	tf.ram = func() int64 { return 0 } // no auto context unless a test sets it
 	return tf
 }
 
