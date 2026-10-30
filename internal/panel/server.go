@@ -575,6 +575,9 @@ func (p *Panel) controls(c *ui.Context, f *frame, s *mainState) {
 				monoTxt(c, v.Address, 11.5).NoWrap()
 			})
 		}
+		if v.Model.ID != "" {
+			p.contextChip(c, f, s)
+		}
 	})
 	if s.showUpdChip && p.updToggled && v.PendingRestart && p.running() {
 		// The server read the choice when it started.
@@ -658,3 +661,32 @@ const (
 	sweepLen    = 6
 	sweepPeriod = 2400 * time.Millisecond
 )
+
+// contextChip is the context of the model beside the address: "↔ 64K".
+// While the server runs it is the window the server reports
+// (Snapshot.ContextTokens); else the one Settings chose for the model, or
+// "Auto". The tooltip gives the tokens; a click opens Settings, where the
+// model's context is chosen.
+func (p *Panel) contextChip(c *ui.Context, f *frame, s *mainState) {
+	t, m, v := f.pal, f.m, p.view
+	tokens := 0
+	if s.served {
+		tokens = v.Snapshot.ContextTokens
+	}
+	if tokens <= 0 {
+		tokens = p.pref.Contexts[v.Model.ID]
+	}
+	label, tip := m.CtxAuto(), m.CtxChipAutoTip()
+	if tokens > 0 {
+		label, tip = ctxName(f.loc, tokens), m.CtxChipTip(format.Number(f.loc, float64(tokens), 0))
+	}
+	b := btn(c).Key("context-chip").Height(22).Radius(6).Background(t.chip).TextColor(t.soft).PaddingX(8).Gap(4).
+		Label(m.Context() + " " + label).Description(tip).Tooltip(tip)
+	if b.Hovered() || b.FocusVisible() {
+		b.Background(t.rowHover).TextColor(t.text)
+	}
+	b.OnClick(func() { p.openSettings(false) }).Children(func() {
+		ico(c, "arrows-horizontal", 2, 12)
+		txt(c, label, 11.5).NoWrap()
+	})
+}

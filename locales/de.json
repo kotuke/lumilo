@@ -378,6 +378,8 @@
   "engineNote": "Es läuft immer nur eine Engine. Eine fehlende Engine wird über Homebrew installiert",
   "context": "Kontext",
   "ctxAuto": "Automatisch",
+  "ctxChipTip": "Kontext: {tokens} Tokens. Klicken, um ihn in den Einstellungen zu ändern",
+  "ctxChipAutoTip": "Kontext: Auto – der größte, der in den Speicher passt, oder der des Engines. Klicken, um ihn in den Einstellungen zu ändern",
   "ctxOther": "Andere…",
   "ctxOtherLabel": "Größe in K Token",
   "ctxBad": "Geben Sie eine ganze Zahl von K Token ein (K = 1024)",

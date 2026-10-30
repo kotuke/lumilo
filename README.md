@@ -138,7 +138,8 @@ which prints `accepted` and `source=Notarized Developer ID`.
   generation speed. The panel shows loading, ready, generating, unloaded,
   not responding, stopping and error states, with the reason and the last
   log line when a start fails (port in use, missing model, not enough
-  memory).
+  memory). Beside the address, a chip shows the model's context ("↔ 64K"):
+  the server's while it runs, else the one chosen in Settings.
 - **Metrics.** Memory against the engine's budget, conversation state on
   disk, average speed over the last 10 requests, the last 20 requests as a
   chart, time to first token and prompt speed.

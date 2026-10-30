@@ -195,6 +195,8 @@
   "engineNote": "同一时间只运行一个引擎。未安装的引擎通过 Homebrew 安装",
   "context": "上下文",
   "ctxAuto": "自动",
+  "ctxChipTip": "上下文：{tokens} 个词元。点按可在设置中更改",
+  "ctxChipAutoTip": "上下文：自动，取内存可容纳的最大值或引擎默认值。点按可在设置中更改",
   "ctxOther": "其他…",
   "ctxOtherLabel": "大小（K 个词元）",
   "ctxBad": "请输入词元数量，须为整数，单位为 K（K = 1024）",

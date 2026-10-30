@@ -2861,6 +2861,38 @@ func (msgs Messages) CtxAuto() string {
 	return Catalog.Format(msgs.locale, "ctxAuto", nil)
 }
 
+// CtxChipTip says "Context: {tokens} tokens. Click to change it in Settings"
+// in the language the app shows.
+//
+// Tooltip of the context chip beside the server address. {tokens} is a
+// number such as "65,536".
+func CtxChipTip(tokens string) string { return In(i18n.Locale()).CtxChipTip(tokens) }
+
+// CtxChipTip says "Context: {tokens} tokens. Click to change it in Settings"
+// in the language of msgs.
+//
+// Tooltip of the context chip beside the server address. {tokens} is a
+// number such as "65,536".
+func (msgs Messages) CtxChipTip(tokens string) string {
+	return Catalog.Format(msgs.locale, "ctxChipTip", map[string]any{"tokens": tokens})
+}
+
+// CtxChipAutoTip says "Context: Auto, the largest that fits in memory or the engine's own. Click to change it in Settings"
+// in the language the app shows.
+//
+// Tooltip of the context chip while the server is stopped and the model's
+// context is Auto.
+func CtxChipAutoTip() string { return In(i18n.Locale()).CtxChipAutoTip() }
+
+// CtxChipAutoTip says "Context: Auto, the largest that fits in memory or the engine's own. Click to change it in Settings"
+// in the language of msgs.
+//
+// Tooltip of the context chip while the server is stopped and the model's
+// context is Auto.
+func (msgs Messages) CtxChipAutoTip() string {
+	return Catalog.Format(msgs.locale, "ctxChipAutoTip", nil)
+}
+
 // CtxOther says "Other…"
 // in the language the app shows.
 //

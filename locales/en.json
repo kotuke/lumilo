@@ -1253,6 +1253,17 @@
   "@ctxAuto": {
     "description": "Context size option: the engine chooses (the model's native window when memory holds it)."
   },
+  "ctxChipTip": "Context: {tokens} tokens. Click to change it in Settings",
+  "@ctxChipTip": {
+    "description": "Tooltip of the context chip beside the server address. {tokens} is a number such as \"65,536\".",
+    "placeholders": {
+      "tokens": {"type": "String", "example": "65,536"}
+    }
+  },
+  "ctxChipAutoTip": "Context: Auto, the largest that fits in memory or the engine's own. Click to change it in Settings",
+  "@ctxChipAutoTip": {
+    "description": "Tooltip of the context chip while the server is stopped and the model's context is Auto."
+  },
   "ctxOther": "Other…",
   "@ctxOther": {
     "description": "Context size option that opens a field for another size."

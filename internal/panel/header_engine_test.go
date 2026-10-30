@@ -340,3 +340,24 @@ func TestAgentNeedsContext(t *testing.T) {
 	b.click("Pi")
 	b.called("RunAgent pi")
 }
+
+// The context chip beside the address: the server's window while it runs,
+// else the one chosen for the model or Auto; a click opens Settings.
+func TestContextChip(t *testing.T) {
+	b := newBench(t, "en")
+	v := withPhase(core.PhaseReady)
+	v.Snapshot.ContextTokens = 65536
+	b.show(v, time.Hour)
+	b.want("Context 64K")
+	b.click("Context 64K")
+	if b.p.screen != screenSettings {
+		t.Errorf("screen %v, want Settings", b.p.screen)
+	}
+
+	b = newBench(t, "en")
+	b.show(withPhase(core.PhaseStopped), 0)
+	b.want("Context Auto")
+	b.p.pref.Contexts = map[string]int{b.p.view.Model.ID: 128 << 10}
+	b.tt.Frame()
+	b.want("Context 128K")
+}

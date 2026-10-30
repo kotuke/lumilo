@@ -378,6 +378,8 @@
   "engineNote": "Un seul moteur tourne à la fois. Un moteur absent s’installe avec Homebrew",
   "context": "Contexte",
   "ctxAuto": "Auto",
+  "ctxChipTip": "Contexte : {tokens} jetons. Cliquez pour le changer dans les réglages",
+  "ctxChipAutoTip": "Contexte : auto, le plus grand qui tient en mémoire ou celui du moteur. Cliquez pour le changer dans les réglages",
   "ctxOther": "Autre…",
   "ctxOtherLabel": "Taille en K jetons",
   "ctxBad": "Saisissez un nombre entier de K jetons (K = 1024)",

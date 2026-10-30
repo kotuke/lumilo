@@ -378,6 +378,8 @@
   "engineNote": "Funciona un motor a la vez. Un motor que no está instalado se instala con Homebrew",
   "context": "Contexto",
   "ctxAuto": "Automático",
+  "ctxChipTip": "Contexto: {tokens} tokens. Haz clic para cambiarlo en Ajustes",
+  "ctxChipAutoTip": "Contexto: automático, el mayor que cabe en memoria o el del motor. Haz clic para cambiarlo en Ajustes",
   "ctxOther": "Otro…",
   "ctxOtherLabel": "Tamaño en K tokens",
   "ctxBad": "Escribe un número entero de K tokens (K = 1024)",
