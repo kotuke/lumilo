@@ -177,7 +177,10 @@ which prints `accepted` and `source=Notarized Developer ID`.
   files are in the Hugging Face cache, which other apps may read too. A GGUF repository without a
   vision projector downloads for text only on Splash, which refuses it with
   image input; a model that fails for that reason starts for text only in
-  one click. The field
+  one click. A Splash model whose DFlash2 draft is gone from the Hugging Face
+  cache fails offline with a card that names the draft and downloads it in
+  one click, at the commit the model was installed with, so the model itself
+  is not updated. The field
   completes as you type: from two letters it lists matching Hugging Face
   repositories by downloads (GGUF ones for llama.cpp; GGUF and MLX ones of
   the architectures Splash runs for Splash; MLX ones of the families

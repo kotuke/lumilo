@@ -3625,6 +3625,40 @@ func (msgs Messages) ErrActTextOnly() string {
 	return Catalog.Format(msgs.locale, "errActTextOnly", nil)
 }
 
+// ErrTitleDraft says "Draft model {name} is not on this Mac. Download it to start the model"
+// in the language the app shows.
+//
+// Error title: the model's draft model (speculative decoding) is missing
+// from the Hugging Face cache and downloads are off. {name} is the draft's
+// repository.
+func ErrTitleDraft(name string) string { return In(i18n.Locale()).ErrTitleDraft(name) }
+
+// ErrTitleDraft says "Draft model {name} is not on this Mac. Download it to start the model"
+// in the language of msgs.
+//
+// Error title: the model's draft model (speculative decoding) is missing
+// from the Hugging Face cache and downloads are off. {name} is the draft's
+// repository.
+func (msgs Messages) ErrTitleDraft(name string) string {
+	return Catalog.Format(msgs.locale, "errTitleDraft", map[string]any{"name": name})
+}
+
+// ErrActDraft says "Download draft model"
+// in the language the app shows.
+//
+// Error button: downloads the missing draft model at the version the model
+// was installed with.
+func ErrActDraft() string { return In(i18n.Locale()).ErrActDraft() }
+
+// ErrActDraft says "Download draft model"
+// in the language of msgs.
+//
+// Error button: downloads the missing draft model at the version the model
+// was installed with.
+func (msgs Messages) ErrActDraft() string {
+	return Catalog.Format(msgs.locale, "errActDraft", nil)
+}
+
 // TextOnly says "Text only"
 // in the language the app shows.
 //

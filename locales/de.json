@@ -426,6 +426,8 @@
   "errTitleModelOnline": "Das Modell konnte nicht heruntergeladen werden. Prüfen Sie den Namen und die Internetverbindung",
   "errTitleNoVision": "Dieses Modell hat keine Bildeingabe. Starten Sie es nur für Text",
   "errActTextOnly": "Ohne Bilder starten",
+  "errTitleDraft": "Das Entwurfsmodell {name} fehlt auf diesem Mac. Laden Sie es, um das Modell zu starten",
+  "errActDraft": "Entwurfsmodell laden",
   "textOnly": "Nur Text",
   "dlCancel": "Download abbrechen",
   "dlCancelling": "Wird abgebrochen…",

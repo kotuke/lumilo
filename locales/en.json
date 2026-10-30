@@ -1578,6 +1578,20 @@
   "@errActTextOnly": {
     "description": "Error button: turns image input off for the model and starts the server again."
   },
+  "errTitleDraft": "Draft model {name} is not on this Mac. Download it to start the model",
+  "@errTitleDraft": {
+    "description": "Error title: the model's draft model (speculative decoding) is missing from the Hugging Face cache and downloads are off. {name} is the draft's repository.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "incoai/Qwen3.8-27B-DFlash2"
+      }
+    }
+  },
+  "errActDraft": "Download draft model",
+  "@errActDraft": {
+    "description": "Error button: downloads the missing draft model at the version the model was installed with."
+  },
   "textOnly": "Text only",
   "@textOnly": {
     "description": "Tag under a model to download: its repository has no vision projector, so it is downloaded and served for text only."

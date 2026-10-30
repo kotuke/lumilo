@@ -37,11 +37,18 @@ type RevFile struct {
 // "lfs": {"sha256", "size"} (checked live with ggml-org/Qwen3-0.6B-GGUF
 // on 2026-10-27).
 func (c *Client) Revision(ctx context.Context, repo string) (Revision, error) {
+	return c.RevisionAt(ctx, repo, "main")
+}
+
+// RevisionAt is Revision at revision, a branch or a commit: a commit
+// answers itself as "sha".
+func (c *Client) RevisionAt(ctx context.Context, repo, revision string) (Revision, error) {
 	owner, name, ok := strings.Cut(repo, "/")
 	if !ok || owner == "" || name == "" || strings.ContainsAny(repo, "?#") || strings.Contains(name, "/") {
 		return Revision{}, fmt.Errorf("hf: %q is not owner/repo", repo)
 	}
-	u := c.base() + "/api/models/" + url.PathEscape(owner) + "/" + url.PathEscape(name) + "/revision/main?blobs=true"
+	u := c.base() + "/api/models/" + url.PathEscape(owner) + "/" + url.PathEscape(name) + "/revision/" +
+		url.PathEscape(revision) + "?blobs=true"
 	body, err := c.get(ctx, u)
 	if err != nil {
 		return Revision{}, err

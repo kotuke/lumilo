@@ -112,6 +112,9 @@ var (
 	// files are missing from the cache:
 	// "Fetching 3 file(s), 21.24 GB, from owner/repo@0123456789ab; cached files are reused."
 	fetchRe = regexp.MustCompile(`^Fetching \d+ file\(s\), ([0-9.]+) GB, from `)
+	// install/hub.py Repository.resolve: "cannot resolve <repo>: <why>; <cache>",
+	// the target's repository or its draft's.
+	resolveRe = regexp.MustCompile(`cannot resolve ([\w.-]+/[\w.-]+): `)
 )
 
 // ParseLine reads one line of "splash serve" output (ref §2.2). Stream does
@@ -218,7 +221,11 @@ func (s *Splash) ClassifyFailure(code int, tail []string) engine.Failure {
 		return engine.Failure{Kind: engine.FailNoVision, Code: code, Line: l}
 	}
 	if l := findLine(lines, modelPatterns...); l != "" {
-		return engine.Failure{Kind: engine.FailModel, Code: code, Line: l}
+		f := engine.Failure{Kind: engine.FailModel, Code: code, Line: l}
+		if m := resolveRe.FindStringSubmatch(l); m != nil {
+			f.Repo = m[1]
+		}
+		return f
 	}
 	if l := findLine(lines, memoryPatterns...); l != "" {
 		return engine.Failure{Kind: engine.FailMemory, Code: code, Line: l}
