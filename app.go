@@ -64,8 +64,10 @@ type app struct {
 	shown      trayicon.Icon // the icon and tooltip set last
 	shownTip   string
 	haveShown  bool
-	step       int           // breathing frame
-	stopBreath chan struct{} // non-nil while the breathing ticker runs
+	step       int            // breathing frame
+	stopBreath chan struct{}  // non-nil while the breathing ticker runs
+	tps        trayicon.Speed // the speed the icon shows, eased and held
+	stopSpeed  chan struct{}  // non-nil while the speed ticker runs
 
 	path string // settings file
 
@@ -191,6 +193,10 @@ func (a *app) ready() {
 	mygo.App.OnWillQuit(func(*mygo.QuitEvent) {
 		a.quitting.Store(true)
 		a.stopBreathing()
+		if a.stopSpeed != nil {
+			close(a.stopSpeed)
+			a.stopSpeed = nil
+		}
 		a.sup.Close() // stops our server; a foreign one is never touched
 		a.tray.Destroy()
 		a.waitSaves(2 * time.Second)
@@ -589,7 +595,8 @@ func (a *app) drawTray() {
 		return
 	}
 	loc := mygo.App.Locale()
-	ic := trayicon.For(a.view, loc, a.tray.Dark())
+	a.tps.Target(a.view, time.Now())
+	ic := trayicon.For(a.view, loc, a.tray.Dark(), a.tps.Shown())
 	tip := trayicon.ToolTip(a.view, loc)
 	if !a.haveShown || ic != a.shown {
 		a.setIcon(ic)
@@ -599,6 +606,51 @@ func (a *app) drawTray() {
 	}
 	a.shown, a.shownTip, a.haveShown = ic, tip, true
 	a.syncBreathing()
+	a.syncSpeed()
+}
+
+// syncSpeed starts or stops the ticker of the speed the icon shows
+// (trayicon.Speed): it eases the number toward the live speed, when the
+// user wants the icon animated and the system does not ask for less
+// motion, and ends the hold after a request; it runs only while a speed
+// shows.
+func (a *app) syncSpeed() {
+	a.mu.Lock()
+	animate := a.st.AnimateIcon
+	a.mu.Unlock()
+	a.tps.Ease = animate && !mygo.Theme.Preferences().ReduceMotion
+	want := a.tps.Active()
+	switch {
+	case want && a.stopSpeed == nil:
+		stop := make(chan struct{})
+		a.stopSpeed = stop
+		go func() {
+			tk := time.NewTicker(trayicon.SpeedTick)
+			defer tk.Stop()
+			for {
+				select {
+				case <-stop:
+					return
+				case now := <-tk.C:
+					if a.quitting.Load() {
+						return
+					}
+					a.win.Update(func() {
+						select {
+						case <-stop:
+							return
+						default:
+						}
+						a.tps.Step(now)
+						a.drawTray()
+					})
+				}
+			}
+		}()
+	case !want && a.stopSpeed != nil:
+		close(a.stopSpeed)
+		a.stopSpeed = nil
+	}
 }
 
 func (a *app) setIcon(ic trayicon.Icon) {

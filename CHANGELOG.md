@@ -9,6 +9,9 @@
 - Claude Code, Codex, OpenCode and Pi also launch against llama.cpp and
   TensorFold servers, without changes to the agents' own settings. Claude
   Code's button is off while the context is under the 100K it needs.
+- The speed in the menu bar glides instead of jumping, and stays while a
+  coding agent runs its tools between answers; a request's bar in the chart
+  is its whole speed.
 - Pause a model download from its row and resume it later from what it
   fetched.
 - A third engine: [TensorFold](https://github.com/ashhart/TensorFold), the

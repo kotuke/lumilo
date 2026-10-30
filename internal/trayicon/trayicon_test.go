@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"image/png"
+	"math"
 	"os"
 	"path/filepath"
 	"strings"
@@ -48,7 +49,7 @@ func TestEveryState(t *testing.T) {
 			for _, dark := range []bool{false, true} {
 				v := view(p)
 				v.Engine = name
-				ic := For(v, "en", dark)
+				ic := For(v, "en", dark, liveTPS(v))
 				data := PNG(ic)
 				w, h, a := decode(t, data)
 				if h != height*scale || w < 20 || w > maxWidth*scale {
@@ -68,64 +69,64 @@ func TestEveryState(t *testing.T) {
 
 func TestStates(t *testing.T) {
 	v := view(core.PhaseReady)
-	if ic := For(v, "en", false); ic.Text != "17 GB" || ic.Lit != 4 || ic.Label != "SPLASH" || ic.Glyph != GlyphNone {
+	if ic := For(v, "en", false, liveTPS(v)); ic.Text != "17 GB" || ic.Lit != 4 || ic.Label != "SPLASH" || ic.Glyph != GlyphNone {
 		t.Errorf("ready: %+v", ic)
 	}
-	if ic := For(view(core.PhaseExternal), "en", false); ic.Text != "17 GB" || ic.Lit != 4 {
+	if ic := For(view(core.PhaseExternal), "en", false, 0); ic.Text != "17 GB" || ic.Lit != 4 {
 		t.Errorf("external: %+v", ic)
 	}
 	g := view(core.PhaseGenerating)
-	if ic := For(g, "en", false); ic.Text != "41 T/S" || ic.Lit != 4 {
+	if ic := For(g, "en", false, liveTPS(g)); ic.Text != "41 T/S" || ic.Lit != 4 {
 		t.Errorf("generating: %+v", ic)
 	}
 	g.Speed.Current = 0
-	if ic := For(g, "en", false); ic.Text != "17 GB" {
+	if ic := For(g, "en", false, liveTPS(g)); ic.Text != "17 GB" {
 		t.Errorf("generating without speed: %+v", ic)
 	}
-	if ic := For(view(core.PhaseLoading), "en", false); ic.Glyph != GlyphLoader || ic.Lit != 2 || ic.BarTone != ToneWarn {
+	if ic := For(view(core.PhaseLoading), "en", false, 0); ic.Glyph != GlyphLoader || ic.Lit != 2 || ic.BarTone != ToneWarn {
 		t.Errorf("loading: %+v", ic)
 	}
-	if ic := For(view(core.PhaseError), "en", false); ic.Glyph != GlyphAlert || ic.GlyphTone != ToneErr || ic.Lit != 2 {
+	if ic := For(view(core.PhaseError), "en", false, 0); ic.Glyph != GlyphAlert || ic.GlyphTone != ToneErr || ic.Lit != 2 {
 		t.Errorf("error: %+v", ic)
 	}
 	// Weights on their way back look like loading, not like ready or zzz.
-	if ic := For(view(core.PhaseRestoring), "en", false); ic.Glyph != GlyphLoader || ic.Lit != 2 || ic.BarTone != ToneWarn || ic.Text != "" {
+	if ic := For(view(core.PhaseRestoring), "en", false, 0); ic.Glyph != GlyphLoader || ic.Lit != 2 || ic.BarTone != ToneWarn || ic.Text != "" {
 		t.Errorf("restoring: %+v", ic)
 	}
 	if got, want := ToolTip(view(core.PhaseRestoring), "en"), ToolTip(view(core.PhaseLoading), "en"); got != want {
 		t.Errorf("restoring tooltip %q, loading %q", got, want)
 	}
-	if ic := For(view(core.PhaseReleased), "en", false); ic.Glyph != GlyphZzz || ic.Lit != 0 || ic.GlyphTone != ToneInk {
+	if ic := For(view(core.PhaseReleased), "en", false, 0); ic.Glyph != GlyphZzz || ic.Lit != 0 || ic.GlyphTone != ToneInk {
 		t.Errorf("released: %+v", ic)
 	}
-	if ic := For(view(core.PhaseStopped), "en", false); ic.Glyph != GlyphPower || ic.Lit != 0 || ic.GlyphTone != ToneMuted {
+	if ic := For(view(core.PhaseStopped), "en", false, 0); ic.Glyph != GlyphPower || ic.Lit != 0 || ic.GlyphTone != ToneMuted {
 		t.Errorf("stopped: %+v", ic)
 	}
-	if ic := For(view(core.PhaseNoInstaller), "en", false); ic.Glyph != GlyphDownload {
+	if ic := For(view(core.PhaseNoInstaller), "en", false, 0); ic.Glyph != GlyphDownload {
 		t.Errorf("no brew: %+v", ic)
 	}
 	// A running update overrides any state.
 	u := view(core.PhaseReady)
 	u.Update = core.UpdateUpdating
-	if ic := For(u, "en", true); ic.Glyph != GlyphLoader || ic.Text != "" || ic.Lit != 2 || ic.BarTone != ToneWarn {
+	if ic := For(u, "en", true, liveTPS(u)); ic.Glyph != GlyphLoader || ic.Text != "" || ic.Lit != 2 || ic.BarTone != ToneWarn {
 		t.Errorf("updating: %+v", ic)
 	}
 	// An available update changes nothing.
 	u.Update = core.UpdateAvailable
-	if ic := For(u, "en", true); ic.Text != "17 GB" {
+	if ic := For(u, "en", true, liveTPS(u)); ic.Text != "17 GB" {
 		t.Errorf("update available: %+v", ic)
 	}
 }
 
 func TestLocaleUnits(t *testing.T) {
-	if ic := For(view(core.PhaseReady), "ru", false); !strings.Contains(ic.Text, "ГБ") {
+	if ic := For(view(core.PhaseReady), "ru", false, 0); !strings.Contains(ic.Text, "ГБ") {
 		t.Errorf("ru: %q", ic.Text)
 	}
-	if ic := For(view(core.PhaseGenerating), "ru", false); !strings.Contains(ic.Text, "Т/С") {
+	if ic := For(view(core.PhaseGenerating), "ru", false, liveTPS(view(core.PhaseGenerating))); !strings.Contains(ic.Text, "Т/С") {
 		t.Errorf("ru: %q", ic.Text)
 	}
 	// Arabic keeps Latin digits and is not isolated: the icon reads left to right.
-	if ic := For(view(core.PhaseReady), "ar", false); !strings.HasPrefix(ic.Text, "17") {
+	if ic := For(view(core.PhaseReady), "ar", false, 0); !strings.HasPrefix(ic.Text, "17") {
 		t.Errorf("ar: %q", ic.Text)
 	}
 }
@@ -168,7 +169,7 @@ func TestToolTip(t *testing.T) {
 }
 
 func TestCacheAndLight(t *testing.T) {
-	ic := For(view(core.PhaseReady), "en", false)
+	ic := For(view(core.PhaseReady), "en", false, 0)
 	a, b := PNG(ic), PNG(ic)
 	if &a[0] != &b[0] {
 		t.Error("identical icons must come from the cache")
@@ -180,7 +181,7 @@ func TestCacheAndLight(t *testing.T) {
 }
 
 func TestBreathing(t *testing.T) {
-	ic := For(view(core.PhaseGenerating), "en", true)
+	ic := For(view(core.PhaseGenerating), "en", true, liveTPS(view(core.PhaseGenerating)))
 	seen := map[uint8]bool{}
 	for i := range BreathSteps {
 		seen[Frame(ic, i).Dim] = true
@@ -211,7 +212,7 @@ func TestLabelPosition(t *testing.T) {
 	v := view(core.PhaseReady)
 	for _, name := range []string{"Splash", "llama.cpp"} {
 		v.Engine = name
-		img, err := png.Decode(bytes.NewReader(PNG(For(v, "en", false))))
+		img, err := png.Decode(bytes.NewReader(PNG(For(v, "en", false, liveTPS(v)))))
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -240,5 +241,71 @@ func TestLabelPosition(t *testing.T) {
 		if bTop < 2 || bTop > 4 || h-1-bBot < 2 || h-1-bBot > 4 {
 			t.Errorf("%s: bar rows %d..%d of %d, want it centred", name, bTop, bBot, h)
 		}
+	}
+}
+
+// liveTPS is the speed the app shows for v without a hold: the live one
+// while generating.
+func liveTPS(v core.View) float64 {
+	if v.Phase == core.PhaseGenerating {
+		return v.Speed.Current
+	}
+	return 0
+}
+
+// Speed holds the last speed after a generation, eases toward a new one
+// in steps, and shows none once the hold is over or the server stops.
+func TestSpeedHoldAndEase(t *testing.T) {
+	t0 := time.Unix(1000, 0)
+	gen := view(core.PhaseGenerating)
+	gen.Speed.Current = 80
+	ready := view(core.PhaseReady)
+	var s Speed
+	s.Ease = true
+	s.Target(gen, t0)
+	s.Step(t0)
+	if s.Shown() != 80 || !s.Active() {
+		t.Fatalf("first speed: %v", s.Shown())
+	}
+	// A faster stretch: the number moves toward 120, not at once.
+	gen.Speed.Current = 120
+	s.Target(gen, t0.Add(100*time.Millisecond))
+	s.Step(t0.Add(100 * time.Millisecond))
+	if got := s.Shown(); got <= 80 || got >= 100 {
+		t.Errorf("after one step: %v", got)
+	}
+	for i := 2; i <= 30; i++ {
+		s.Step(t0.Add(time.Duration(i) * 100 * time.Millisecond))
+	}
+	if got := s.Shown(); math.Abs(got-120) > 1 {
+		t.Errorf("after 3 s: %v", got)
+	}
+	// The agent runs a tool: the server is ready, the speed holds.
+	at := t0.Add(5 * time.Second)
+	s.Target(ready, at)
+	if s.Shown() < 119 || !s.Active() {
+		t.Errorf("held: %v", s.Shown())
+	}
+	if ic := For(ready, "en", false, s.Shown()); ic.Text != "120 T/S" {
+		t.Errorf("held icon %q", ic.Text)
+	}
+	s.Target(ready, at.Add(SpeedHold+time.Second))
+	if s.Shown() != 0 || s.Active() {
+		t.Errorf("after the hold: %v", s.Shown())
+	}
+	// Stopped: none at once.
+	s.Target(gen, at)
+	s.Target(view(core.PhaseStopped), at.Add(time.Second))
+	if s.Shown() != 0 {
+		t.Errorf("stopped: %v", s.Shown())
+	}
+	// Without easing a change shows at once.
+	s = Speed{}
+	gen.Speed.Current = 50
+	s.Target(gen, t0)
+	gen.Speed.Current = 90
+	s.Target(gen, t0.Add(time.Second))
+	if s.Shown() != 90 {
+		t.Errorf("no easing: %v", s.Shown())
 	}
 }

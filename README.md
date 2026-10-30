@@ -74,7 +74,10 @@ memory the model takes, and the value is the live speed while it generates,
 the memory while it waits, or a sign when it loads, sleeps, stops or fails.
 llama.cpp counts a request's tokens when it ends, so under llama.cpp the icon
 shows memory while it generates. TensorFold does too, but it reports the
-tokens in flight, so Lumilo times them itself and the speed shows live.
+tokens in flight, so Lumilo times them itself and the speed shows live. The
+speed is that of the last three seconds, and the number glides to a new one
+when the icon is animated; it stays for 15 seconds after an answer, while a
+coding agent runs its tools between two of them.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/menubar-dark.png">

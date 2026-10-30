@@ -54,6 +54,13 @@ func (p *Panel) speedCard(c *ui.Context, f *frame, s *mainState) {
 	}
 	isCur := func(i int) bool { return i == current }
 	tps := func(x float64) string { return format.TokPerSec(f.loc, x) }
+	el := card(c, f, 8).Key("speed-card")
+	if current >= 0 {
+		// The live bar and its number follow the speed with a spring, so
+		// they glide where the probes step (once a second); at once with
+		// Reduce Motion.
+		series[current] = float64(el.Spring("live", float32(series[current])))
+	}
 	barText := func(i int) string {
 		if isCur(i) {
 			return m.HoverCur() + " " + tps(series[i])
@@ -61,7 +68,7 @@ func (p *Panel) speedCard(c *ui.Context, f *frame, s *mainState) {
 		return m.HoverReq() + " " + tps(series[i])
 	}
 
-	card(c, f, 8).Children(func() {
+	el.Children(func() {
 		ui.Row(c).Gap(6).Children(func() {
 			txt(c, m.SpeedTitle(), 12.5).FontWeight(600).Grow(1)
 			if generating && v.Snapshot.Queued > 0 {
