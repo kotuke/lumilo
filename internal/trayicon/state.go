@@ -18,12 +18,13 @@ const (
 )
 
 // For maps the supervisor's view to an icon. loc is the app locale
-// (mygo.App.Locale()); dark is Tray.Dark().
+// (mygo.App.Locale()); dark is Tray.Dark(); tps is the speed to show
+// (Speed.Shown), 0 for none.
 //
 //	state                          bar (bottom up)    value
 //	stopped, stopping              0 lit              power, muted
 //	loading, installing, updating, restoring  2 lit, warn  loader, warn
-//	ready, external                memory fraction    memory "17 GB"
+//	ready, external                memory fraction    speed "41 T/S" while tps > 0 (held), else memory "17 GB"
 //	generating                     memory fraction    speed "41 T/S"; memory until a speed is known
 //	released                       0 lit              zzz, ink
 //	unresponsive                   2 lit, warn        alert, warn
@@ -31,7 +32,7 @@ const (
 //	not installed, no Homebrew     0 lit              download, muted
 //
 // An update that is running overrides the state: loading look, no text.
-func For(v core.View, loc string, dark bool) Icon {
+func For(v core.View, loc string, dark bool, tps float64) Icon {
 	ic := Icon{Label: strings.ToUpper(v.Engine), Dark: dark}
 	busy := func() { ic.Glyph, ic.GlyphTone, ic.Lit, ic.BarTone = GlyphLoader, ToneWarn, 2, ToneWarn }
 	fail := func(g Glyph, t Tone) { ic.Glyph, ic.GlyphTone, ic.Lit, ic.BarTone = g, t, 2, t }
@@ -50,12 +51,10 @@ func For(v core.View, loc string, dark bool) Icon {
 		idle(GlyphPower, ToneMuted)
 	case core.PhaseLoading, core.PhaseInstalling, core.PhaseRestoring:
 		busy()
-	case core.PhaseReady, core.PhaseExternal:
+	case core.PhaseReady, core.PhaseExternal, core.PhaseGenerating:
 		memory()
-	case core.PhaseGenerating:
-		memory()
-		if cur := v.Speed.Current; cur > 0 {
-			ic.Text = format.TrayTPS(loc, cur)
+		if tps > 0 {
+			ic.Text = format.TrayTPS(loc, tps)
 		}
 	case core.PhaseReleased:
 		idle(GlyphZzz, ToneInk)

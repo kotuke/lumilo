@@ -20,9 +20,10 @@ const (
 	// DownloadQueued waits for the engine's running download to end (one
 	// runs at a time), or for an update of the engine to finish.
 	DownloadQueued
-	// DownloadPaused stopped with what it fetched kept: Lumilo quit, or
-	// the user switched to another engine. DownloadModel resumes it;
-	// DismissDownload removes it and its partial files.
+	// DownloadPaused stopped with what it fetched kept: the user paused
+	// it, Lumilo quit, or the user switched to another engine.
+	// DownloadModel resumes it; DismissDownload removes it and its partial
+	// files.
 	DownloadPaused
 )
 
@@ -50,7 +51,7 @@ type DownloadJob struct {
 type stopWhy int
 
 const (
-	stopPause   stopWhy = iota // keep the files; the job is paused (quit, engine switch)
+	stopPause   stopWhy = iota // keep the files; the job is paused (Pause, quit, engine switch)
 	stopDrop                   // the user cancelled: drop the files and the job
 	stopRequeue                // keep the files; the job runs again later (engine update)
 )
@@ -160,6 +161,25 @@ func (s *Supervisor) CancelDownload(id string) { s.removeJob(id, true) }
 // DismissDownload removes a job of id that does not run: a failed, paused
 // or queued one with its partial files, a finished one from the view.
 func (s *Supervisor) DismissDownload(id string) { s.removeJob(id, false) }
+
+// PauseDownload stops the download of id and keeps what it fetched, for
+// DownloadModel to resume it: a running or queued job is DownloadPaused at
+// once (a running one's engine stops meanwhile, and the next queued job
+// starts once it has), others stay as they are.
+func (s *Supervisor) PauseDownload(id string) {
+	s.mu.Lock()
+	j := s.jobLocked(id)
+	if j == nil || (j.State != DownloadRunning && j.State != DownloadQueued) {
+		s.mu.Unlock()
+		return
+	}
+	j.State, j.stop = DownloadPaused, stopPause
+	if j.alive() {
+		j.cancel()
+	}
+	s.mu.Unlock()
+	s.jobsChanged()
+}
 
 func (s *Supervisor) removeJob(id string, cancelRunning bool) {
 	s.mu.Lock()
@@ -291,8 +311,10 @@ func (s *Supervisor) runJob(ctx context.Context, d engine.Downloader, j *job) {
 			return
 		case stopRequeue:
 			j.State = DownloadQueued
-		default: // Close or a switch: what it fetched waits for a resume
-			j.State = DownloadPaused
+		default: // Pause, Close or a switch: what it fetched waits for a resume
+			if j.State != DownloadQueued { // resumed while it stopped
+				j.State = DownloadPaused
+			}
 		}
 		s.mu.Unlock()
 		return

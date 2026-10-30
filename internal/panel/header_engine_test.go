@@ -1,12 +1,14 @@
 package panel
 
 import (
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/egoist/mygo/ui"
 
 	"github.com/kotuke/lumilo/internal/core"
+	"github.com/kotuke/lumilo/internal/engines/tensorfold"
 	"github.com/kotuke/lumilo/internal/format"
 	"github.com/kotuke/lumilo/locales"
 )
@@ -289,4 +291,121 @@ func TestHeaderEngineSwitchFits(t *testing.T) {
 			t.Errorf("%s: the list is cut off: %+v (shown %v), window %d", lang, row, ok, b.p.height)
 		}
 	}
+}
+
+// TensorFold has no chat page: the header has no chat button, and the
+// engine list shows it beside the others.
+func TestHeaderTensorFold(t *testing.T) {
+	m := locales.In("en")
+	b := newBench(t, "en")
+	v := withPhase(core.PhaseReady)
+	e := tensorfold.New()
+	core.Describe(&v, e)
+	v.Version, v.ChatURL = "1.1.9", ""
+	info := e.Info()
+	v.Engines = append(engineList(), core.EngineInfo{ID: info.ID, Name: info.Name, Logo: info.Logo,
+		Installed: true, Version: "1.1.9", Install: e.Installer().Describe()})
+	b.show(v, time.Hour)
+	b.none(m.Chat(), m.NoUpdates(), m.UpdatesOn()) // no chat page; nothing to update on start
+	b.want(m.Log(), m.Settings())
+	b.openEngines("TensorFold 1.1.9")
+	b.want("Splash", "llama.cpp", "TensorFold")
+}
+
+// Claude Code needs a context of 100K or more: against a server of 32K
+// its chip is off and says why; the other agents launch.
+func TestAgentNeedsContext(t *testing.T) {
+	if got := locales.In("en").AgentNeedsContext("Claude", "100K", "32K"); !strings.Contains(got, "100K") {
+		t.Errorf("message %q", got)
+	}
+	b := newBench(t, "en")
+	v := withPhase(core.PhaseReady)
+	core.Describe(&v, tensorfold.New())
+	v.Version, v.ChatURL = "1.1.9", ""
+	v.Snapshot.ContextTokens = 32768
+	b.show(v, time.Hour)
+	// The reason is the chip's tooltip and description, which the tester
+	// does not list; the chip does not launch.
+	b.click("Claude")
+	b.notCalled("RunAgent claude")
+	b.click("Pi") // 64K or more
+	b.notCalled("RunAgent pi")
+	b.click("Codex")
+	b.called("RunAgent codex")
+
+	v.Snapshot.ContextTokens = 131072
+	b.show(v, time.Hour)
+	b.click("Claude")
+	b.called("RunAgent claude")
+	b.click("Pi")
+	b.called("RunAgent pi")
+}
+
+// The context chip beside the address: the server's window while it runs,
+// else the one chosen for the model or Auto; a click opens Settings.
+func TestCtxBlink(t *testing.T) {
+	for _, c := range []struct {
+		e    time.Duration
+		lit  bool
+		next time.Duration
+	}{
+		{-time.Second, false, 0},
+		{0, true, ctxBlinks[0]},
+		{ctxBlinks[0], false, ctxBlinks[1]},
+		{ctxBlinks[0] + ctxBlinks[1], true, ctxBlinks[2]},
+		{ctxFlash - time.Millisecond, true, time.Millisecond},
+		{ctxFlash, false, 0},
+	} {
+		if lit, next := ctxBlink(c.e); lit != c.lit || next != c.next {
+			t.Errorf("ctxBlink(%v) = %v, %v; want %v, %v", c.e, lit, next, c.lit, c.next)
+		}
+	}
+}
+
+func TestContextChip(t *testing.T) {
+	b := newBench(t, "en")
+	v := withPhase(core.PhaseReady)
+	v.Snapshot.ContextTokens = 65536
+	b.show(v, time.Hour)
+	b.want("Context 64K")
+	b.click("Context 64K")
+	if b.p.screen != screenSettings {
+		t.Errorf("screen %v, want Settings", b.p.screen)
+	}
+	// The context row blinks twice in the accent's tint, then is the card
+	// again.
+	r, ok := b.tt.Find("Context")
+	if !ok {
+		t.Fatalf("no context row in %q", b.tt.Texts())
+	}
+	at := func() ui.Color { return pixel(b.tt.Image(), int(r.X-4), int(r.Y+r.H/2)) }
+	// The card beside the next row, left of its text as well.
+	card := pixel(b.tt.Image(), int(r.X-4), int(r.Y+r.H/2+34))
+	// The blink began with the click; settle moved the clock since.
+	e := slideAnimation.Duration + 100*time.Millisecond
+	to := func(d time.Duration) {
+		b.tt.Advance(d - e)
+		e = d
+	}
+	for i, c := range []struct {
+		at  time.Duration
+		lit bool
+	}{
+		{e, true},
+		{ctxBlinks[0] + 250*time.Millisecond, false},
+		{ctxBlinks[0] + ctxBlinks[1] + 300*time.Millisecond, true},
+		{ctxFlash + time.Second, false},
+	} {
+		to(c.at)
+		if got := at(); (dist(got, card) > 12) != c.lit {
+			t.Errorf("step %d at %v: row %v, card %v, want lit %v", i, c.at, got, card, c.lit)
+		}
+	}
+
+	b = newBench(t, "en")
+	b.show(withPhase(core.PhaseStopped), 0)
+	b.want("Context Auto")
+	b.p.pref.Contexts = map[string]int{b.p.view.Model.ID: 128 << 10}
+	b.tt.Frame()
+	b.want("Context 128K")
 }

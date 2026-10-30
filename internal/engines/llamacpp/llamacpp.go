@@ -88,7 +88,7 @@ func New() *LlamaCpp {
 		ports:      map[int]*portMemo{},
 	}
 	l.info = engine.Info{ID: "llamacpp", Name: "llama.cpp", Logo: logo, Caps: caps(),
-		Suggestions: suggestions(), ModelSearch: modelSearch()}
+		Suggestions: suggestions(), ModelSearch: modelSearch(), Agents: enginekit.Agents()}
 	l.inst = &enginekit.Homebrew{
 		Formula: formula,
 		Size:    installSize,
@@ -119,8 +119,8 @@ func flatDirs(home string) []string {
 	return enginekit.Uniq([]string{os.Getenv("LLAMA_CACHE"), filepath.Join(home, "Library", "Caches", "llama.cpp")})
 }
 
-// Info: llama.cpp with its logo, controls and suggestions; it has no
-// agents (agents.go).
+// Info: llama.cpp with its logo, controls, suggestions and agents
+// (agents.go).
 func (l *LlamaCpp) Info() engine.Info { return l.info }
 
 // Installer is Homebrew with the llama.cpp formula of homebrew-core. The
@@ -132,8 +132,9 @@ func (l *LlamaCpp) Installer() engine.Installer { return l.inst }
 var logo = engine.Logo{Kind: engine.LogoSVG,
 	Dark: enginekit.MustFile(logos, "logos/icon-dark.svg"), Light: enginekit.MustFile(logos, "logos/icon-light.svg")}
 
-// caps: no Release (see probe.go; idle unload is --sleep-idle-seconds), no
-// Host check (llama-server serves any Host header, serve.go), no live
+// caps: a chat page (ChatURL), no Release (see probe.go; idle unload is
+// --sleep-idle-seconds), no Host check (llama-server serves any Host
+// header, serve.go), no live
 // speed (llamacpp:tokens_predicted_total and _seconds_total move only when
 // a request ends: a streamed 1500-token request read 0 for 6 s, then 1500,
 // checked live on 2026-10-27) and no conversation cache on disk. -c has no
@@ -145,7 +146,7 @@ var logo = engine.Logo{Kind: engine.LogoSVG,
 // --parallel auto). The reserve is the compute buffers, about 1 GB for a
 // 27B model on Metal. --fit (on by default) shrinks the context to fit.
 func caps() engine.Caps {
-	return engine.Caps{Memory: engine.MemoryCaps{KVBytesPerElement: 2, Reserve: 1_000_000_000, ShrinksContext: true}}
+	return engine.Caps{Chat: true, ModelUpdates: true, Memory: engine.MemoryCaps{KVBytesPerElement: 2, Reserve: 1_000_000_000, ShrinksContext: true}}
 }
 
 // ChatURL is the built-in web UI at the root (--ui is on by default, help).

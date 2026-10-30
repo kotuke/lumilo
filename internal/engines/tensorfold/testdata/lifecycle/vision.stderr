@@ -1,0 +1,2 @@
+warning: /opt/homebrew/opt/jpeg-turbo/lib/libturbojpeg.0.dylib is not libjpeg-turbo 3.1.4.1; JPEG images are refused until it is
+tensorfold: --vision: the native engine reads images for GLM-5.3-Flash, Qwen3.8-27B, Qwen3.8 Flash Next, Gemma 4 and Step-5 only, not qwen3_5 checkpoints

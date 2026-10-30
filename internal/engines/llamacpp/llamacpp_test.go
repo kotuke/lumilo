@@ -34,8 +34,8 @@ func TestInfo(t *testing.T) {
 	if len(info.Suggestions) != 2 || len(info.ModelSearch.Sources) != 1 || info.ModelSearch.MLX != nil {
 		t.Errorf("suggestions %+v, search %+v", info.Suggestions, info.ModelSearch)
 	}
-	if len(info.Agents) != 0 {
-		t.Errorf("agents %+v", info.Agents)
+	if len(info.Agents) != 4 || info.Agents[0].ID != "claude" || info.Agents[3].ID != "pi" {
+		t.Errorf("agents %d", len(info.Agents))
 	}
 	p := e.StopPolicy()
 	if p.Graceful != syscall.SIGINT || p.Force != syscall.SIGINT || p.KillWait != 3*time.Second {
@@ -307,7 +307,7 @@ func TestServeCommand(t *testing.T) {
 		IdleRelease: 90*time.Second + 500*time.Millisecond, ModelUpdates: false,
 	}
 	argv, env := e.ServeCommand(cfg)
-	want := []string{e.binPath(), "-m", model, "--host", "0.0.0.0", "--port", "8123", "--metrics",
+	want := []string{e.binPath(), "-m", model, "--alias", "Tiny-Q4_K_M", "--host", "0.0.0.0", "--port", "8123", "--metrics",
 		"--mmproj", filepath.Join(dir, "mmproj-Tiny-F16.gguf"), "--offline", "--sleep-idle-seconds", "91"}
 	if strings.Join(argv, "\x00") != strings.Join(want, "\x00") {
 		t.Errorf("argv\n got %q\nwant %q", argv, want)
@@ -598,5 +598,18 @@ func TestFindRunning(t *testing.T) {
 	e.ps = func() ([]byte, error) { return nil, os.ErrPermission }
 	if _, err := e.FindRunning(); err == nil {
 		t.Error("ps error ignored")
+	}
+}
+
+// An agent asks for the model by its --alias.
+func TestAgentCommand(t *testing.T) {
+	e := New()
+	if argv, _ := e.AgentCommand("codex", engine.Target{Port: 9000}); argv != nil {
+		t.Errorf("unknown server: %q", argv)
+	}
+	e.ServeCommand(engine.Config{Model: "/m/Qwen3-0.6B-Q8_0.gguf", Port: 9000})
+	argv, _ := e.AgentCommand("codex", engine.Target{Port: 9000})
+	if !strings.Contains(strings.Join(argv, " "), `-c model="Qwen3-0.6B-Q8_0"`) {
+		t.Errorf("codex: %q", argv)
 	}
 }

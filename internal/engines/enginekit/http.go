@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"regexp"
 	"strings"
 	"time"
 
@@ -143,6 +144,35 @@ func ParseFormula(body []byte) (string, error) {
 		return "", errors.New("formula feed has no stable version")
 	}
 	return v, nil
+}
+
+// TapFormulaLatest reads the Ruby source of a formula of a third-party tap
+// at url, e.g. https://raw.githubusercontent.com/OWNER/homebrew-TAP/HEAD/Formula/NAME.rb:
+// the version "brew upgrade" installs once brew has updated the tap.
+// formulae.brew.sh serves only homebrew-core.
+func TapFormulaLatest(ctx context.Context, url string) (string, error) {
+	body, err := getFeed(ctx, url, 1<<20)
+	if err != nil {
+		return "", err
+	}
+	return ParseTapFormula(body)
+}
+
+var (
+	formulaVersionRe = regexp.MustCompile(`(?m)^\s*version\s+"([^"]+)"`)
+	// A GitHub release asset: .../releases/download/v1.1.9/name.tar.gz.
+	formulaURLRe = regexp.MustCompile(`(?m)^\s*url\s+"[^"]*/releases/download/v?([^/"]+)/[^"]*"`)
+)
+
+// ParseTapFormula reads a formula's explicit version, else the release tag
+// in its url (the version Homebrew infers from it), without a leading "v".
+func ParseTapFormula(body []byte) (string, error) {
+	for _, re := range []*regexp.Regexp{formulaVersionRe, formulaURLRe} {
+		if m := re.FindSubmatch(body); m != nil {
+			return strings.TrimPrefix(strings.TrimSpace(string(m[1])), "v"), nil
+		}
+	}
+	return "", errors.New("formula has no version")
 }
 
 // DropRevision cuts a Homebrew revision ("0.7.0_1" -> "0.7.0"). The

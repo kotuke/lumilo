@@ -22,10 +22,16 @@ var errNoRelease = errors.New("llama.cpp: the server cannot unload the model on 
 
 // portMemo is what the engine keeps per port between calls.
 type portMemo struct {
-	idle      time.Duration // IdleRelease of the last ServeCommand or FindRunning
-	pid       int           // the server process, found by port; 0 = unknown
-	predicted int64         // tokens_predicted_total at the last probe
-	completed int64         // synthesised request counter, see countCompleted
+	idle time.Duration // IdleRelease of the last ServeCommand or FindRunning
+	// For AgentCommand: the name the API serves the model by (--alias, else
+	// the -m path or -hf name, /v1/models), the context of a slot and the
+	// image input, from /props.
+	served    string
+	context   int
+	vision    bool
+	pid       int   // the server process, found by port; 0 = unknown
+	predicted int64 // tokens_predicted_total at the last probe
+	completed int64 // synthesised request counter, see countCompleted
 }
 
 func (l *LlamaCpp) memo(port int) *portMemo {
@@ -37,12 +43,13 @@ func (l *LlamaCpp) memo(port int) *portMemo {
 	return m
 }
 
-// remember records the sleep setting a server on port was started with;
-// /props does not report it.
-func (l *LlamaCpp) remember(port int, idle time.Duration) {
+// remember records the sleep setting a server on port was started with
+// (/props does not report it) and the name its API serves the model by.
+func (l *LlamaCpp) remember(port int, idle time.Duration, served string) {
 	l.mu.Lock()
 	defer l.mu.Unlock()
-	l.memo(port).idle = idle
+	m := l.memo(port)
+	m.idle, m.served = idle, served
 }
 
 // countCompleted synthesises Snapshot.Completed. llama-server has no
@@ -76,6 +83,9 @@ type propsDoc struct {
 	DefaultGenerationSettings struct {
 		NCtx int `json:"n_ctx"`
 	} `json:"default_generation_settings"`
+	Modalities struct {
+		Vision bool `json:"vision"`
+	} `json:"modalities"`
 }
 
 // Probe fetches /health, /props and /metrics at once. It never asks /slots:
@@ -120,6 +130,13 @@ func (l *LlamaCpp) Probe(ctx context.Context, t engine.Target) engine.Snapshot {
 		// use the whole context.
 		snap.ContextTokens = p.DefaultGenerationSettings.NCtx
 		snap.Released = p.IsSleeping
+		l.mu.Lock()
+		m := l.memo(t.Port)
+		m.context, m.vision = snap.ContextTokens, p.Modalities.Vision
+		if m.served == "" {
+			m.served = p.ModelPath // no alias: the API names it by its path
+		}
+		l.mu.Unlock()
 	}
 	if metrics.Code == http.StatusOK {
 		m := enginekit.ParseProm(metrics.Body)

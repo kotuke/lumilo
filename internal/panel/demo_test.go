@@ -113,7 +113,7 @@ func TestDemo(t *testing.T) {
 				f.Press = s >= 1.0
 			}
 			save(t, b.tt, filepath.Join(dir, f.Panel))
-			if err := os.WriteFile(filepath.Join(dir, f.Tray), trayicon.PNG(trayicon.For(v, "en", dark)), 0o644); err != nil {
+			if err := os.WriteFile(filepath.Join(dir, f.Tray), trayicon.PNG(trayicon.For(v, "en", dark, liveTPS(v))), 0o644); err != nil {
 				t.Fatal(err)
 			}
 			frames = append(frames, f)
@@ -126,4 +126,12 @@ func TestDemo(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
+}
+
+// liveTPS is the speed the app shows for v without a hold.
+func liveTPS(v core.View) float64 {
+	if v.Phase == core.PhaseGenerating {
+		return v.Speed.Current
+	}
+	return 0
 }

@@ -1,0 +1,3 @@
+warning: /opt/homebrew/opt/jpeg-turbo/lib/libturbojpeg.0.dylib is not libjpeg-turbo 3.1.4.1; JPEG images are refused until it is
+info: Qwen3.8-27B: image tower loaded (1.79 GiB with scratch for 4096 image tokens a request)
+tensorfold: --parallel 1 needs 13.0 GiB for its streams and 512-row prompt scratch at a 131072-token context; 11.8 GiB remains beside the weights and an 8 GiB margin: lower --parallel or --context

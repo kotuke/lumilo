@@ -10,7 +10,7 @@ and point coding agents at it, without a terminal.
 
 [![CI](https://github.com/kotuke/lumilo/actions/workflows/ci.yml/badge.svg)](https://github.com/kotuke/lumilo/actions/workflows/ci.yml)
 ![macOS on Apple silicon](https://img.shields.io/badge/macOS-Apple%20silicon-black?logo=apple)
-![Engines: Splash and llama.cpp](https://img.shields.io/badge/engines-Splash%20%C2%B7%20llama.cpp-f26b4f)
+![Engines: Splash, llama.cpp and TensorFold](https://img.shields.io/badge/engines-Splash%20%C2%B7%20llama.cpp%20%C2%B7%20TensorFold-f26b4f)
 ![8 languages](https://img.shields.io/badge/languages-8-4b6bfb)
 ![Signed with Developer ID and notarized](https://img.shields.io/badge/Developer%20ID-signed%20%26%20notarized-1f6feb?logo=apple)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
@@ -22,12 +22,14 @@ and point coding agents at it, without a terminal.
 
 </div>
 
-Lumilo runs [Splash](https://github.com/incoai/splash) or
-[llama.cpp](https://github.com/ggml-org/llama.cpp) (`llama-server`) for you.
+Lumilo runs [Splash](https://github.com/incoai/splash),
+[llama.cpp](https://github.com/ggml-org/llama.cpp) (`llama-server`) or
+[TensorFold](https://github.com/ashhart/TensorFold) for you.
 It starts and stops the server, shows its state, memory and generation
 speed, downloads and deletes models, launches coding agents against it, and
 installs or updates the engine. One engine runs at a time; you choose it in
-Settings. Engines are pluggable; mlx-serve is planned.
+Settings. Engines are pluggable; [mlx-serve](https://github.com/ddalcu/mlx-serve) and
+[oMLX](https://github.com/jundot/omlx) are planned.
 
 <p align="center">
   <picture>
@@ -54,7 +56,7 @@ brew install --cask kotuke/tap/lumilo
   and whether it fits in memory, download beside a running server, delete
   with the space it frees.
 - **Coding agents.** Claude Code, Codex, OpenCode or Pi in Terminal, Ghostty
-  or Rex, already pointed at the local Splash server.
+  or Rex, already pointed at the local server of any engine.
 - **Private by default.** The server listens on this Mac only; network access
   needs an API key, kept in the Keychain.
 - **Native and translated.** Liquid Glass, light and dark themes, eight
@@ -71,7 +73,11 @@ The icon tells the state without opening the panel: the bar fills with the
 memory the model takes, and the value is the live speed while it generates,
 the memory while it waits, or a sign when it loads, sleeps, stops or fails.
 llama.cpp counts a request's tokens when it ends, so under llama.cpp the icon
-shows memory while it generates.
+shows memory while it generates. TensorFold does too, but it reports the
+tokens in flight, so Lumilo times them itself and the speed shows live. The
+speed is that of the last three seconds, and the number glides to a new one
+when the icon is animated; it stays for 15 seconds after an answer, while a
+coding agent runs its tools between two of them.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/menubar-dark.png">
@@ -132,23 +138,26 @@ which prints `accepted` and `source=Notarized Developer ID`.
   generation speed. The panel shows loading, ready, generating, unloaded,
   not responding, stopping and error states, with the reason and the last
   log line when a start fails (port in use, missing model, not enough
-  memory).
+  memory). Beside the address, a chip shows the model's context ("↔ 64K"):
+  the server's while it runs, else the one chosen in Settings.
 - **Metrics.** Memory against the engine's budget, conversation state on
   disk, average speed over the last 10 requests, the last 20 requests as a
   chart, time to first token and prompt speed.
 - **Unload and reload** the model weights without stopping the server, and
-  unload automatically when idle. llama.cpp unloads only when idle.
+  unload automatically when idle. llama.cpp and TensorFold unload only when
+  idle.
 - **Models.** Pick an installed model, or add one by its Hugging Face name
   (`owner/repo:variant`). It downloads in the model list, apart from the
   server, which keeps serving its model: a progress bar with the speed and
-  the time left, a Cancel button, the reason and Retry or Remove when it
-  fails. Several downloads queue: one runs per engine, the others wait as
+  the time left, Pause and Cancel buttons, the reason and Retry or Remove
+  when it fails. A paused download shows "Paused" with what it fetched,
+  Resume and Remove. Several downloads queue: one runs per engine, the others wait as
   "Queued". Downloads that did not finish survive quitting Lumilo
   (`downloads.json` beside the settings) and show as "Paused" with what they
   fetched, Resume and Remove; nothing starts on its own at launch. A switch
   to another engine pauses its downloads, and an engine update holds them
-  and goes on after. llama.cpp resumes a file from its partial blob (Range,
-  then a SHA-256 check); Splash's installer keeps finished files but fetches
+  and goes on after. llama.cpp and TensorFold resume a file from its partial
+  blob (Range, then a SHA-256 or Git blob check); Splash's installer keeps finished files but fetches
   an unfinished one again. It can be picked once it is installed. Under
   Splash the list also shows the models "Already on this Mac": GGUFs in the
   Hugging Face cache that Splash serves but has not installed, as llama.cpp
@@ -157,14 +166,17 @@ which prints `accepted` and `source=Notarized Developer ID`.
   trash button of a model deletes it from the disk after a confirmation
   that says how much it frees; it stops the server first when the server
   runs that model, and keeps files another installed model shares (the
-  draft of a model family, a vision projector). The dialog warns when the
+  draft of a model family, a vision projector). Under TensorFold,
+  Qwen3.8-27B downloads with its DFlash2 drafter, which runs by default and
+  turns off with the model's speculative decoding switch. The dialog warns when the
   files are in the Hugging Face cache, which other apps may read too. A GGUF repository without a
   vision projector downloads for text only on Splash, which refuses it with
   image input; a model that fails for that reason starts for text only in
   one click. The field
   completes as you type: from two letters it lists matching Hugging Face
   repositories by downloads (GGUF ones for llama.cpp; GGUF and MLX ones of
-  the architectures Splash runs for Splash), and after a GGUF repository and
+  the architectures Splash runs for Splash; MLX ones of the families
+  TensorFold serves for TensorFold, added as `owner/repo`), and after a GGUF repository and
   `:` it lists the variants with their sizes, 4-bit first, and warns when one
   does not fit in memory. Arrows move, Enter or Tab take, Esc closes; it says
   when nothing was found, when a repository has no variant the engine runs,
@@ -176,8 +188,14 @@ which prints `accepted` and `source=Notarized Developer ID`.
   same name (off starts the server offline); while the server runs, the card
   says the change applies on restart and offers Restart.
 - **Agents.** One click opens a terminal (Terminal, Ghostty or Rex; pick it in
-  Settings) with Claude Code, Codex, OpenCode or Pi pointed at the local server
-  (Splash).
+  Settings) with Claude Code, Codex, OpenCode or Pi pointed at the local server.
+  Splash launches them itself; for llama.cpp and TensorFold Lumilo passes the
+  server, the model and the key in the environment and the command line, and
+  leaves the agents' own configuration files alone (Pi gets a provider
+  extension and, under TensorFold, Codex a home of its own in Lumilo's
+  folder, `~/Library/Application Support/Lumilo/agents`). Claude Code needs a
+  context of 100K tokens or more and Pi 64K: against a smaller one the button is off and
+  its tooltip says so.
 - **Install and update** the engine through Homebrew. Lumilo checks for a new
   version once a day and updates only when you click.
 - **Settings.** Engine; access from this computer or from the network; port;
@@ -251,9 +269,10 @@ request: the strings are in `locales/<language>.json`.
 | Package | Role |
 | --- | --- |
 | `internal/engine` | The contract. `Engine`: `Info()` (ID, name, logo, capabilities, suggestions, model search, agents), `Installer()`, models, the serve command (context size, download on start), the optional `Downloader` (download apart from the server), output parsing, failure classes, download meter, probing, release and restore, agent commands. `Installer`: `Describe()` (method, size on disk, commands, prerequisite), `Detect`, `Install`, `Upgrade`, `Latest`, `ReleaseNotesURL`. The memory estimate (`Estimate`, `Judge`) |
-| `internal/engines/enginekit` | What engines share: the local HTTP request with a bearer key, the Prometheus text parser, executable lookup at Homebrew paths, the child environment, embedded logos, release feeds (GitHub, Homebrew formula API), the Hugging Face hub cache and its download meter, and `Homebrew`, the installer of an engine with a Homebrew formula |
+| `internal/engines/enginekit` | What engines share: the local HTTP request with a bearer key, the Prometheus text parser, executable lookup at Homebrew paths, the child environment, embedded logos, release feeds (GitHub, Homebrew formula API, a tap's formula), the Hugging Face hub cache and its download meter, and `Homebrew`, the installer of an engine with a Homebrew formula |
 | `internal/engines/splash` | The Splash implementation. Everything specific to Splash lives here: formula, lock files, log lines, metric names, error texts |
 | `internal/engines/llamacpp` | The llama.cpp (`llama-server`) implementation: GGUF models from the Hugging Face cache, `/health`, `/props` and `/metrics`, log lines, error texts, suggestions |
+| `internal/engines/tensorfold` | The TensorFold implementation: MLX checkpoints of the families its native engine serves, from the Hugging Face cache, DFlash2 drafters, `/health`, `/memory` and `/metrics`, idle unload, log lines, error texts |
 | `internal/core` | The engine-agnostic supervisor. It installs and updates engines through their `Installer`, runs the server, switches engines, runs model downloads apart from the server (`DownloadModel`, `View.Downloads`), polls the server, keeps the speed history and publishes a `View` |
 | `internal/engines/makers` | Logos of model makers (Qwen) for the suggestions |
 | `internal/panel` | The panel and settings screens, drawn from a `View` |
@@ -271,7 +290,8 @@ The app icon is `AppIcon.icon`, an Icon Composer document (`macos.icon` in
 2. Give it an `engine.Installer`. An engine with a Homebrew formula uses
    `enginekit.Homebrew` with its formula, size, executable paths
    (`enginekit.StdBins`), a version reader and a release feed
-   (`enginekit.GitHubLatest` or `enginekit.FormulaLatest`). An engine
+   (`enginekit.GitHubLatest`, `enginekit.FormulaLatest` or
+   `enginekit.TapFormulaLatest`). An engine
    installed another way (pip or uv, a downloaded binary) implements its
    six methods itself and says what it needs first in
    `InstallInfo.Prerequisite`, with a new `engine.InstallMethod`. The
@@ -288,8 +308,10 @@ The app icon is `AppIcon.icon`, an Icon Composer document (`macos.icon` in
    no other download of the engine runs. Splash runs its own model
    installer (`install/models.py … prepare`, the step `splash serve` runs
    before it serves); llama.cpp's files are fetched by Lumilo into the
-   Hugging Face hub cache in the layout `llama-server -hf` reads
-   (`enginekit.HubDownload`: resume, SHA-256 check, atomic rename). An
+   Hugging Face hub cache in the layout `llama-server -hf` reads, and
+   TensorFold's in the layout `tensorfold pull` writes
+   (`enginekit.HubDownload`: resume, SHA-256 or Git blob check, atomic
+   rename). An
    engine without it downloads on the server's start instead: then
    `WatchDownload` returns a meter of the bytes fetched so far
    (`enginekit.HubMeter` for the hub cache) and `EventDownloading.Bytes` is
@@ -299,8 +321,8 @@ The app icon is `AppIcon.icon`, an Icon Composer document (`macos.icon` in
    (Splash assembles a GGUF of the hub cache).
 5. Add it to the engine list in `app.go`.
 6. Test it against responses and output recorded from the real server, as
-   `internal/engines/splash/testdata` and `internal/engines/llamacpp/testdata`
-   do. For an engine installed with Homebrew, the supervisor and the panel
+   `internal/engines/splash/testdata`, `internal/engines/llamacpp/testdata`
+   and `internal/engines/tensorfold/testdata` do. For an engine installed with Homebrew, the supervisor and the panel
    need no change.
 
 ## License

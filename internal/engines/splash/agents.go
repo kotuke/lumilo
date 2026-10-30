@@ -7,16 +7,9 @@ import (
 	"github.com/kotuke/lumilo/internal/engines/enginekit"
 )
 
-// agents are the coding agents offered, in this order. Splash also knows
-// hermes (ref §5); it is left out on purpose.
-func agents() []engine.Agent {
-	return []engine.Agent{
-		{ID: "claude", Name: "Claude", Logo: enginekit.MustFile(logos, "logos/logo-claude.svg"), Color: "#D97757"},
-		{ID: "codex", Name: "Codex", Logo: enginekit.MustFile(logos, "logos/logo-codex.svg")},
-		{ID: "opencode", Name: "OpenCode", Logo: enginekit.MustFile(logos, "logos/logo-opencode.svg")},
-		{ID: "pi", Name: "Pi", Logo: enginekit.MustFile(logos, "logos/logo-pi.svg")},
-	}
-}
+// agents are the coding agents offered, in this order (enginekit.Agents).
+// Splash also knows hermes (ref §5); it is left out on purpose.
+func agents() []engine.Agent { return enginekit.Agents() }
 
 // AgentCommand is "splash <agent>". It does not start a server: it probes
 // 127.0.0.1:$SPLASH_PORT (default 8000) with SPLASH_API_KEY as the bearer

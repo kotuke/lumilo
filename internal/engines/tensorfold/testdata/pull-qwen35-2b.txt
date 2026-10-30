@@ -1,0 +1,18 @@
+[tensorfold] downloading mlx-community/Qwen3.5-2B-MLX-4bit@93760be4f1f69842a46bc13dbdc0f19e291392a3 from Hugging Face
+mlx-community/Qwen3.5-2B-MLX-4bit: Qwen3.5-2B or Qwen3.8-27B (qwen3_5)
+  .gitattributes: 0.00 MiB
+  README.md: 0.00 MiB
+  chat_template.jinja: 0.01 MiB
+  config.json: 0.00 MiB
+  model.safetensors.index.json: 0.08 MiB
+  preprocessor_config.json: 0.00 MiB
+  processor_config.json: 0.00 MiB
+  tokenizer.json: 19.06 MiB
+  tokenizer_config.json: 0.00 MiB
+  video_preprocessor_config.json: 0.00 MiB
+  vocab.json: 6.41 MiB
+  0.40 of 1.60 GiB, 40.7 MiB/s
+  0.85 of 1.60 GiB, 42.9 MiB/s
+  1.28 of 1.60 GiB, 43.1 MiB/s
+  model.safetensors: 1642.49 MiB in 52 pieces
+stored mlx-community/Qwen3.5-2B-MLX-4bit@93760be4f1f69842a46bc13dbdc0f19e291392a3 at /Users/user/.cache/huggingface/hub/models--mlx-community--Qwen3.5-2B-MLX-4bit/snapshots/93760be4f1f69842a46bc13dbdc0f19e291392a3

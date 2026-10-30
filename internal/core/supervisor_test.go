@@ -1032,6 +1032,63 @@ func TestSpeedMeter(t *testing.T) {
 	}
 }
 
+// A request's history entry is its speed over all of it, the tail of the
+// last interval included; Current spans the last three intervals.
+func TestSpeedPerRequest(t *testing.T) {
+	var m speedMeter
+	m.reset(true)
+	t0 := time.Unix(0, 0)
+	at := func(i int) time.Time { return t0.Add(time.Duration(i) * time.Second) }
+	snap := engine.Snapshot{Reachable: true, Authorized: true}
+	m.add(snap, at(0)) // idle
+	// Bursts of a draft model: 120, 40, 140, 60 tokens a second.
+	for i, tok := range []int64{120, 160, 300, 360} {
+		snap.Active, snap.OutputTokens, snap.DecodeTime = 1, tok, time.Duration(i+1)*time.Second
+		m.add(snap, at(i+1))
+	}
+	if m.speed.Current != 80 { // (40+140+60)/3
+		t.Errorf("current %v, want the last three seconds' 80", m.speed.Current)
+	}
+	// It ends 0.5 s into the next interval with 30 tokens more: 390 in 4.5 s.
+	snap.Active, snap.Completed, snap.OutputTokens, snap.DecodeTime = 0, 1, 390, 4500*time.Millisecond
+	m.add(snap, at(5))
+	if len(m.speed.History) != 1 || m.speed.History[0] != 390/4.5 || m.speed.Current != 0 {
+		t.Errorf("history %v current %v, want one entry of %v", m.speed.History, m.speed.Current, 390/4.5)
+	}
+	// An idle probe moves the start: the next request counts from it.
+	m.add(snap, at(6))
+	snap.Completed, snap.OutputTokens, snap.DecodeTime = 2, 490, 5500*time.Millisecond
+	m.add(snap, at(7))
+	if len(m.speed.History) != 2 || m.speed.History[1] != 100 {
+		t.Errorf("history %v", m.speed.History)
+	}
+}
+
+// Tokens seen without decode time (the first tokens in flight, before an
+// engine's clock runs) and a stretch shorter than liveMin give no live
+// speed: the menu bar once read over 3,000 tok/s from 1,300 such tokens
+// and a 0.4 s tail.
+func TestSpeedLiveNoSpike(t *testing.T) {
+	var m speedMeter
+	m.reset(true)
+	t0 := time.Unix(0, 0)
+	at := func(i int) time.Time { return t0.Add(time.Duration(i) * time.Second) }
+	snap := engine.Snapshot{Reachable: true, Authorized: true}
+	m.add(snap, at(0))
+	snap.Active, snap.OutputTokens = 1, 1300 // first seen: no time yet
+	m.add(snap, at(1))
+	snap.OutputTokens, snap.DecodeTime = 1330, 400*time.Millisecond
+	m.add(snap, at(2))
+	if m.speed.Current != 0 {
+		t.Errorf("current %v after 0.4 s", m.speed.Current)
+	}
+	snap.OutputTokens, snap.DecodeTime = 1380, 1400*time.Millisecond
+	m.add(snap, at(3))
+	if m.speed.Current != 80/1.4 {
+		t.Errorf("current %v, want %v", m.speed.Current, 80/1.4)
+	}
+}
+
 func TestSpeedThroughProbes(t *testing.T) {
 	h := newHarness(t, newFakeEngine())
 	h.startReady()

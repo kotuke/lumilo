@@ -54,12 +54,17 @@ func (p *Panel) serverCard(c *ui.Context, f *frame, s *mainState) {
 		}
 		if s.isProgress {
 			ui.Column(c).Gap(6).Children(func() {
+				label := joinLeft(s.progressText, s.progressLeft)
 				if pct := p.downloadPercent(); s.downloading && pct >= 0 {
-					p.downloadBar(c, f, s.progressText, pct)
+					p.downloadBar(c, f, label, pct)
 				} else {
-					sweep(c, f, s.progressText)
+					sweep(c, f, label)
 				}
-				txt(c, s.progressText, 11.5).TextColor(t.muted)
+				if s.progressLeft != "" {
+					progressLine(c, f, s.progressText, s.progressLeft, 11.5)
+				} else {
+					txt(c, s.progressText, 11.5).TextColor(t.muted)
+				}
 				if s.cmd != "" {
 					command(c, f, s.cmd)
 				}
@@ -570,6 +575,9 @@ func (p *Panel) controls(c *ui.Context, f *frame, s *mainState) {
 				monoTxt(c, v.Address, 11.5).NoWrap()
 			})
 		}
+		if v.Model.ID != "" {
+			p.contextChip(c, f, s)
+		}
 	})
 	if s.showUpdChip && p.updToggled && v.PendingRestart && p.running() {
 		// The server read the choice when it started.
@@ -653,3 +661,60 @@ const (
 	sweepLen    = 6
 	sweepPeriod = 2400 * time.Millisecond
 )
+
+// contextChip is the context of the model beside the address: "↔ 64K".
+// While the server runs it is the window the server reports
+// (Snapshot.ContextTokens); else the one Settings chose for the model, or
+// "Auto". The tooltip gives the tokens; a click opens Settings, where the
+// model's context is chosen, and makes that row stand out for a moment
+// (contextRow), so the eye finds it among the others.
+func (p *Panel) contextChip(c *ui.Context, f *frame, s *mainState) {
+	t, m, v := f.pal, f.m, p.view
+	tokens := 0
+	if s.served {
+		tokens = v.Snapshot.ContextTokens
+	}
+	if tokens <= 0 {
+		tokens = p.pref.Contexts[v.Model.ID]
+	}
+	label, tip := m.CtxAuto(), m.CtxChipAutoTip()
+	if tokens > 0 {
+		label, tip = ctxName(f.loc, tokens), m.CtxChipTip(format.Number(f.loc, float64(tokens), 0))
+	}
+	b := btn(c).Key("context-chip").Height(22).Radius(6).Background(t.chip).TextColor(t.soft).PaddingX(8).Gap(4).
+		Label(m.Context() + " " + label).Description(tip).Tooltip(tip)
+	if b.Hovered() || b.FocusVisible() {
+		b.Background(t.rowHover).TextColor(t.text)
+	}
+	b.OnClick(func() {
+		p.openSettings(false)
+		p.set.revealCtx = true
+	}).Children(func() {
+		ico(c, "arrows-horizontal", 2, 12)
+		txt(c, label, 11.5).NoWrap()
+	})
+}
+
+// ctxBlinks are the steps of the context row's blink after the context
+// chip opens Settings, each lit or not: lit while Settings slides in and a
+// moment after, dark, lit again, and dark for good.
+var ctxBlinks = []time.Duration{slideAnimation.Duration + 450*time.Millisecond, 300 * time.Millisecond, 450 * time.Millisecond}
+
+// ctxFlash is how long the context row blinks.
+var ctxFlash = ctxBlinks[0] + ctxBlinks[1] + ctxBlinks[2]
+
+// ctxBlink tells whether the context row is lit e after the blink began,
+// and when that changes: never (0) once it is over.
+func ctxBlink(e time.Duration) (lit bool, next time.Duration) {
+	if e < 0 {
+		return false, 0
+	}
+	at := time.Duration(0)
+	for i, d := range ctxBlinks {
+		at += d
+		if e < at {
+			return i%2 == 0, at - e
+		}
+	}
+	return false, 0
+}

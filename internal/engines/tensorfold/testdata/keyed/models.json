@@ -1,0 +1,1 @@
+{"object": "list", "data": [{"id": "Qwen3.5-2B-MLX-4bit", "object": "model", "created": 1793293419, "owned_by": "tensorfold", "context_length": 16384, "max_model_len": 16384, "reasoning": {"default_enabled": true}}]}

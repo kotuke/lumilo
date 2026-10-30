@@ -223,16 +223,18 @@ func (msgs Messages) DlSpeed(size string) string {
 	return Catalog.Format(msgs.locale, "dlSpeed", map[string]any{"size": size})
 }
 
-// DlLeft says "about {duration} left"
+// DlLeft says "~{duration}"
 // in the language the app shows.
 //
-// Time left of a download. {duration} is a short duration such as "6 min".
+// Time left of a download, after the size and speed: "~6 min". {duration}
+// is a short duration such as "6 min"; "~" says it is an estimate.
 func DlLeft(duration string) string { return In(i18n.Locale()).DlLeft(duration) }
 
-// DlLeft says "about {duration} left"
+// DlLeft says "~{duration}"
 // in the language of msgs.
 //
-// Time left of a download. {duration} is a short duration such as "6 min".
+// Time left of a download, after the size and speed: "~6 min". {duration}
+// is a short duration such as "6 min"; "~" says it is an estimate.
 func (msgs Messages) DlLeft(duration string) string {
 	return Catalog.Format(msgs.locale, "dlLeft", map[string]any{"duration": duration})
 }
@@ -1889,6 +1891,26 @@ func (msgs Messages) AgentsTitle() string {
 	return Catalog.Format(msgs.locale, "agentsTitle", nil)
 }
 
+// AgentNeedsContext says "{agent} needs a context of {need} tokens or more, and the model is served with {have}. Raise it in Settings → Model…"
+// in the language the app shows.
+//
+// Tooltip of an agent chip that is off because the server's context is too
+// small. {agent} is e.g. "Claude"; {need} and {have} are sizes such as
+// "100K" and "33K".
+func AgentNeedsContext(agent string, need string, have string) string {
+	return In(i18n.Locale()).AgentNeedsContext(agent, need, have)
+}
+
+// AgentNeedsContext says "{agent} needs a context of {need} tokens or more, and the model is served with {have}. Raise it in Settings → Model…"
+// in the language of msgs.
+//
+// Tooltip of an agent chip that is off because the server's context is too
+// small. {agent} is e.g. "Claude"; {need} and {have} are sizes such as
+// "100K" and "33K".
+func (msgs Messages) AgentNeedsContext(agent string, need string, have string) string {
+	return Catalog.Format(msgs.locale, "agentNeedsContext", map[string]any{"agent": agent, "need": need, "have": have})
+}
+
 // AgentStart says "Starts the server and the agent"
 // in the language the app shows.
 //
@@ -2839,6 +2861,38 @@ func (msgs Messages) CtxAuto() string {
 	return Catalog.Format(msgs.locale, "ctxAuto", nil)
 }
 
+// CtxChipTip says "Context: {tokens} tokens. Click to change it in Settings"
+// in the language the app shows.
+//
+// Tooltip of the context chip beside the server address. {tokens} is a
+// number such as "65,536".
+func CtxChipTip(tokens string) string { return In(i18n.Locale()).CtxChipTip(tokens) }
+
+// CtxChipTip says "Context: {tokens} tokens. Click to change it in Settings"
+// in the language of msgs.
+//
+// Tooltip of the context chip beside the server address. {tokens} is a
+// number such as "65,536".
+func (msgs Messages) CtxChipTip(tokens string) string {
+	return Catalog.Format(msgs.locale, "ctxChipTip", map[string]any{"tokens": tokens})
+}
+
+// CtxChipAutoTip says "Context: Auto, the largest that fits in memory or the engine's own. Click to change it in Settings"
+// in the language the app shows.
+//
+// Tooltip of the context chip while the server is stopped and the model's
+// context is Auto.
+func CtxChipAutoTip() string { return In(i18n.Locale()).CtxChipAutoTip() }
+
+// CtxChipAutoTip says "Context: Auto, the largest that fits in memory or the engine's own. Click to change it in Settings"
+// in the language of msgs.
+//
+// Tooltip of the context chip while the server is stopped and the model's
+// context is Auto.
+func (msgs Messages) CtxChipAutoTip() string {
+	return Catalog.Format(msgs.locale, "ctxChipAutoTip", nil)
+}
+
 // CtxOther says "Other…"
 // in the language the app shows.
 //
@@ -3215,6 +3269,22 @@ func VisionTip(size string) string { return In(i18n.Locale()).VisionTip(size) }
 // Tooltip of the image input switch. {size} is the projector's size.
 func (msgs Messages) VisionTip(size string) string {
 	return Catalog.Format(msgs.locale, "visionTip", map[string]any{"size": size})
+}
+
+// VisionNoJPEG says "JPEG images are not read here: TensorFold needs libjpeg-turbo 3.1.4.1, which Homebrew does not offer. PNG and WebP im…"
+// in the language the app shows.
+//
+// Added to the image input tooltip when the engine refuses JPEG images on
+// this Mac.
+func VisionNoJPEG() string { return In(i18n.Locale()).VisionNoJPEG() }
+
+// VisionNoJPEG says "JPEG images are not read here: TensorFold needs libjpeg-turbo 3.1.4.1, which Homebrew does not offer. PNG and WebP im…"
+// in the language of msgs.
+//
+// Added to the image input tooltip when the engine refuses JPEG images on
+// this Mac.
+func (msgs Messages) VisionNoJPEG() string {
+	return Catalog.Format(msgs.locale, "visionNoJPEG", nil)
 }
 
 // Draft says "Speculative decoding"
@@ -3617,6 +3687,22 @@ func DlResume() string { return In(i18n.Locale()).DlResume() }
 // Button of a paused download: goes on from what it fetched.
 func (msgs Messages) DlResume() string {
 	return Catalog.Format(msgs.locale, "dlResume", nil)
+}
+
+// DlPause says "Pause"
+// in the language the app shows.
+//
+// Button of a running or queued download: stops it and keeps what it
+// fetched, for Resume.
+func DlPause() string { return In(i18n.Locale()).DlPause() }
+
+// DlPause says "Pause"
+// in the language of msgs.
+//
+// Button of a running or queued download: stops it and keeps what it
+// fetched, for Resume.
+func (msgs Messages) DlPause() string {
+	return Catalog.Format(msgs.locale, "dlPause", nil)
 }
 
 // AddModelNothing says "Nothing found on Hugging Face"

@@ -12,7 +12,7 @@ import (
 // budget is the memory the engine may use: what it reports while it runs,
 // else three quarters of the Mac's memory (engine.Budget).
 func (p *Panel) budget() int64 {
-	return engine.Budget(p.memory, p.view.Snapshot.MemoryLimit)
+	return engine.Budget(p.memory, p.view.Snapshot.MemoryLimit, p.view.Caps.Memory.Share)
 }
 
 // judge is engine.Judge with the engine's numbers and the budget.
@@ -89,6 +89,9 @@ func (p *Panel) featureRows(c *ui.Context, f *frame) {
 		on := !opt.NoVision
 		was := on
 		tip := m.VisionTip(format.GB(f.loc, md.Features.VisionBytes))
+		if md.Features.NoJPEG {
+			tip += ". " + m.VisionNoJPEG()
+		}
 		featureSwitch(c, f, "vision:"+md.ID, m.Vision(), tip, &on, false)
 		if on != was {
 			p.setOptions(md.ID, func(o *engine.ModelOptions) { o.NoVision = !on })
@@ -101,24 +104,27 @@ func (p *Panel) featureRows(c *ui.Context, f *frame) {
 		on := true
 		featureSwitch(c, f, "draft:"+md.ID, m.Draft(), m.DraftAlways(v.Engine, drafts[0].Name), &on, true)
 	case len(drafts) == 1:
-		on := opt.Draft == drafts[0].ID
+		on := engine.ActiveDraft(md, opt.Draft) != nil
 		was := on
 		featureSwitch(c, f, "draft:"+md.ID, m.Draft(), p.draftTip(f, drafts[0]), &on, false)
 		if on != was {
-			id := drafts[0].ID
-			p.setOptions(md.ID, func(o *engine.ModelOptions) {
-				o.Draft = ""
-				if on {
-					o.Draft = id
-				}
-			})
+			var d *engine.Draft
+			if on {
+				d = &drafts[0]
+			}
+			choice := draftChoice(drafts, d)
+			p.setOptions(md.ID, func(o *engine.ModelOptions) { o.Draft = choice })
 		}
 	default:
-		opts := []string{""}
+		off := draftChoice(drafts, nil)
+		opts := []string{off}
 		for _, d := range drafts {
 			opts = append(opts, d.ID)
 		}
-		sel := opt.Draft
+		sel, was := off, off
+		if d := engine.ActiveDraft(md, opt.Draft); d != nil {
+			sel, was = d.ID, d.ID
+		}
 		dropdown(c, f, [2]any{"draft", md.ID}, m.Draft(), &sel, opts, func(id string) string {
 			for _, d := range drafts {
 				if d.ID == id {
@@ -127,10 +133,35 @@ func (p *Panel) featureRows(c *ui.Context, f *frame) {
 			}
 			return m.DraftOff()
 		}, 200)
-		if sel != opt.Draft {
-			p.setOptions(md.ID, func(o *engine.ModelOptions) { o.Draft = sel })
+		if sel != was {
+			var pick *engine.Draft
+			for i := range drafts {
+				if drafts[i].ID == sel {
+					pick = &drafts[i]
+				}
+			}
+			choice := draftChoice(drafts, pick)
+			p.setOptions(md.ID, func(o *engine.ModelOptions) { o.Draft = choice })
 		}
 	}
+}
+
+// draftChoice is the Config.Draft that runs d of drafts, or none when d is
+// nil: "" for the engine's default draft, DraftOff to turn a default draft
+// off, else the draft's ID.
+func draftChoice(drafts []engine.Draft, d *engine.Draft) string {
+	if d != nil {
+		if d.Default {
+			return ""
+		}
+		return d.ID
+	}
+	for _, x := range drafts {
+		if x.Default {
+			return engine.DraftOff
+		}
+	}
+	return ""
 }
 
 // draftName is how a draft is named in a select: "MTP", or its file.
@@ -220,15 +251,14 @@ func (p *Panel) featureToggles(c *ui.Context, f *frame, md engine.Model) {
 		default:
 			// Several drafts: the toggle turns on the first, as the
 			// select of Settings offers the others.
-			on := opt.Draft != ""
-			id := drafts[0].ID
+			on := engine.ActiveDraft(md, opt.Draft) != nil
+			var d *engine.Draft
+			if !on {
+				d = &drafts[0]
+			}
+			choice := draftChoice(drafts, d)
 			featureToggle(c, f, "draft:"+md.ID, "bolt", m.Draft(), on, "", func() {
-				p.setOptions(md.ID, func(o *engine.ModelOptions) {
-					o.Draft = ""
-					if !on {
-						o.Draft = id
-					}
-				})
+				p.setOptions(md.ID, func(o *engine.ModelOptions) { o.Draft = choice })
 			})
 		}
 	})

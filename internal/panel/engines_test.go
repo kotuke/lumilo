@@ -40,13 +40,13 @@ func engineBoards() []board {
 	}
 	return []board{
 		// llama.cpp: its logo and name, no Unload (no release on request),
-		// no agents.
+		// the agents Lumilo points at it.
 		{name: "llamacpp-ready", build: func(b *bench) {
 			b.rec.eng = llamacpp.New()
 			b.show(llamaView(), time.Hour)
 		}, check: func(b *bench) {
-			b.want("llama.cpp 0.7.0", "Qwen3-0.6B-GGUF", "ggml-org · Q8_0", "Memory", "Stop")
-			b.none("Launch agent", "Claude")
+			b.want("llama.cpp 0.7.0", "Qwen3-0.6B-GGUF", "ggml-org · Q8_0", "Memory", "Stop",
+				"Launch agent", "Claude", "Codex", "OpenCode", "Pi")
 			for _, s := range b.tt.Texts() {
 				if s == "Unload" { // "Unloads after … idle" stays: that is --sleep-idle-seconds
 					b.t.Error("an Unload button")

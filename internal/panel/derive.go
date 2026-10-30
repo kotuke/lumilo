@@ -72,6 +72,7 @@ type mainState struct {
 	warnText                string
 	isProgress              bool
 	progressText, cmd       string
+	progressLeft            string // the time left of a download, "~6 min" (progressText)
 	showHead, showPill      bool
 	hasModel, showChat      bool
 	chatOff                 bool
@@ -170,40 +171,62 @@ func (p *Panel) downloadPercent() float64 {
 }
 
 // downloadText is the progress of a model download: "6.1 of 21.2 GB ·
-// 45 MB/s · about 6 min left" while View.DownloadBytes grows toward a
-// known size, else the size alone.
+// 45 MB/s" and the time left, "~6 min", while View.DownloadBytes grows
+// toward a known size, else the size alone and no time.
 //
 // The size is the suggestion's, or the variant's the field took
 // (dlTotal), else what the engine said it fetches (View.DownloadTotal).
 // The speed is that of DownloadBytes, the bytes fetched so far, between
 // the Views that changed it.
-func (p *Panel) downloadText(f *frame) string {
+func (p *Panel) downloadText(f *frame) (text, left string) {
 	return p.progressText(f, p.downloadTotal(), p.view.DownloadBytes)
 }
 
 // progressText is downloadText of a download of total bytes (0 = not
 // known) that fetched done, at the speed the panel measured (dlRate).
-func (p *Panel) progressText(f *frame, total, done int64) string {
+// left is "" until the speed is known.
+func (p *Panel) progressText(f *frame, total, done int64) (text, left string) {
 	m := f.m
 	if total > 0 && done > 0 && done < total {
 		of := m.UsedOf(format.Number(f.loc, float64(done)/1e9, 1), format.GB(f.loc, total))
 		if p.dlRate <= 0 {
-			return of // the speed is not known yet
+			return of, "" // the speed is not known yet
 		}
-		left := time.Duration(float64(total-done) / p.dlRate * float64(time.Second))
-		// A countdown rounds up: "about 2 min" while more than one minute is left.
-		if left >= time.Minute {
-			left = (left + time.Minute - 1).Truncate(time.Minute)
+		d := time.Duration(float64(total-done) / p.dlRate * float64(time.Second))
+		// A countdown rounds up: "~2 min" while more than one minute is left.
+		if d >= time.Minute {
+			d = (d + time.Minute - 1).Truncate(time.Minute)
 		}
-		return of + " · " + m.DlSpeed(format.MB(f.loc, int64(p.dlRate))) + " · " + m.DlLeft(format.ShortDuration(f.loc, left))
+		return of + " · " + m.DlSpeed(format.MB(f.loc, int64(p.dlRate))), m.DlLeft(format.ShortDuration(f.loc, d))
 	}
 	switch {
 	case total > 0:
-		return m.DownloadingSize(format.GB(f.loc, total))
+		return m.DownloadingSize(format.GB(f.loc, total)), ""
 	case done > 0:
-		return m.DownloadingSize(format.GB(f.loc, done))
+		return m.DownloadingSize(format.GB(f.loc, done)), ""
 	}
-	return m.Downloading()
+	return m.Downloading(), ""
+}
+
+// progressLine is a download's progress text and its time left on one
+// line, " · " between them: the text gives way (an ellipsis) before the
+// time does, so the time left always shows.
+func progressLine(c *ui.Context, f *frame, text, left string, size float32) {
+	t := f.pal
+	ui.Row(c).MinWidth(0).Role(ui.RoleStatus).Label(joinLeft(text, left)).Children(func() {
+		txt(c, text, size).TextColor(t.muted).SingleLine().Shrink(1).MinWidth(0)
+		if left != "" {
+			txt(c, " · "+left, size).TextColor(t.muted).NoWrap().Shrink(0)
+		}
+	})
+}
+
+// joinLeft is a progress text with its time left, as one string.
+func joinLeft(text, left string) string {
+	if left == "" {
+		return text
+	}
+	return text + " · " + left
 }
 
 func (p *Panel) derive(c *ui.Context, f *frame) mainState {
@@ -357,7 +380,7 @@ func (p *Panel) derive(c *ui.Context, f *frame) mainState {
 		if v.Downloading {
 			s.downloading = true
 			s.pill = m.PillDownloading()
-			s.progressText = p.downloadText(f)
+			s.progressText, s.progressLeft = p.downloadText(f)
 		}
 	}
 
@@ -365,13 +388,15 @@ func (p *Panel) derive(c *ui.Context, f *frame) mainState {
 	s.showPill = !s.isInstall
 	s.suggest = !s.isInstall && !s.isUpdating && p.suggesting()
 	s.hasModel = !s.isInstall && !s.suggest
-	s.showChat = !s.isInstall
+	s.showChat = !s.isInstall && v.Caps.Chat
 	s.chatOff = !s.served
 	s.hasControls = !s.isInstall && !s.isUpdating && !s.suggest
 	s.showAgents = !s.isInstall && !s.isUpdating && !s.suggest && len(v.Agents) > 0
 	// The model-updates chip toggles a panel setting; it says nothing of a
 	// foreign server.
-	s.showUpdChip = !s.isExternal && v.Download == "" // a download runs online
+	// A download runs online; an engine that never contacts the hub
+	// (Caps.ModelUpdates off) has no use for it.
+	s.showUpdChip = !s.isExternal && v.Download == "" && v.Caps.ModelUpdates
 	s.modelCanOpen = s.hasModel && modelCanOpen(v)
 	if v.Phase == core.PhaseExternal && !s.isUpdating {
 		s.modelTitle = m.ModelLocked()

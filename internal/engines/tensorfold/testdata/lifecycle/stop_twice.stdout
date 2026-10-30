@@ -1,0 +1,9 @@
+[tensorfold] prompt chunks of up to 128 tokens, cut at replies 256+ tokens apart
+[tensorfold] serving Qwen3.5-2B-MLX-4bit at http://127.0.0.1:18082/v1 (sampling: greedy; drafts: copies only; context: 262144; loaded in 0.6s)
+[tensorfold] thinking on (the chat template's default): replies reason in reasoning_content before the answer in content, and max_tokens counts both. --no-thinking turns it off; a request can send chat_template_kwargs {"enable_thinking": false}
+[tensorfold] 127.0.0.1 "GET /health HTTP/1.1" 200 -
+[tensorfold] 127.0.0.1 "POST /v1/chat/completions HTTP/1.1" 200 -
+[tensorfold] shutting down (SIGINT): draining: new requests get 503; 1 request(s) in progress may finish within 20.0 s
+[tensorfold] shutting down: a second stop signal: 1 request(s) still in progress end "server restarting: retry shortly" at the next round boundary
+[tensorfold] done chatcmpl-e92f45fc1b089b3e31b359486c15cb64 prompt=18 cached=0 thinking=False effort=none tokens=751 sha=7bf018ebb508 finish=cancelled rounds=750 accepted=0/0 ttft=0.023 decode=4.405 elapsed=4.428 queued=0.000 tok/s=170.3
+[tensorfold] shutting down: stopped

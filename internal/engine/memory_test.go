@@ -37,3 +37,36 @@ func TestEstimateDraft(t *testing.T) {
 		t.Errorf("no draft does not fit: %v", fit)
 	}
 }
+
+// A default draft runs with "" and stops with DraftOff; another draft of
+// the model is chosen by its ID.
+func TestActiveDraftDefault(t *testing.T) {
+	m := Model{Features: Features{Drafts: []Draft{{ID: "a", SizeBytes: 7, Default: true}, {ID: "b", SizeBytes: 9}}}}
+	for draft, want := range map[string]string{"": "a", DraftOff: "", "a": "a", "b": "b", "x": ""} {
+		got := ""
+		if d := ActiveDraft(m, draft); d != nil {
+			got = d.ID
+		}
+		if got != want {
+			t.Errorf("%q: %q, want %q", draft, got, want)
+		}
+	}
+	if n := Estimate(Model{SizeBytes: 10, Features: m.Features}, Config{}, MemoryCaps{}); n.Draft != 7 {
+		t.Errorf("default draft not counted: %+v", n)
+	}
+}
+
+// The budget is the engine's report, else its share of the memory, else
+// three quarters.
+func TestBudget(t *testing.T) {
+	var ram int64 = 48 << 30
+	if b := Budget(ram, 30e9, 0.7); b != 30e9 {
+		t.Errorf("reported: %d", b)
+	}
+	if b := Budget(ram, 0, 0.7); b != int64(float64(ram)*0.7) {
+		t.Errorf("share: %d", b)
+	}
+	if b := Budget(ram, 0, 0); b != ram/4*3 {
+		t.Errorf("default: %d", b)
+	}
+}

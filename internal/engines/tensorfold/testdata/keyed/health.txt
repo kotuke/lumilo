@@ -1,0 +1,5 @@
+{"status": "ok"} 200
+ 401
+ 401
+ 200
+{"error": {"message": "Host header is not allowed on this loopback bind; use --allowed-host NAME for a trusted name", "type": "invalid_request_error"}} 403

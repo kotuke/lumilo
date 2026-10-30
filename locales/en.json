@@ -72,9 +72,9 @@
       }
     }
   },
-  "dlLeft": "about {duration} left",
+  "dlLeft": "~{duration}",
   "@dlLeft": {
-    "description": "Time left of a download. {duration} is a short duration such as \"6 min\".",
+    "description": "Time left of a download, after the size and speed: \"~6 min\". {duration} is a short duration such as \"6 min\"; \"~\" says it is an estimate.",
     "placeholders": {
       "duration": {
         "type": "String",
@@ -892,6 +892,15 @@
   "@agentsTitle": {
     "description": "Title of the agents card."
   },
+  "agentNeedsContext": "{agent} needs a context of {need} tokens or more, and the model is served with {have}. Raise it in Settings → Model, then restart",
+  "@agentNeedsContext": {
+    "description": "Tooltip of an agent chip that is off because the server's context is too small. {agent} is e.g. \"Claude\"; {need} and {have} are sizes such as \"100K\" and \"33K\".",
+    "placeholders": {
+      "agent": {"type": "String"},
+      "need": {"type": "String"},
+      "have": {"type": "String"}
+    }
+  },
   "agentStart": "Starts the server and the agent",
   "@agentStart": {
     "description": "Tooltip of agent buttons when the server is stopped or unloaded."
@@ -1244,6 +1253,17 @@
   "@ctxAuto": {
     "description": "Context size option: the engine chooses (the model's native window when memory holds it)."
   },
+  "ctxChipTip": "Context: {tokens} tokens. Click to change it in Settings",
+  "@ctxChipTip": {
+    "description": "Tooltip of the context chip beside the server address. {tokens} is a number such as \"65,536\".",
+    "placeholders": {
+      "tokens": {"type": "String", "example": "65,536"}
+    }
+  },
+  "ctxChipAutoTip": "Context: Auto, the largest that fits in memory or the engine's own. Click to change it in Settings",
+  "@ctxChipAutoTip": {
+    "description": "Tooltip of the context chip while the server is stopped and the model's context is Auto."
+  },
   "ctxOther": "Other…",
   "@ctxOther": {
     "description": "Context size option that opens a field for another size."
@@ -1426,6 +1446,10 @@
       }
     }
   },
+  "visionNoJPEG": "JPEG images are not read here: TensorFold needs libjpeg-turbo 3.1.4.1, which Homebrew does not offer. PNG and WebP images work",
+  "@visionNoJPEG": {
+    "description": "Added to the image input tooltip when the engine refuses JPEG images on this Mac."
+  },
   "draft": "Speculative decoding",
   "@draft": {
     "description": "Settings, Model card: switch or select of the draft that speeds up generation (speculative decoding). Also the label of the bolt badge in the model list."
@@ -1557,6 +1581,10 @@
   "dlResume": "Resume",
   "@dlResume": {
     "description": "Button of a paused download: goes on from what it fetched."
+  },
+  "dlPause": "Pause",
+  "@dlPause": {
+    "description": "Button of a running or queued download: stops it and keeps what it fetched, for Resume."
   },
   "addModelNothing": "Nothing found on Hugging Face",
   "@addModelNothing": {

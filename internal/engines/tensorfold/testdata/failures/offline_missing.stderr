@@ -1,0 +1,1 @@
+tensorfold: mlx-community/Qwen3.5-0.8B-MLX-4bit is not in the Hugging Face cache; the native engine does not download: run tensorfold pull mlx-community/Qwen3.5-0.8B-MLX-4bit first
