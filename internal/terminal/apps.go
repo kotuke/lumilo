@@ -43,16 +43,6 @@ func (a App) Name() string {
 	return string(a)
 }
 
-// Valid reports whether a is one of the known terminals.
-func (a App) Valid() bool {
-	for _, k := range Known() {
-		if a == k {
-			return true
-		}
-	}
-	return false
-}
-
 // bundleNames are the file names of each app's bundle in /Applications and
 // ~/Applications. Terminal lives in the system volume and needs no search.
 var bundleNames = map[App][]string{

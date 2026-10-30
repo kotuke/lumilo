@@ -56,7 +56,6 @@ type addState struct {
 
 	vars      []hf.Variant
 	info      hf.RepoInfo // what the hub said of varsFor
-	full      bool        // info is the hub's whole answer (SetModelInfo), not variants alone
 	varsAsked string      // the repository last sent to ModelVariants
 	varsFor   string      // the repository vars answer; "" until it does
 	varsErr   bool        // varsFor's answer was an error: the hub could not be reached
@@ -105,36 +104,26 @@ func (p *Panel) SetModelSearchFailed(text string) {
 	p.gen++
 }
 
-// SetModelVariants shows the variants of a GGUF repository, 4-bit first. An
-// empty list, as a failed lookup gives, shows nothing.
-// Nothing else of the repository is known then: whether it has a vision
-// projector, say.
-func (p *Panel) SetModelVariants(repo string, vs []hf.Variant) {
-	p.setInfo(repo, hf.RepoInfo{ID: repo, GGUF: len(vs) > 0, Variants: vs}, false)
-}
-
 // SetModelInfo shows what the hub said of a repository: the variants the
 // engine runs, with what each needs in memory, or whether the engine runs
-// its MLX checkpoint.
-func (p *Panel) SetModelInfo(repo string, info hf.RepoInfo) { p.setInfo(repo, info, true) }
-
-// SetModelInfoFailed answers a look at a repository that could not reach
-// Hugging Face.
-func (p *Panel) SetModelInfoFailed(repo string) {
-	p.setInfo(repo, hf.RepoInfo{ID: repo}, true)
-	if strings.EqualFold(repo, p.add.varsFor) {
-		p.add.varsErr = true
-	}
-}
-
-func (p *Panel) setInfo(repo string, info hf.RepoInfo, full bool) {
+// its MLX checkpoint. The variants show 4-bit first.
+func (p *Panel) SetModelInfo(repo string, info hf.RepoInfo) {
 	if !strings.EqualFold(repo, p.add.varsAsked) {
 		return
 	}
 	info.Variants = sortVariants(info.Variants)
-	p.add.vars, p.add.info, p.add.varsFor, p.add.full = info.Variants, info, p.add.varsAsked, full
+	p.add.vars, p.add.info, p.add.varsFor = info.Variants, info, p.add.varsAsked
 	p.add.varsErr = false
 	p.gen++
+}
+
+// SetModelInfoFailed answers a look at a repository that could not reach
+// Hugging Face.
+func (p *Panel) SetModelInfoFailed(repo string) {
+	p.SetModelInfo(repo, hf.RepoInfo{ID: repo})
+	if strings.EqualFold(repo, p.add.varsFor) {
+		p.add.varsErr = true
+	}
 }
 
 // sortVariants orders a copy of vs as the list shows them: the hub's
@@ -414,7 +403,7 @@ func (p *Panel) addField(c *ui.Context, f *frame, inPopup bool, example string) 
 			case len(rows) > 0:
 			case colon && repo != "" && strings.EqualFold(repo, st.varsFor) && st.varsErr:
 				note = m.AddModelUnreachable()
-			case colon && repo != "" && strings.EqualFold(repo, st.varsFor) && st.full && len(st.vars) == 0:
+			case colon && repo != "" && strings.EqualFold(repo, st.varsFor) && len(st.vars) == 0:
 				note = m.AddModelNoVariants(p.view.Engine)
 			case !colon && st.searchAnswered(p.addText) && st.failed:
 				note = m.AddModelUnreachable()
@@ -531,7 +520,7 @@ func (p *Panel) addSummary(c *ui.Context, f *frame, ch addChoice) {
 		sub = append(sub, format.GB(f.loc, ch.bytes))
 	}
 	// No vision projector: downloaded and served for text only.
-	textOnly := ch.known && p.add.full && textOnlyRepo(ch.info)
+	textOnly := ch.known && textOnlyRepo(ch.info)
 	unsupported := ch.known && ch.info.Unsupported && ch.tag == ""
 	loading := !ch.known && ch.tag != ""
 	reason := ""

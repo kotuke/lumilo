@@ -158,7 +158,7 @@ func flatModels(ctx context.Context, root string) ([]engine.Model, error) {
 	}
 	ms := ggufModels(root)
 	for i := range ms {
-		ms[i].Name, ms[i].Variant = stem(filepath.Base(ms[i].ID)), ""
+		ms[i].Name, ms[i].Variant = gguf.Stem(filepath.Base(ms[i].ID)), ""
 	}
 	return ms, nil
 }
@@ -203,7 +203,7 @@ func ggufModels(dir string) []engine.Model {
 }
 
 // features are what llama-server can load with the model at path:
-//   - its vision projector, the only mmproj-*.gguf beside it (mmprojFor),
+//   - its vision projector, the only mmproj-*.gguf beside it (sidecarFor),
 //     passed as --mmproj unless Config.NoVision;
 //   - its own multi-token prediction layers (<arch>.nextn_predict_layers,
 //     1 in OrcaCyber-Nano), run by "--spec-type draft-mtp": libllama 0.7.0
@@ -216,7 +216,7 @@ func ggufModels(dir string) []engine.Model {
 //     "--spec-type draft-dflash".
 func features(path string, meta gguf.Meta) engine.Features {
 	var f engine.Features
-	if mm := mmprojFor(path); mm != "" {
+	if mm := sidecarFor(path, "mmproj"); mm != "" {
 		f.Vision = true
 		f.VisionBytes, _ = fileSize(mm)
 	}
@@ -257,12 +257,6 @@ func splitSize(dir, base, n string) (int64, bool) {
 	}
 	return total, true
 }
-
-// isMmprojName: multimodal projectors are named mmproj-*.gguf or
-// *-mmproj-*.gguf by convention (llama.cpp's -hf picks them that way).
-func isMmprojName(name string) bool { return gguf.Sidecar(name) == "mmproj" }
-
-func stem(name string) string { return gguf.Stem(name) }
 
 // variantOf is the variant tag of a GGUF file of repo whose general.name is
 // model: the file name without the longest of the repository's name and

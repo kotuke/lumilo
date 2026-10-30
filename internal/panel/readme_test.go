@@ -161,7 +161,7 @@ func readmeBoards() []board {
 			b.click(b.m.AddModel())
 			b.tt.Frame()
 			b.typeText("unsloth/Qwen3.6-35B-A3B-GGUF:")
-			b.p.SetModelVariants("unsloth/Qwen3.6-35B-A3B-GGUF", qwen36Variants)
+			b.variants("unsloth/Qwen3.6-35B-A3B-GGUF", qwen36Variants)
 			b.tt.Frame()
 			b.tt.Key(0, ui.KeyDown)
 		}, check: func(b *bench) {

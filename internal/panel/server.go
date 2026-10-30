@@ -422,7 +422,7 @@ func (p *Panel) submitModel() {
 		}
 		// A repository without a vision projector: an engine that refuses
 		// such a model with vision gets it for text only from the start.
-		o.NoVision = p.add.full && textOnlyRepo(p.add.info) && p.view.Caps.VisionNeedsProjector
+		o.NoVision = textOnlyRepo(p.add.info) && p.view.Caps.VisionNeedsProjector
 	}
 	p.addingModel, p.addText, p.addBad = false, "", false
 	// A download apart from the server shows in the model list, which

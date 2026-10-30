@@ -64,6 +64,13 @@ func (b *bench) searched(text string, hits []hf.Repo) {
 	b.tt.Frame()
 }
 
+// variants makes the look at repo settle: the hub answers with the GGUF
+// variants vs and a vision projector, as for a multimodal Qwen.
+func (b *bench) variants(repo string, vs []hf.Variant) {
+	b.t.Helper()
+	b.p.SetModelInfo(repo, hf.RepoInfo{ID: repo, GGUF: len(vs) > 0, Variants: vs, Vision: 928_000_000})
+}
+
 func (b *bench) text() string { return b.p.addText }
 
 func (b *bench) count(prefix string) int {
@@ -166,7 +173,7 @@ func TestAddModelTabTakesTheFirstRow(t *testing.T) {
 		t.Errorf("Tab put %q", got)
 	}
 	// With no list, Tab is not taken: the text stays.
-	b.p.SetModelVariants("unsloth/Qwen3.8-27B-GGUF", nil)
+	b.variants("unsloth/Qwen3.8-27B-GGUF", nil)
 	b.tt.Frame()
 	b.tt.Key(0, ui.KeyTab)
 	if got := b.text(); got != "unsloth/Qwen3.8-27B-GGUF:" {
@@ -281,7 +288,7 @@ func TestAddModelVariants(t *testing.T) {
 	b.called("ModelVariants unsloth/Qwen3.8-27B-GGUF")
 	b.notCalled("SearchModels unsloth/Qwen3.8-27B-GGUF:")
 	b.want("Looking up variants…")
-	b.p.SetModelVariants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
+	b.variants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
 	b.tt.Frame()
 	b.none("Looking up variants…")
 	b.want("UD-Q4_K_M", "16.5 GB", "UD-IQ4_XS", "14.3 GB", "Q8_0", "29 GB", "BF16", "54.7 GB")
@@ -290,11 +297,11 @@ func TestAddModelVariants(t *testing.T) {
 	if len(rows) != 5 || rows[0].variant.Tag != "UD-Q4_K_M" {
 		t.Errorf("rows %+v", rows)
 	}
-	// Each variant says what it needs: its weights, the draft Splash always
-	// runs and Splash's buffers (the sample knows no projector or KV cache).
-	// A big one warns: the Mac here has 48 GB, Splash may use three
-	// quarters.
-	b.want("Needs about 20 GB of memory", "Needs about 58.2 GB of memory, more than the 38.7 GB available")
+	// Each variant says what it needs: its weights, the vision projector,
+	// the draft Splash always runs and Splash's buffers (the sample knows no
+	// KV cache). A big one warns: the Mac here has 48 GB, Splash may use
+	// three quarters.
+	b.want("Needs about 20.9 GB of memory", "Needs about 59.1 GB of memory, more than the 38.7 GB available")
 	// What follows the colon filters, prefix first.
 	b.typeText("q8")
 	b.want("Q8_0")
@@ -309,7 +316,7 @@ func TestAddModelVariants(t *testing.T) {
 	b.called("ModelVariants ggml-org/Qwen3.8-27B-GGUF")
 	b.none("UD-Q4_K_M")
 	// An answer for the repository left is dropped.
-	b.p.SetModelVariants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
+	b.variants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
 	b.tt.Frame()
 	b.none("UD-Q4_K_M")
 }
@@ -318,7 +325,7 @@ func TestAddModelPickAVariant(t *testing.T) {
 	b := newBench(t, "en")
 	b.openAdd(false)
 	b.typeText("unsloth/Qwen3.8-27B-GGUF:")
-	b.p.SetModelVariants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
+	b.variants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
 	b.tt.Frame()
 	b.tt.Key(0, ui.KeyDown)
 	b.tt.Key(0, ui.KeyDown)
@@ -342,7 +349,7 @@ func TestAddModelVariantsOfAnotherCase(t *testing.T) {
 	b := newBench(t, "en")
 	b.openAdd(false)
 	b.typeText("Unsloth/qwen3.8-27B-GGUF:")
-	b.p.SetModelVariants("Unsloth/qwen3.8-27B-GGUF", sampleVariants)
+	b.variants("Unsloth/qwen3.8-27B-GGUF", sampleVariants)
 	b.tt.Frame()
 	b.tt.Key(0, ui.KeyTab)
 	b.tt.Frame()
@@ -531,7 +538,7 @@ func TestAddModelArabic(t *testing.T) {
 	b.want("unsloth/Qwen3.8-27B-GGUF")
 	b.tt.Key(0, ui.KeyDown)
 	b.tt.Key(0, ui.KeyEnter)
-	b.p.SetModelVariants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
+	b.variants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
 	b.tt.Frame()
 	b.want("UD-Q4_K_M")
 }

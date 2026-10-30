@@ -2,7 +2,7 @@ package splash
 
 import (
 	"github.com/kotuke/lumilo/internal/engine"
-	"github.com/kotuke/lumilo/internal/engines/makers"
+	"github.com/kotuke/lumilo/internal/engines/enginekit"
 )
 
 // modelSearch is what "splash serve --model" takes: a GGUF repository, whose
@@ -46,14 +46,14 @@ func suggestions() []engine.Suggestion {
 	return []engine.Suggestion{
 		{
 			ID: "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_M", Name: "Qwen3.8-27B",
-			Maker: "Qwen", MakerLogo: makers.Qwen,
+			Maker: "Qwen", MakerLogo: enginekit.QwenLogo,
 			Params: 27_000_000_000,
 			// 16.46 GB GGUF + 0.93 GB mmproj + 3.85 GB incoai/Qwen3.8-27B-DFlash2.
 			DownloadBytes: 21_240_000_000, MemoryBytes: 21_240_000_000,
 		},
 		{
 			ID: "unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_M", Name: "Qwen3.6-35B-A3B",
-			Maker: "Qwen", MakerLogo: makers.Qwen,
+			Maker: "Qwen", MakerLogo: enginekit.QwenLogo,
 			Params: 36_000_000_000, Active: 3_000_000_000,
 			// 22.13 GB GGUF + 0.90 GB mmproj + 1.05 GB incoai/Qwen3.6-35B-A3B-DFlash2.
 			DownloadBytes: 24_080_000_000, MemoryBytes: 24_080_000_000,

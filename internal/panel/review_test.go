@@ -151,7 +151,7 @@ func reviewBoards() []board {
 		{name: "add-model-summary", build: func(b *bench) {
 			b.openAdd(true)
 			b.typeText("unsloth/Qwen3.8-27B-GGUF:")
-			b.p.SetModelVariants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
+			b.variants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
 			b.tt.Frame()
 			b.click("UD-IQ4_XS")
 			b.tt.Frame()
@@ -164,7 +164,7 @@ func reviewBoards() []board {
 		{name: "add-model-summary-big", build: func(b *bench) {
 			b.openAdd(true)
 			b.typeText("unsloth/Qwen3.8-27B-GGUF:BF16")
-			b.p.SetModelVariants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
+			b.variants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
 			b.tt.Frame()
 		}, check: func(b *bench) {
 			b.want("54.7 GB", "Download Qwen3.8-27B-GGUF")

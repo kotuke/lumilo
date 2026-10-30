@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/kotuke/lumilo/internal/engine"
-	"github.com/kotuke/lumilo/internal/engines/makers"
+	"github.com/kotuke/lumilo/internal/engines/enginekit"
 )
 
 // The Hugging Face name syntax of -hf ("-hf, -hfr, --hf-repo <user>/<model>[:quant]",
@@ -38,14 +38,14 @@ func suggestions() []engine.Suggestion {
 	return []engine.Suggestion{
 		{
 			ID: "unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_M", Name: "Qwen3.8-27B",
-			Maker: "Qwen", MakerLogo: makers.Qwen,
+			Maker: "Qwen", MakerLogo: enginekit.QwenLogo,
 			Params: 27_000_000_000,
 			// 16.46 GB GGUF + 0.93 GB mmproj-F16.
 			DownloadBytes: 17_390_000_000, MemoryBytes: 17_390_000_000,
 		},
 		{
 			ID: "unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_M", Name: "Qwen3.6-35B-A3B",
-			Maker: "Qwen", MakerLogo: makers.Qwen,
+			Maker: "Qwen", MakerLogo: enginekit.QwenLogo,
 			Params: 36_000_000_000, Active: 3_000_000_000,
 			// 22.13 GB GGUF + 0.90 GB mmproj-F16.
 			DownloadBytes: 23_030_000_000, MemoryBytes: 23_030_000_000,
