@@ -1139,6 +1139,68 @@
   "@checkFailed": {
     "description": "Settings, under the engine version: the update check the user asked for failed."
   },
+  "appUpdNote": "Lumilo updates itself from its releases on GitHub",
+  "@appUpdNote": {
+    "description": "App card: Lumilo updates itself; the note under Lumilo's version."
+  },
+  "appUpdOff": "This copy can’t update itself: update it with Homebrew",
+  "@appUpdOff": {
+    "description": "App card, under Lumilo's version: this copy cannot replace itself (a development build, or a folder the user cannot write to)."
+  },
+  "appUpdDownloading": "Downloading version {version}",
+  "@appUpdDownloading": {
+    "description": "App card, under Lumilo's version: the new version downloads. {version} is it; the downloaded and total sizes follow.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "0.2.0"
+      }
+    }
+  },
+  "appUpdReady": "Version {version} is ready: restart to use it",
+  "@appUpdReady": {
+    "description": "App card and the Settings button's description: the new version is installed and runs after a restart. {version} is it.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "0.2.0"
+      }
+    }
+  },
+  "appUpdFailed": "Couldn’t install version {version}",
+  "@appUpdFailed": {
+    "description": "App card, under Lumilo's version: the download or install of the new version failed. {version} is it.",
+    "placeholders": {
+      "version": {
+        "type": "String",
+        "example": "0.2.0"
+      }
+    }
+  },
+  "appUpdRestart": "Restart",
+  "@appUpdRestart": {
+    "description": "Button that restarts Lumilo into its new version."
+  },
+  "appUpdAuto": "Download updates automatically",
+  "@appUpdAuto": {
+    "description": "Label of the switch that downloads Lumilo's new versions by themselves."
+  },
+  "restartUpdTitle": "Restart Lumilo to update?",
+  "@restartUpdTitle": {
+    "description": "Dialog title: restarting into Lumilo's new version stops the server or downloads."
+  },
+  "restartUpdNote": "The server and downloads stop and start again after the restart",
+  "@restartUpdNote": {
+    "description": "Dialog note: what happens to the server and downloads when Lumilo restarts to update."
+  },
+  "restartUpdLater": "Restart Lumilo to update when it finishes?",
+  "@restartUpdLater": {
+    "description": "Dialog note: Lumilo's new version waits, but the engine is still installing or updating; Lumilo can restart once that ends."
+  },
+  "appUpdRestartLater": "Restart when done",
+  "@appUpdRestartLater": {
+    "description": "Dialog button: restart into Lumilo's new version once the engine's install or update ends."
+  },
   "login": "Launch at login",
   "@login": {
     "description": "Label of the launch-at-login switch."

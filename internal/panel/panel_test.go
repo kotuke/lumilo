@@ -88,6 +88,9 @@ func (r *recorder) OpenLog()              { r.add("OpenLog") }
 func (r *recorder) OpenURL(url string)    { r.add("OpenURL %s", url) }
 func (r *recorder) Copy(text string)      { r.add("Copy %s", text) }
 func (r *recorder) Quit()                 { r.add("Quit") }
+func (r *recorder) CheckAppUpdate()       { r.add("CheckAppUpdate") }
+func (r *recorder) DownloadAppUpdate()    { r.add("DownloadAppUpdate") }
+func (r *recorder) RestartToUpdate()      { r.add("RestartToUpdate") }
 func (r *recorder) ToggleTheme()          { r.add("ToggleTheme") }
 func (r *recorder) SetPrefs(p Prefs)      { r.add("SetPrefs"); r.prefs = append(r.prefs, p) }
 func (r *recorder) NewAPIKey() string {

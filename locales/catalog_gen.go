@@ -2569,6 +2569,176 @@ func (msgs Messages) CheckFailed() string {
 	return Catalog.Format(msgs.locale, "checkFailed", nil)
 }
 
+// AppUpdNote says "Lumilo updates itself from its releases on GitHub"
+// in the language the app shows.
+//
+// App card: Lumilo updates itself; the note under Lumilo's version.
+func AppUpdNote() string { return In(i18n.Locale()).AppUpdNote() }
+
+// AppUpdNote says "Lumilo updates itself from its releases on GitHub"
+// in the language of msgs.
+//
+// App card: Lumilo updates itself; the note under Lumilo's version.
+func (msgs Messages) AppUpdNote() string {
+	return Catalog.Format(msgs.locale, "appUpdNote", nil)
+}
+
+// AppUpdOff says "This copy can’t update itself: update it with Homebrew"
+// in the language the app shows.
+//
+// App card, under Lumilo's version: this copy cannot replace itself (a
+// development build, or a folder the user cannot write to).
+func AppUpdOff() string { return In(i18n.Locale()).AppUpdOff() }
+
+// AppUpdOff says "This copy can’t update itself: update it with Homebrew"
+// in the language of msgs.
+//
+// App card, under Lumilo's version: this copy cannot replace itself (a
+// development build, or a folder the user cannot write to).
+func (msgs Messages) AppUpdOff() string {
+	return Catalog.Format(msgs.locale, "appUpdOff", nil)
+}
+
+// AppUpdDownloading says "Downloading version {version}"
+// in the language the app shows.
+//
+// App card, under Lumilo's version: the new version downloads. {version} is
+// it; the downloaded and total sizes follow.
+func AppUpdDownloading(version string) string { return In(i18n.Locale()).AppUpdDownloading(version) }
+
+// AppUpdDownloading says "Downloading version {version}"
+// in the language of msgs.
+//
+// App card, under Lumilo's version: the new version downloads. {version} is
+// it; the downloaded and total sizes follow.
+func (msgs Messages) AppUpdDownloading(version string) string {
+	return Catalog.Format(msgs.locale, "appUpdDownloading", map[string]any{"version": version})
+}
+
+// AppUpdReady says "Version {version} is ready: restart to use it"
+// in the language the app shows.
+//
+// App card and the Settings button's description: the new version is
+// installed and runs after a restart. {version} is it.
+func AppUpdReady(version string) string { return In(i18n.Locale()).AppUpdReady(version) }
+
+// AppUpdReady says "Version {version} is ready: restart to use it"
+// in the language of msgs.
+//
+// App card and the Settings button's description: the new version is
+// installed and runs after a restart. {version} is it.
+func (msgs Messages) AppUpdReady(version string) string {
+	return Catalog.Format(msgs.locale, "appUpdReady", map[string]any{"version": version})
+}
+
+// AppUpdFailed says "Couldn’t install version {version}"
+// in the language the app shows.
+//
+// App card, under Lumilo's version: the download or install of the new
+// version failed. {version} is it.
+func AppUpdFailed(version string) string { return In(i18n.Locale()).AppUpdFailed(version) }
+
+// AppUpdFailed says "Couldn’t install version {version}"
+// in the language of msgs.
+//
+// App card, under Lumilo's version: the download or install of the new
+// version failed. {version} is it.
+func (msgs Messages) AppUpdFailed(version string) string {
+	return Catalog.Format(msgs.locale, "appUpdFailed", map[string]any{"version": version})
+}
+
+// AppUpdRestart says "Restart"
+// in the language the app shows.
+//
+// Button that restarts Lumilo into its new version.
+func AppUpdRestart() string { return In(i18n.Locale()).AppUpdRestart() }
+
+// AppUpdRestart says "Restart"
+// in the language of msgs.
+//
+// Button that restarts Lumilo into its new version.
+func (msgs Messages) AppUpdRestart() string {
+	return Catalog.Format(msgs.locale, "appUpdRestart", nil)
+}
+
+// AppUpdAuto says "Download updates automatically"
+// in the language the app shows.
+//
+// Label of the switch that downloads Lumilo's new versions by themselves.
+func AppUpdAuto() string { return In(i18n.Locale()).AppUpdAuto() }
+
+// AppUpdAuto says "Download updates automatically"
+// in the language of msgs.
+//
+// Label of the switch that downloads Lumilo's new versions by themselves.
+func (msgs Messages) AppUpdAuto() string {
+	return Catalog.Format(msgs.locale, "appUpdAuto", nil)
+}
+
+// RestartUpdTitle says "Restart Lumilo to update?"
+// in the language the app shows.
+//
+// Dialog title: restarting into Lumilo's new version stops the server or
+// downloads.
+func RestartUpdTitle() string { return In(i18n.Locale()).RestartUpdTitle() }
+
+// RestartUpdTitle says "Restart Lumilo to update?"
+// in the language of msgs.
+//
+// Dialog title: restarting into Lumilo's new version stops the server or
+// downloads.
+func (msgs Messages) RestartUpdTitle() string {
+	return Catalog.Format(msgs.locale, "restartUpdTitle", nil)
+}
+
+// RestartUpdNote says "The server and downloads stop and start again after the restart"
+// in the language the app shows.
+//
+// Dialog note: what happens to the server and downloads when Lumilo
+// restarts to update.
+func RestartUpdNote() string { return In(i18n.Locale()).RestartUpdNote() }
+
+// RestartUpdNote says "The server and downloads stop and start again after the restart"
+// in the language of msgs.
+//
+// Dialog note: what happens to the server and downloads when Lumilo
+// restarts to update.
+func (msgs Messages) RestartUpdNote() string {
+	return Catalog.Format(msgs.locale, "restartUpdNote", nil)
+}
+
+// RestartUpdLater says "Restart Lumilo to update when it finishes?"
+// in the language the app shows.
+//
+// Dialog note: Lumilo's new version waits, but the engine is still
+// installing or updating; Lumilo can restart once that ends.
+func RestartUpdLater() string { return In(i18n.Locale()).RestartUpdLater() }
+
+// RestartUpdLater says "Restart Lumilo to update when it finishes?"
+// in the language of msgs.
+//
+// Dialog note: Lumilo's new version waits, but the engine is still
+// installing or updating; Lumilo can restart once that ends.
+func (msgs Messages) RestartUpdLater() string {
+	return Catalog.Format(msgs.locale, "restartUpdLater", nil)
+}
+
+// AppUpdRestartLater says "Restart when done"
+// in the language the app shows.
+//
+// Dialog button: restart into Lumilo's new version once the engine's
+// install or update ends.
+func AppUpdRestartLater() string { return In(i18n.Locale()).AppUpdRestartLater() }
+
+// AppUpdRestartLater says "Restart when done"
+// in the language of msgs.
+//
+// Dialog button: restart into Lumilo's new version once the engine's
+// install or update ends.
+func (msgs Messages) AppUpdRestartLater() string {
+	return Catalog.Format(msgs.locale, "appUpdRestartLater", nil)
+}
+
 // Login says "Launch at login"
 // in the language the app shows.
 //

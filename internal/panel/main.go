@@ -233,7 +233,18 @@ func (p *Panel) header(c *ui.Context, f *frame, s *mainState) {
 			}
 		}
 		iconBtn(c, f, m.Log(), "file-text", false, p.act.OpenLog)
-		iconBtn(c, f, m.Settings(), "settings", false, func() { p.openSettings(false) })
+		sb := iconBtn(c, f, m.Settings(), "settings", false, func() { p.openSettings(false) })
+		if p.appReady() {
+			// A new version of Lumilo waits for a restart, which Settings
+			// offers: a dot on the button says so.
+			sb.Description(m.AppUpdReady(p.app.st.Version)).DrawOver(func(pt *ui.Painter, r ui.Rect) {
+				x := r.X + r.W - 7
+				if f.rtl {
+					x = r.X + 1
+				}
+				pt.Fill(ui.Rect{X: x, Y: r.Y + 1, W: 6, H: 6}, t.ok, 3)
+			})
+		}
 		// The icon shows the theme the button switches to, as in Kvoto.
 		if c.Theme().Dark {
 			iconBtn(c, f, m.ThemeLight(), "sun", false, p.act.ToggleTheme)

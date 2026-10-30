@@ -255,7 +255,9 @@ func TestDownloadJobSwitch(t *testing.T) {
 	h.s.DownloadModel("hf/next:Q4", engine.ModelOptions{})
 	c := eng.next(t)
 	c.progress(300, 1000)
-	h.wait("running", func(v View) bool { return job0(v).Done == 300 })
+	// Both jobs are in the list before the switch: a download asked for
+	// while a switch runs is dropped.
+	h.wait("running", func(v View) bool { return job0(v).Done == 300 && len(v.Downloads) == 2 })
 	h.s.SwitchEngine("other", "")
 	h.wait("switched", func(v View) bool { return v.EngineID == "other" && len(v.Downloads) == 0 })
 	select {

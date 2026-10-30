@@ -40,9 +40,12 @@ type Settings struct {
 	Language     string        `json:"language"` // "" = as in the system
 	OpenAtLogin  bool          `json:"open_at_login"`
 	AnimateIcon  bool          `json:"animate_icon"`
-	Theme        string        `json:"theme,omitempty"` // "" = as in the system, "light" or "dark" once chosen in the panel
-	Terminal     string        `json:"terminal"`        // bundle id of the terminal that runs agents
-	AllowedHosts []string      `json:"allowed_hosts"`
+	// ManualUpdates turns the automatic download of new Lumilo versions
+	// off; absent, they download by themselves.
+	ManualUpdates bool     `json:"manual_updates,omitempty"`
+	Theme         string   `json:"theme,omitempty"` // "" = as in the system, "light" or "dark" once chosen in the panel
+	Terminal      string   `json:"terminal"`        // bundle id of the terminal that runs agents
+	AllowedHosts  []string `json:"allowed_hosts"`
 	// LoginApplied is set once the login item was set for the first run.
 	LoginApplied bool `json:"login_applied"`
 

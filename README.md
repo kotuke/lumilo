@@ -108,8 +108,11 @@ With [Homebrew](https://brew.sh):
 brew install --cask kotuke/tap/lumilo
 ```
 
-Then open Lumilo from Applications. Lumilo updates itself, so Homebrew
-leaves it alone after the install.
+Then open Lumilo from Applications. Lumilo updates itself (see
+[Updates](#updates)), so Homebrew leaves it alone after the install.
+Version 0.1.0 could not update itself yet: update it once with
+`brew upgrade --cask kotuke/tap/lumilo` or from the
+[latest release](https://github.com/kotuke/lumilo/releases/latest).
 
 Or by hand:
 
@@ -198,11 +201,22 @@ which prints `accepted` and `source=Notarized Developer ID`.
   its tooltip says so.
 - **Install and update** the engine through Homebrew. Lumilo checks for a new
   version once a day and updates only when you click.
+- <a id="updates"></a>**Updates of Lumilo.** Lumilo checks its GitHub releases
+  once a day, downloads a new version in the background and checks its
+  signature; the running app stays as it is. A dot on the Settings button
+  says the version is ready, and Settings restarts into it. When the server
+  runs or a model downloads, the restart asks first, and the new version
+  starts the server again with the same model and resumes the downloads.
+  Turn the automatic download off in Settings to install each version with a
+  click. A build of your own never downloads by itself: it has no stapled
+  notarization ticket, and Lumilo offers its updates instead. A copy that
+  cannot replace itself (in a folder you cannot write to, or opened from the
+  disk image) says to update it with Homebrew.
 - **Settings.** Engine; access from this computer or from the network; port;
   API key (kept in the macOS Keychain; the network access never starts without
   one); allowed host names (Splash); context size, vision and draft per model
-  of each engine; idle unload; model updates; language; launch at login;
-  icon animation.
+  of each engine; idle unload; model updates; Lumilo's version and its
+  automatic updates; language; launch at login; icon animation.
 - **Look.** Liquid Glass cards; light and dark themes follow the system until
   you pick one with the header button.
 - **Languages.** English, Arabic, Chinese (Simplified), French, German,
@@ -242,7 +256,11 @@ its window out, so the first run asks to let the terminal control Finder.
 After the release, move the cask in
 [kotuke/homebrew-tap](https://github.com/kotuke/homebrew-tap) to the new
 version: `brew bump-cask-pr --version <version> kotuke/tap/lumilo` opens
-the pull request.
+the pull request. The cask has `auto_updates true`, so `brew upgrade` leaves
+Lumilo to update itself; the cask of 0.2.0 goes without it, as 0.1.0 has no
+updater and only Homebrew can move it on. Keep a copy of the update key
+(`~/.config/lumilo/update-keys/`) off this Mac: installed copies accept only
+updates signed with it.
 
 A live test against a real Splash server (it loads a model) runs with:
 
@@ -275,6 +293,7 @@ request: the strings are in `locales/<language>.json`.
 | `internal/engines/tensorfold` | The TensorFold implementation: MLX checkpoints of the families its native engine serves, from the Hugging Face cache, DFlash2 drafters, `/health`, `/memory` and `/metrics`, idle unload, log lines, error texts |
 | `internal/core` | The engine-agnostic supervisor. It installs and updates engines through their `Installer`, runs the server, switches engines, runs model downloads apart from the server (`DownloadModel`, `View.Downloads`), polls the server, keeps the speed history and publishes a `View` |
 | `internal/engines/makers` | Logos of model makers (Qwen) for the suggestions |
+| `internal/appupdate` | Lumilo's own updates: the daily check of the release feed (`mygo.Updater`), the background download and install, the state the panel shows |
 | `internal/panel` | The panel and settings screens, drawn from a `View` |
 | `internal/trayicon` | The menu-bar icon |
 | `internal/settings`, `internal/terminal` | Settings file, Terminal launcher |

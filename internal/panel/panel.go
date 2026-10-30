@@ -34,6 +34,9 @@ type Prefs struct {
 	Terminal     string // bundle id of the terminal that runs agents
 	OpenAtLogin  bool
 	AnimateIcon  bool
+	// AppUpdates: new versions of Lumilo download by themselves and wait
+	// for a restart.
+	AppUpdates bool
 	// Contexts is the context window chosen for each model, in tokens, by
 	// Model.ID; a missing one is the engine's choice.
 	Contexts map[string]int
@@ -106,6 +109,15 @@ type Actions interface {
 	ToggleTheme()
 	Quit() // quit Lumilo (the panel confirms first when needed)
 
+	// CheckAppUpdate asks for a newer version of Lumilo now; the answer
+	// comes through Panel.SetAppUpdate. DownloadAppUpdate installs the one
+	// found when automatic downloads are off or the last one failed.
+	// RestartToUpdate restarts into the version installed and brings back
+	// the server and the downloads that ran.
+	CheckAppUpdate()
+	DownloadAppUpdate()
+	RestartToUpdate()
+
 	// SetPrefs stores changed settings. Settings that the server reads at
 	// start take effect on Restart; the panel shows the restart banner.
 	SetPrefs(p Prefs)
@@ -132,6 +144,12 @@ const (
 	dlgKill
 	dlgSwitch // switching the engine stops our server
 	dlgRemove // deleting an installed model from the disk: Panel.removeID
+	// dlgRestartUpdate: restarting into Lumilo's new version stops our
+	// server or a download.
+	dlgRestartUpdate
+	// dlgRestartLater: the engine is being installed or updated; the
+	// restart can wait for it.
+	dlgRestartLater
 )
 
 // Panel holds the panel's own state between frames. It is used only on
@@ -145,6 +163,7 @@ type Panel struct {
 	OnResize func(height int)
 
 	lanHost   string           // SetLANAddress
+	app       appUpdate        // SetAppInfo, SetAppUpdate
 	memory    int64            // SetMemory: the computer's memory, bytes; 0 = unknown
 	terminals []TerminalChoice // SetTerminals
 
@@ -395,6 +414,7 @@ func (p *Panel) SetView(v core.View) {
 		p.quitAfterUpdate = false
 		p.act.Quit()
 	}
+	p.restartWhenIdle()
 }
 
 // SetPrefs shows the current settings.
