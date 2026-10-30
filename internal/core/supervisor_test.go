@@ -1064,6 +1064,31 @@ func TestSpeedPerRequest(t *testing.T) {
 	}
 }
 
+// Tokens seen without decode time (the first tokens in flight, before an
+// engine's clock runs) and a stretch shorter than liveMin give no live
+// speed: the menu bar once read over 3,000 tok/s from 1,300 such tokens
+// and a 0.4 s tail.
+func TestSpeedLiveNoSpike(t *testing.T) {
+	var m speedMeter
+	m.reset(true)
+	t0 := time.Unix(0, 0)
+	at := func(i int) time.Time { return t0.Add(time.Duration(i) * time.Second) }
+	snap := engine.Snapshot{Reachable: true, Authorized: true}
+	m.add(snap, at(0))
+	snap.Active, snap.OutputTokens = 1, 1300 // first seen: no time yet
+	m.add(snap, at(1))
+	snap.OutputTokens, snap.DecodeTime = 1330, 400*time.Millisecond
+	m.add(snap, at(2))
+	if m.speed.Current != 0 {
+		t.Errorf("current %v after 0.4 s", m.speed.Current)
+	}
+	snap.OutputTokens, snap.DecodeTime = 1380, 1400*time.Millisecond
+	m.add(snap, at(3))
+	if m.speed.Current != 80/1.4 {
+		t.Errorf("current %v, want %v", m.speed.Current, 80/1.4)
+	}
+}
+
 func TestSpeedThroughProbes(t *testing.T) {
 	h := newHarness(t, newFakeEngine())
 	h.startReady()

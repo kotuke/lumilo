@@ -13,6 +13,9 @@ const (
 	// probe a second, about the last three seconds. A draft model emits
 	// tokens in bursts, so one interval alone jumps.
 	liveOver = 3
+	// liveMin is the least decode time Speed.Current is measured over: a
+	// shorter one gives wild values.
+	liveMin = 500 * time.Millisecond
 )
 
 // speedMeter turns cumulative probe counters into Speed.
@@ -93,7 +96,10 @@ func (m *speedMeter) add(s engine.Snapshot, now time.Time) (completed bool) {
 		m.start = &snap
 		return completed
 	}
-	if dTok > 0 || dDec > 0 {
+	// Only intervals with decode time count: tokens an engine shows before
+	// it times them (TensorFold's first tokens in flight, which its clock
+	// starts at) would read thousands of tokens a second.
+	if dDec > 0 {
 		m.live = append(m.live, interval{dTok, dDec})
 		if len(m.live) > liveOver {
 			m.live = m.live[len(m.live)-liveOver:]
@@ -104,7 +110,7 @@ func (m *speedMeter) add(s engine.Snapshot, now time.Time) (completed bool) {
 	for _, iv := range m.live {
 		tok, dec = tok+iv.tokens, dec+iv.decode
 	}
-	if tok > 0 && dec > 0 {
+	if tok > 0 && dec >= liveMin {
 		m.speed.Current = float64(tok) / dec.Seconds()
 	}
 	return completed

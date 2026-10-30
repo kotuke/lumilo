@@ -289,6 +289,15 @@ func TestSpeedHoldAndEase(t *testing.T) {
 	if ic := For(ready, "en", false, s.Shown()); ic.Text != "120 T/S" {
 		t.Errorf("held icon %q", ic.Text)
 	}
+	// The next request reads a long prompt: longer than the hold, with no
+	// speed of its own, the last one stays.
+	reading := view(core.PhaseGenerating)
+	reading.Speed.Current, reading.Snapshot.Active = 0, 1
+	s.Target(reading, at.Add(SpeedHold+40*time.Second))
+	if s.Shown() < 119 {
+		t.Errorf("while reading a prompt: %v", s.Shown())
+	}
+	at = at.Add(SpeedHold + 40*time.Second)
 	s.Target(ready, at.Add(SpeedHold+time.Second))
 	if s.Shown() != 0 || s.Active() {
 		t.Errorf("after the hold: %v", s.Shown())

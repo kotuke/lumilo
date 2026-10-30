@@ -39,8 +39,11 @@ type Speed struct {
 }
 
 // Target sets the speed to show from the view v at now: the live speed
-// while the server generates, the last one until the hold ends while it
-// is ready or answers outside Lumilo, else none (the icon shows memory).
+// while the server generates; the last one while a request is in progress
+// without a speed of its own yet (the server reads a long prompt: 40 s for
+// 25,000 tokens of Qwen3.8-27B with nothing cached), and until the hold
+// ends while it is ready or answers outside Lumilo; else none (the icon
+// shows memory).
 func (s *Speed) Target(v core.View, now time.Time) {
 	switch v.Phase {
 	case core.PhaseGenerating:
@@ -49,7 +52,12 @@ func (s *Speed) Target(v core.View, now time.Time) {
 			s.set(cur)
 			return
 		}
-		fallthrough // reading the prompt: no speed yet
+		if s.last > 0 && v.Snapshot.Active > 0 {
+			s.held = now.Add(SpeedHold) // the hold starts over when it ends
+			s.set(s.last)
+			return
+		}
+		fallthrough
 	case core.PhaseReady, core.PhaseExternal:
 		if !s.held.IsZero() && now.Before(s.held) {
 			s.set(s.last)
