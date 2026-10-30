@@ -1,14 +1,27 @@
 # Changelog
 
-## Unreleased
+## 0.3.1
+
+Close speeds stand apart on the chart, and a Splash error names what is
+missing.
+
+### Improved
 
 - The speed chart starts below the slowest request, not at zero, so
   requests of close speeds differ at a glance. Its range glides when a new
   request is the slowest or the fastest.
+
+### Fixed
+
 - When Splash cannot start a model offline, the error card quotes the
   error that names the missing files, such as a speculative-decoding
   drafter gone from the Hugging Face cache, not the notice that Splash
   installs the model from that cache.
+
+### Updating
+
+Lumilo 0.3.0 downloads this version by itself within a day and offers to
+restart; Settings → Check for updates finds it at once.
 
 ## 0.3.0
 
