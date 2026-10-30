@@ -205,11 +205,11 @@ func engineBoards() []board {
 		{name: "add-model-variants", build: func(b *bench) {
 			b.openAdd(true)
 			b.typeText("unsloth/Qwen3.8-27B-GGUF:")
-			b.p.SetModelVariants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
+			b.variants("unsloth/Qwen3.8-27B-GGUF", sampleVariants)
 			b.tt.Frame()
 			b.tt.Key(0, ui.KeyDown)
 		}, check: func(b *bench) {
-			b.want("UD-Q4_K_M", "16.5 GB", "Needs about 58.2 GB of memory, more than the 38.7 GB available")
+			b.want("UD-Q4_K_M", "16.5 GB", "Needs about 59.1 GB of memory, more than the 38.7 GB available")
 		}},
 		// More variants than fit scroll; what follows the colon narrows them.
 		{name: "add-model-variants-many", build: func(b *bench) {
@@ -218,7 +218,7 @@ func engineBoards() []board {
 			b.click("Add model…")
 			b.tt.Frame()
 			b.typeText("unsloth/Qwen3.8-27B-GGUF:")
-			b.p.SetModelVariants("unsloth/Qwen3.8-27B-GGUF", manyVariants)
+			b.variants("unsloth/Qwen3.8-27B-GGUF", manyVariants)
 			b.tt.Frame()
 			for range 7 {
 				b.tt.Key(0, ui.KeyDown)

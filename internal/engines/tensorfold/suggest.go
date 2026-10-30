@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/kotuke/lumilo/internal/engine"
-	"github.com/kotuke/lumilo/internal/engines/makers"
+	"github.com/kotuke/lumilo/internal/engines/enginekit"
 )
 
 // hfPartRe is a repository part as the hub allows it.
@@ -36,7 +36,7 @@ func suggestions() []engine.Suggestion {
 	return []engine.Suggestion{
 		{
 			ID: "TensorFold/Qwen3.8-27B-MLX-4bit", Name: "Qwen3.8-27B",
-			Maker: "Qwen", MakerLogo: makers.Qwen,
+			Maker: "Qwen", MakerLogo: enginekit.QwenLogo,
 			Params:        27_000_000_000,
 			DownloadBytes: 19_930_000_000, MemoryBytes: 17_780_000_000,
 		},

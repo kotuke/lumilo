@@ -14,7 +14,7 @@ import (
 // The agent logos are the colour icons of Lobe Icons
 // (@lobehub/icons-static-svg 1.101.0, MIT; THIRD_PARTY_NOTICES).
 //
-//go:embed logos/logo-*.svg
+//go:embed logos/logo-*.svg logos/maker-*.svg
 var agentLogos embed.FS
 
 // Agents are the coding agents Lumilo can point at a local server, in the
@@ -342,3 +342,8 @@ func jsonString(s string) string {
 	b, _ := json.Marshal(s)
 	return string(b)
 }
+
+// QwenLogo is the logo of Qwen (Alibaba Cloud) that engines show next to
+// the models they suggest: the colour icon of Lobe Icons
+// (@lobehub/icons-static-svg 1.101.0, MIT), icons/qwen-color.svg.
+var QwenLogo = MustFile(agentLogos, "logos/maker-qwen.svg")

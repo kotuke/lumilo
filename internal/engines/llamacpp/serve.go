@@ -63,7 +63,7 @@ func (l *LlamaCpp) ServeCommand(cfg engine.Config) (argv []string, env []string)
 		"--port", strconv.Itoa(cfg.Port),
 		"--metrics",
 	}
-	switch mm := mmprojFor(cfg.Model); {
+	switch mm := sidecarFor(cfg.Model, "mmproj"); {
 	case cfg.NoVision && model == "-hf":
 		argv = append(argv, "--no-mmproj")
 	case mm != "" && !cfg.NoVision:
@@ -136,11 +136,6 @@ func draftArgs(cfg engine.Config) []string {
 	}
 	return nil
 }
-
-// mmprojFor returns the only multimodal projector in the model's directory,
-// or "" when there is none or more than one (then it is not clear which
-// belongs to the model).
-func mmprojFor(model string) string { return sidecarFor(model, "mmproj") }
 
 // sidecarFor returns the only file of the kind (gguf.Sidecar) in the
 // model's directory, or "" when there is none or more than one.

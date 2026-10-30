@@ -296,12 +296,11 @@ request: the strings are in `locales/<language>.json`.
 | Package | Role |
 | --- | --- |
 | `internal/engine` | The contract. `Engine`: `Info()` (ID, name, logo, capabilities, suggestions, model search, agents), `Installer()`, models, the serve command (context size, download on start), the optional `Downloader` (download apart from the server), output parsing, failure classes, download meter, probing, release and restore, agent commands. `Installer`: `Describe()` (method, size on disk, commands, prerequisite), `Detect`, `Install`, `Upgrade`, `Latest`, `ReleaseNotesURL`. The memory estimate (`Estimate`, `Judge`) |
-| `internal/engines/enginekit` | What engines share: the local HTTP request with a bearer key, the Prometheus text parser, executable lookup at Homebrew paths, the child environment, embedded logos, release feeds (GitHub, Homebrew formula API, a tap's formula), the Hugging Face hub cache and its download meter, and `Homebrew`, the installer of an engine with a Homebrew formula |
+| `internal/engines/enginekit` | What engines share: the local HTTP request with a bearer key, the Prometheus text parser, executable lookup at Homebrew paths, the child environment, embedded logos (agents and model makers such as Qwen), release feeds (GitHub, Homebrew formula API, a tap's formula), the Hugging Face hub cache and its download meter, and `Homebrew`, the installer of an engine with a Homebrew formula |
 | `internal/engines/splash` | The Splash implementation. Everything specific to Splash lives here: formula, lock files, log lines, metric names, error texts |
 | `internal/engines/llamacpp` | The llama.cpp (`llama-server`) implementation: GGUF models from the Hugging Face cache, `/health`, `/props` and `/metrics`, log lines, error texts, suggestions |
 | `internal/engines/tensorfold` | The TensorFold implementation: MLX checkpoints of the families its native engine serves, from the Hugging Face cache, DFlash2 drafters, `/health`, `/memory` and `/metrics`, idle unload, log lines, error texts |
 | `internal/core` | The engine-agnostic supervisor. It installs and updates engines through their `Installer`, runs the server, switches engines, runs model downloads apart from the server (`DownloadModel`, `View.Downloads`), polls the server, keeps the speed history and publishes a `View` |
-| `internal/engines/makers` | Logos of model makers (Qwen) for the suggestions |
 | `internal/appupdate` | Lumilo's own updates: the daily check of the release feed (`mygo.Updater`), the background download and install, the state the panel shows |
 | `internal/panel` | The panel and settings screens, drawn from a `View` |
 | `internal/trayicon` | The menu-bar icon |

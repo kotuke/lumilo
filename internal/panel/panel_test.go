@@ -28,7 +28,7 @@ type recorder struct {
 	keys  int
 	eng   engine.Engine // ParseModel asks it; nil = Splash
 	// search and variants stand for the lookups of the app, which answer
-	// later through SetModelHits and SetModelVariants.
+	// later through SetModelHits and SetModelInfo.
 	search, variants func(string)
 }
 
