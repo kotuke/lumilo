@@ -262,9 +262,9 @@ Lumilo's own updates.
 After the release, move the cask in
 [kotuke/homebrew-tap](https://github.com/kotuke/homebrew-tap) to the new
 version: `brew bump-cask-pr --version <version> kotuke/tap/lumilo` opens
-the pull request. The cask has `auto_updates true`, so `brew upgrade` leaves
-Lumilo to update itself; the cask of 0.2.0 goes without it, as 0.1.0 has no
-updater and only Homebrew can move it on. Keep a copy of the update key
+the pull request. The cask has `auto_updates true` from 0.3.0 on, so
+`brew upgrade` leaves Lumilo to update itself; 0.1.0 has no updater, and
+`brew upgrade --greedy` moves it on. Keep a copy of the update key
 (`~/.config/lumilo/update-keys/`) off this Mac: installed copies accept only
 updates signed with it.
 

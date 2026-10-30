@@ -190,17 +190,24 @@ func (p *Panel) tokenCount(c *ui.Context, f *frame, n int64, rate float64) int64
 	return int64(p.tokShown)
 }
 
-// chartTop is the speed the full chart height stands for: the mockup's 50
-// tok/s, raised in steps of 10 for faster engines.
-func chartTop(series []float64) float64 {
-	top := 0.0
+// chartRange is the speeds the chart's bottom and top stand for. The
+// chart starts below the slowest bar, not at zero, so that requests of
+// close speeds differ at a glance: of bars from 30 to 45 tok/s, the
+// slowest stands at a third of the height. The range spans at least half
+// the top speed, so that requests of about one speed do not read as wild
+// swings; both ends are multiples of 5 tok/s, so they hold still while
+// the bars change a little.
+func chartRange(series []float64) (lo, hi float64) {
+	if len(series) == 0 {
+		return 0, 50
+	}
+	lo, hi = series[0], series[0]
 	for _, x := range series {
-		top = max(top, x)
+		lo, hi = min(lo, x), max(hi, x)
 	}
-	if top <= 50 {
-		return 50
-	}
-	return math.Ceil(top*1.2/10) * 10
+	hi = max(5, math.Ceil(hi*1.05/5)*5)
+	lo = min(lo-(hi-lo)/2, hi/2)
+	return max(0, math.Floor(lo/5)*5), hi
 }
 
 // chart is the 20-bar speed chart, with a dashed line at avg (none when
@@ -208,9 +215,18 @@ func chartTop(series []float64) float64 {
 func (p *Panel) chart(c *ui.Context, f *frame, series []float64, current int, dim bool, avg float64, barText func(int) string) {
 	t, m := f.pal, f.m
 	n := len(series)
-	top := chartTop(series)
 	hover := -1
-	group := ui.Row(c).Direction(ui.LeftToRight).Height(40).Gap(3).AlignItems(ui.End).Role(ui.RoleGroup)
+	group := ui.Row(c).Key("speed-chart").Direction(ui.LeftToRight).Height(40).Gap(3).AlignItems(ui.End).Role(ui.RoleGroup)
+	// The range glides as the live bar does, so a new slowest or fastest
+	// request rescales the bars smoothly.
+	lo, hi := chartRange(series)
+	lo = float64(group.Spring("lo", float32(lo), liveSpring))
+	hi = float64(group.Spring("hi", float32(hi), liveSpring))
+	// height is how high the bar of speed x stands, from 2 DIP (seen)
+	// to the chart's 40.
+	height := func(x float64) float32 {
+		return min(40, max(2, float32(math.Round((x-lo)/(hi-lo)*100))/100*40))
+	}
 	if n > 0 {
 		lo, hi := series[0], series[0]
 		for _, x := range series {
@@ -220,7 +236,7 @@ func (p *Panel) chart(c *ui.Context, f *frame, series []float64, current int, di
 	}
 	if avg > 0 {
 		// Over the bars, so that each reads above or below the average.
-		ah := float32(math.Round(avg/top*100)) / 100 * 40
+		ah := height(avg)
 		line := t.muted
 		group.DrawOver(func(pt *ui.Painter, r ui.Rect) {
 			y := r.Y + r.H - ah
@@ -238,7 +254,7 @@ func (p *Panel) chart(c *ui.Context, f *frame, series []float64, current int, di
 			ui.Box(c).Key(-1 - i).Grow(1).Basis(0).Height(40)
 		}
 		for i, x := range series {
-			h := float32(math.Round(x/top*100)) / 100 * 40
+			h := height(x)
 			bg := t.barLo
 			if !dim && i >= n-10 {
 				bg = t.barHi
@@ -263,9 +279,6 @@ func (p *Panel) chart(c *ui.Context, f *frame, series []float64, current int, di
 				if i != current {
 					bg = t.strong
 				}
-			}
-			if i == current {
-				h = max(h, 2) // seen before the first speed comes
 			}
 			cell.Children(func() {
 				ui.Box(c).Height(max(h, 0)).Radius(2).Background(bg)

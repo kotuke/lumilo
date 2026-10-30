@@ -44,3 +44,24 @@ func TestChartBarsContrast(t *testing.T) {
 		t.Error("the recent bars do not read darker than the older ones")
 	}
 }
+
+func TestChartRange(t *testing.T) {
+	for _, c := range []struct {
+		series []float64
+		lo, hi float64
+	}{
+		{nil, 0, 50},
+		// Close speeds: the slowest bar at a third of the height.
+		{[]float64{30, 36, 45, 41}, 20, 50},
+		// One speed: the range still spans half the top.
+		{[]float64{40}, 20, 45},
+		// Far apart: the chart starts at zero.
+		{[]float64{8, 90}, 0, 95},
+		// A request without a speed yet.
+		{[]float64{0}, 0, 5},
+	} {
+		if lo, hi := chartRange(c.series); lo != c.lo || hi != c.hi {
+			t.Errorf("chartRange(%v) = %v, %v; want %v, %v", c.series, lo, hi, c.lo, c.hi)
+		}
+	}
+}
