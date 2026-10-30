@@ -26,6 +26,7 @@ type settingsState struct {
 	updates    bool
 	login      bool
 	blink      bool
+	appAuto    bool
 	portText   string
 	portBad    bool // the text is not a port number
 	busy, free int  // the port is in use; free is one that is not (0 = none found)
@@ -79,7 +80,7 @@ func (s *settingsState) sync(pr Prefs) {
 	s.idle = pr.IdleRelease
 	s.lang = pr.Language
 	s.term = pr.Terminal
-	s.updates, s.login, s.blink = pr.ModelUpdates, pr.OpenAtLogin, pr.AnimateIcon
+	s.updates, s.login, s.blink, s.appAuto = pr.ModelUpdates, pr.OpenAtLogin, pr.AnimateIcon, pr.AppUpdates
 	if n, err := strconv.Atoi(strings.TrimSpace(s.portText)); err != nil || n != pr.Port {
 		if !s.portBad {
 			s.portText = strconv.Itoa(pr.Port)
@@ -282,6 +283,7 @@ func (p *Panel) settingsBody(c *ui.Context, f *frame) {
 	// App.
 	card(c, f, 6).Children(func() {
 		txt(c, m.App(), 12.5).FontWeight(600).Padding(0, 0, 2, 0)
+		p.appRows(c, f, s)
 		ui.Row(c).Gap(8).MinHeight(28).Children(func() {
 			txt(c, m.EngineVersion(p.view.Engine), 12.5).Grow(1).MinWidth(0)
 			if p.view.Version != "" {
@@ -289,7 +291,7 @@ func (p *Panel) settingsBody(c *ui.Context, f *frame) {
 			}
 			checking := p.checking()
 			b := btn(c).Height(22).Radius(6).Background(t.chip).TextColor(t.text).PaddingX(8).Gap(5).
-				Label(m.CheckUpdates()).Disabled(checking).OnClick(p.checkUpdate)
+				Label(m.CheckUpdates()).Description(m.EngineVersion(p.view.Engine)).Disabled(checking).OnClick(p.checkUpdate)
 			if checking {
 				b.TextColor(t.muted)
 			}
@@ -387,11 +389,13 @@ func (p *Panel) checkResult() core.CheckResult {
 func (p *Panel) applyChoices() {
 	s, pr := &p.set, p.pref
 	if engine.Access(s.access) != pr.Access || s.idle != pr.IdleRelease || s.lang != pr.Language || s.term != pr.Terminal ||
-		s.updates != pr.ModelUpdates || s.login != pr.OpenAtLogin || s.blink != pr.AnimateIcon {
+		s.updates != pr.ModelUpdates || s.login != pr.OpenAtLogin || s.blink != pr.AnimateIcon ||
+		s.appAuto != pr.AppUpdates {
 		p.commit(func(pr *Prefs) {
 			pr.Access = engine.Access(s.access)
 			pr.IdleRelease, pr.Language, pr.Terminal = s.idle, s.lang, s.term
 			pr.ModelUpdates, pr.OpenAtLogin, pr.AnimateIcon = s.updates, s.login, s.blink
+			pr.AppUpdates = s.appAuto
 		})
 	}
 }

@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Lumilo updates itself: it checks its releases once a day, downloads a new
+  version in the background, and a dot on the Settings button says it waits
+  for a restart. The restart asks first while the server runs or a model
+  downloads, and the new version starts them again. Settings shows Lumilo's
+  version, checks for updates and turns the automatic download off.
 - Install with Homebrew: `brew install --cask kotuke/tap/lumilo`.
 - The README shows Lumilo starting a server in a demo GIF.
 - Splash's model list shows the models already on this Mac, for example

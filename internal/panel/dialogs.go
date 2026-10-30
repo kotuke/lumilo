@@ -2,6 +2,8 @@ package panel
 
 import (
 	"github.com/egoist/mygo/ui"
+
+	"github.com/kotuke/lumilo/internal/core"
 )
 
 // dialogs shows the confirmation over the panel: top 44, end 10, as in
@@ -34,6 +36,15 @@ func (p *Panel) dialogs(c *ui.Context, f *frame) {
 			{m.UpdLater(), t.chip, t.text, 500, func() { p.dlg = dlgNone; p.updateWhenIdle = true }, false},
 			{m.UpdBtn(), t.fillBg, t.fillText, 600, func() { p.dlg = dlgNone; p.act.Update() }, false},
 		}
+	case dlgRestartUpdate:
+		title, note = m.RestartUpdTitle(), m.RestartUpdNote()
+		buttons = []dbtn{{m.AppUpdRestart(), t.fillBg, t.fillText, 600, func() { p.dlg = dlgNone; p.act.RestartToUpdate() }, false}}
+	case dlgRestartLater:
+		title, note = m.QuitUpdTitle(v.Engine), m.RestartUpdLater()
+		if v.Phase == core.PhaseInstalling {
+			title = m.InstProgress(v.Engine)
+		}
+		buttons = []dbtn{{m.AppUpdRestartLater(), t.fillBg, t.fillText, 600, func() { p.dlg = dlgNone; p.app.restartLater = true }, false}}
 	case dlgKill:
 		title, note = m.KillTitle(v.Engine), m.KillNote()
 		buttons = []dbtn{{m.KillBtn(), t.errBtn, t.err, 600, func() { p.dlg = dlgNone; p.act.KillExternal() }, false}}

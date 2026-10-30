@@ -15,6 +15,7 @@ import (
 	"github.com/egoist/mygo/i18n"
 	"github.com/egoist/mygo/ui"
 
+	"github.com/kotuke/lumilo/internal/appupdate"
 	"github.com/kotuke/lumilo/internal/core"
 	"github.com/kotuke/lumilo/internal/engine"
 	"github.com/kotuke/lumilo/internal/engines/llamacpp"
@@ -49,6 +50,10 @@ type app struct {
 	tray  *mygo.Tray
 	panel *panel.Panel
 	sup   *core.Supervisor
+	// upd keeps Lumilo itself up to date (update.go).
+	upd *appupdate.Updater
+	// release: the bundle is a published release (releaseBuild).
+	release bool
 	// look runs the lookups of the "Add model…" field off the main thread.
 	look *hf.Lookup
 
@@ -185,6 +190,7 @@ func (a *app) ready() {
 		OpenTerminal: a.openTerminal,
 	})
 	a.applyView(a.sup.View())
+	a.startUpdates()
 
 	mygo.App.OnSecondInstance(func([]string, string) { a.win.Update(func() { a.open() }) })
 	// Set before the windows close: the panel window cancels its close
@@ -197,6 +203,7 @@ func (a *app) ready() {
 			close(a.stopSpeed)
 			a.stopSpeed = nil
 		}
+		a.upd.Close()
 		a.sup.Close() // stops our server; a foreign one is never touched
 		a.tray.Destroy()
 		a.waitSaves(2 * time.Second)
@@ -254,6 +261,7 @@ func (a *app) loadSystem(fresh bool) {
 		a.storeKey()
 	}
 	a.applyCore()
+	a.resumeAfterUpdate()
 	a.win.Update(func() {
 		a.panel.SetLANAddress(lan)
 		a.panel.SetPrefs(a.prefs())
@@ -383,6 +391,7 @@ func (a *app) prefs() panel.Prefs {
 		Terminal:     a.st.Terminal,
 		OpenAtLogin:  a.st.OpenAtLogin,
 		AnimateIcon:  a.st.AnimateIcon,
+		AppUpdates:   !a.st.ManualUpdates,
 		Contexts:     maps.Clone(a.st.Contexts[a.st.Engine]),
 		Options:      maps.Clone(a.st.Options[a.st.Engine]),
 	}
