@@ -34,6 +34,11 @@ func TestTrayShot(t *testing.T) {
 		llama := view(ph)
 		llama.Engine, llama.Speed.Current, llama.Snapshot.MemoryUsed = "llama.cpp", 0, 20_600_000_000
 		views[name+"-llamacpp"] = llama
+		// And under TensorFold, which the hero's middle panel runs: its
+		// speed is live.
+		tf := view(ph)
+		tf.Engine, tf.Speed.Current, tf.Snapshot.MemoryUsed = "TensorFold", 47, 22_400_000_000
+		views[name+"-tensorfold"] = tf
 	}
 	for name, v := range views {
 		for theme, dark := range map[string]bool{"dark": true, "light": false} {
