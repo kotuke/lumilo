@@ -32,11 +32,11 @@ LANGS = [
     ("ar", "Arabic, right to left"),
 ]
 
-# Both engines take turns: the README's own boards (readme-* in
-# internal/panel/readme_test.go) run Qwen3.8-27B under llama.cpp and Splash.
+# The engines take turns: the README's own boards (readme-* in
+# internal/panel/readme_test.go) run Qwen3.8-27B under each of them.
 FEATURES = [
     ("suggestions", "First run: models that fit"),
-    ("readme-splash-models", "Image input and speculative decoding"),
+    ("readme-tensorfold-models", "Image input and a DFlash2 drafter"),
     ("readme-llama-network", "Network access with an API key"),
     ("readme-splash-remove", "Delete with the space it frees"),
 ]
@@ -44,9 +44,9 @@ FEATURES = [
 # Boards taller than the others, cut to this height (2x pixels).
 CROP = {"readme-llama-network": 1062}
 
-# The hero: llama.cpp with a model downloading and generating, Splash
-# looking up a model's files.
-HERO = ["readme-llama-downloading", "readme-llama-generating", "readme-splash-variants"]
+# The hero, an engine each: llama.cpp with a model downloading, TensorFold
+# generating, Splash looking up a model's files.
+HERO = ["readme-llama-downloading", "readme-tensorfold-generating", "readme-splash-variants"]
 
 # The same panels in the light and the dark theme, side by side.
 THEMED = [("readme-engines", "light", "Light"), ("readme-engines", "dark", "Dark")]
@@ -104,7 +104,7 @@ def menubar(canvas, dir, theme, h, icon_cx, scale):
         x += d.textlength(word, font=f) + 40 * scale
     clock = "Wed 28 Oct  14:32"
     d.text((canvas.width - 36 * scale, y), clock, font=font, fill=ink, anchor="rm")
-    icon = tray(dir, "generating-llamacpp", theme, scale / 2)
+    icon = tray(dir, "generating-tensorfold", theme, scale / 2)
     # The icon is highlighted while its panel is open.
     hl = (icon_cx - icon.width / 2 - 10 * scale, 4 * scale, icon_cx + icon.width / 2 + 10 * scale, h - 4 * scale)
     over = Image.new("RGBA", canvas.size, (0, 0, 0, 0))

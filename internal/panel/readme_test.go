@@ -9,6 +9,7 @@ import (
 	"github.com/kotuke/lumilo/internal/core"
 	"github.com/kotuke/lumilo/internal/engine"
 	"github.com/kotuke/lumilo/internal/engines/llamacpp"
+	"github.com/kotuke/lumilo/internal/engines/tensorfold"
 	"github.com/kotuke/lumilo/internal/format"
 	"github.com/kotuke/lumilo/internal/hf"
 	"github.com/kotuke/lumilo/locales"
@@ -30,6 +31,14 @@ var (
 			SizeBytes: 1_266_000_000, Always: true}}}}
 	qwen36Splash = engine.Model{ID: "unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_M", Name: "Qwen3.6-35B-A3B-GGUF",
 		Owner: "unsloth", Variant: "UD-Q4_K_M", SizeBytes: 22_134_528_992, ContextLength: 262144}
+	// Under TensorFold: MLX checkpoints, Qwen3.8-27B with its DFlash2 drafter
+	// (sizes from Hugging Face, 2026-10-29).
+	qwen38TF = engine.Model{ID: "TensorFold/Qwen3.8-27B-MLX-4bit", Name: "Qwen3.8-27B-MLX-4bit", Owner: "TensorFold",
+		SizeBytes: 16_054_541_349, ContextLength: 262144, KVElements: 32768, Features: engine.Features{Vision: true,
+			Drafts: []engine.Draft{{Kind: engine.DraftDFlash, Name: "z-lab/Qwen3.8-27B-DFlash2", ID: "z-lab/Qwen3.8-27B-DFlash2",
+				SizeBytes: 1_731_967_053, Default: true}}}}
+	qwen36TF = engine.Model{ID: "mlx-community/Qwen3.6-35B-A3B-4bit", Name: "Qwen3.6-35B-A3B-4bit",
+		Owner: "mlx-community", SizeBytes: 19_772_000_000, ContextLength: 262144}
 	// qwen36Download is Qwen3.6-35B-A3B as typed, before its files are on disk.
 	qwen36Download = engine.Model{ID: "unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q4_K_M", Owner: "unsloth",
 		Name: "Qwen3.6-35B-A3B-GGUF", Variant: "UD-Q4_K_M"}
@@ -42,6 +51,36 @@ var qwen36Variants = []hf.Variant{
 	{Tag: "MXFP4_MOE", Bytes: 21_706_144_736, Parts: 1},
 	{Tag: "UD-Q6_K", Bytes: 29_308_320_736, Parts: 1},
 	{Tag: "Q8_0", Bytes: 36_903_140_320, Parts: 1},
+}
+
+// readmeEngines are the three engines, installed.
+func readmeEngines() []core.EngineInfo {
+	e := tensorfold.New()
+	info := e.Info()
+	return append(engineList(), core.EngineInfo{ID: info.ID, Name: info.Name, Logo: info.Logo,
+		Installed: true, Version: "1.1.9", Install: e.Installer().Describe()})
+}
+
+// readmeTensorFold is TensorFold serving Qwen3.8-27B with its DFlash2
+// drafter, at the 128K that fits on 48 GB, enough for Claude Code: the
+// drafter makes it faster than llama.cpp's GGUF.
+func readmeTensorFold(ph core.Phase) core.View {
+	v := withPhase(ph)
+	core.Describe(&v, tensorfold.New())
+	v.Version, v.ChatURL = "1.1.9", ""
+	v.Engines = readmeEngines()
+	v.Model, v.Models = qwen38TF, []engine.Model{qwen38TF, qwen36TF}
+	v.Snapshot.Model, v.Snapshot.ContextTokens = qwen38TF.ID, 131072
+	v.Snapshot.MemoryUsed, v.Snapshot.DiskUsed, v.Snapshot.DiskLimit = 22_400_000_000, 0, 0
+	v.Speed.History = nil
+	for _, s := range sampleHistory {
+		v.Speed.History = append(v.Speed.History, s*1.15)
+	}
+	v.Speed.Average, v.Speed.FirstToken, v.Speed.Read = 44, 900*time.Millisecond, 880
+	if ph == core.PhaseGenerating {
+		v.Speed.Current = 47
+	}
+	return v
 }
 
 // readmeLlama is llama.cpp serving Qwen3.8-27B: a dense 27B model runs
@@ -57,6 +96,7 @@ func readmeLlama(ph core.Phase) core.View {
 		v.Speed.History = append(v.Speed.History, s*0.68)
 	}
 	v.Speed.Average, v.Speed.FirstToken, v.Speed.Read = 26, 1400*time.Millisecond, 610
+	v.Engines = readmeEngines()
 	if ph == core.PhaseGenerating {
 		// llama-server counts a request's tokens when it ends: no live speed.
 		v.Snapshot.MemoryUsed, v.Snapshot.Active = 20_600_000_000, 1
@@ -69,6 +109,7 @@ func readmeSplash(ph core.Phase) core.View {
 	v := withPhase(ph)
 	v.Model, v.Models = qwen38Splash, []engine.Model{qwen38Splash, qwen36Splash}
 	v.Snapshot.Model = qwen38Splash.ID
+	v.Engines = readmeEngines()
 	if ph == core.PhaseGenerating || ph == core.PhaseReady {
 		v.Snapshot.MemoryUsed = 21_200_000_000
 	}
@@ -98,10 +139,20 @@ func readmeBoards() []board {
 		}, check: func(b *bench) {
 			b.want("llama.cpp 0.7.0", "Qwen3.6-35B-A3B", "9 of 22.1 GB · 60 MB/s · "+en.DlLeft("4 min"))
 		}},
-		{name: "readme-llama-generating", build: func(b *bench) {
-			b.show(readmeLlama(core.PhaseGenerating), 3*time.Hour+5*time.Minute)
+		// TensorFold generates with Qwen3.8-27B and its DFlash2 drafter.
+		{name: "readme-tensorfold-generating", build: func(b *bench) {
+			b.rec.eng = tensorfold.New()
+			b.show(readmeTensorFold(core.PhaseGenerating), 2*time.Hour+40*time.Minute)
 		}, check: func(b *bench) {
-			b.want("llama.cpp 0.7.0", "Qwen3.8-27B-GGUF", "unsloth · UD-Q4_K_M", "Generating", "20.6 GB")
+			b.want("TensorFold 1.1.9", "Qwen3.8-27B-MLX-4bit", "Generating", "22.4 GB", "128K")
+		}},
+		// TensorFold's model list: image input and the DFlash2 drafter.
+		{name: "readme-tensorfold-models", build: func(b *bench) {
+			b.rec.eng = tensorfold.New()
+			b.show(readmeTensorFold(core.PhaseReady), 40*time.Minute)
+			b.click("Qwen3.8-27B-MLX-4bit")
+		}, check: func(b *bench) {
+			b.want("TensorFold 1.1.9", "Qwen3.6-35B-A3B-4bit", "Speculative decoding: on")
 		}},
 		// Splash with Qwen3.8-27B looks up Qwen3.6-35B-A3B's files.
 		{name: "readme-splash-variants", build: func(b *bench) {
@@ -122,15 +173,7 @@ func readmeBoards() []board {
 			b.show(readmeLlama(core.PhaseReady), time.Hour)
 			b.openEngines("llama.cpp 0.7.0")
 		}, check: func(b *bench) {
-			b.want("Splash", "llama.cpp", "1.4.0", "0.7.0")
-		}},
-		// Splash's model list: image input and the DFlash2 draft it always runs.
-		{name: "readme-splash-models", build: func(b *bench) {
-			b.show(readmeSplash(core.PhaseReady), 40*time.Minute)
-			b.click("Qwen3.8-27B-GGUF")
-		}, check: func(b *bench) {
-			b.want("Splash 1.4.0", "UD-Q4_K_M · 16.5 GB", "Qwen3.6-35B-A3B-GGUF", "Image input: on",
-				"Speculative decoding: on")
+			b.want("Splash", "llama.cpp", "TensorFold", "1.4.0", "0.7.0", "1.1.9")
 		}},
 		// llama.cpp open to the network, with its key and context.
 		{name: "readme-llama-network", build: func(b *bench) {
@@ -159,24 +202,26 @@ func readmeBoards() []board {
 			b.want(en.RmTitle(qwen36Splash.Name), en.RmFrees("23 GB"))
 		}},
 	}
-	// The languages, Splash in the first row of the README's collage and
-	// llama.cpp in the second.
+	// The languages, by engine: Splash, llama.cpp, then TensorFold.
 	for i, lang := range []string{"en", "ru", "de", "fr", "es", "ja", "zh-Hans", "ar"} {
-		view := readmeSplash
-		if i >= 4 {
-			view = readmeLlama
+		view, eng := readmeSplash, engine.Engine(nil)
+		switch {
+		case i >= 6:
+			view, eng = readmeTensorFold, tensorfold.New()
+		case i >= 3:
+			view, eng = readmeLlama, llamacpp.New()
 		}
 		out = append(out, board{name: "readme-lang-" + lang, lang: lang,
 			build: func(b *bench) {
-				if i >= 4 {
-					b.rec.eng = llamacpp.New()
+				if eng != nil {
+					b.rec.eng = eng
 				}
 				b.show(view(core.PhaseGenerating), 2*time.Hour+14*time.Minute)
 			},
 			check: func(b *bench) {
 				b.want(b.m.PillGenerating(), b.m.SpeedTitle(), b.m.Memory(), b.m.ActStop(),
 					b.m.SubGenerating(format.ShortDuration(lang, 2*time.Hour+14*time.Minute)))
-				if i < 4 && !slices.Contains(b.tt.Texts(), b.m.AgentsTitle()) {
+				if i < 3 && !slices.Contains(b.tt.Texts(), b.m.AgentsTitle()) {
 					b.t.Error("no agents under Splash")
 				}
 			}})

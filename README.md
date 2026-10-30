@@ -17,7 +17,7 @@ and point coding agents at it, without a terminal.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/hero-dark.png">
-  <img src="docs/images/hero-light.png" alt="Lumilo panels: llama.cpp serving Qwen3.8-27B while Qwen3.6-35B-A3B downloads, llama.cpp generating, Splash looking up a model's variants on Hugging Face">
+  <img src="docs/images/hero-light.png" alt="Lumilo panels, one per engine: llama.cpp serving Qwen3.8-27B while Qwen3.6-35B-A3B downloads, TensorFold generating with Qwen3.8-27B and its DFlash2 drafter, Splash looking up a model's variants on Hugging Face">
 </picture>
 
 </div>
@@ -64,7 +64,7 @@ brew install --cask kotuke/tap/lumilo
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/features-dark.png">
-  <img src="docs/images/features-light.png" alt="First-run model suggestions, Splash's model list with image input and speculative decoding, llama.cpp open to the network with an API key, the delete dialog">
+  <img src="docs/images/features-light.png" alt="First-run model suggestions, TensorFold's model list with image input and a DFlash2 drafter, llama.cpp open to the network with an API key, the delete dialog">
 </picture>
 
 ## In the menu bar
@@ -88,7 +88,7 @@ coding agent runs its tools between two of them.
 
 The panel follows the system theme, or the one you switch to in its header.
 
-<img src="docs/images/themes.png" alt="The same llama.cpp panel with the engine list open, in the light and the dark theme">
+<img src="docs/images/themes.png" alt="The same llama.cpp panel with the list of the three engines open, in the light and the dark theme">
 
 ## Languages
 
@@ -97,7 +97,7 @@ Arabic. Lumilo follows the system language, or the one you pick in Settings.
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/languages-dark.png">
-  <img src="docs/images/languages-light.png" alt="The Lumilo panel in eight languages: Splash in the first row, llama.cpp in the second">
+  <img src="docs/images/languages-light.png" alt="The Lumilo panel in eight languages, under Splash, llama.cpp and TensorFold">
 </picture>
 
 ## Install
