@@ -237,24 +237,40 @@ func (s *Splash) ClassifyFailure(code int, tail []string) engine.Failure {
 	return f
 }
 
-// findLine returns the first line containing any of the lowercase patterns.
+// findLine returns the first line containing any of the lowercase patterns,
+// preferring error lines: a notice such as "Could not reach the Hub
+// (HF_HUB_OFFLINE is set); installing … from the Hub cache" precedes the
+// error that names what is missing (testdata/failures/draft_offline.*).
 func findLine(lines []string, patterns ...string) string {
+	var notice string
 	for _, l := range lines {
 		low := strings.ToLower(l)
 		for _, p := range patterns {
-			if strings.Contains(low, p) {
+			if !strings.Contains(low, p) {
+				continue
+			}
+			if isErrorLine(l) {
 				return l
 			}
+			if notice == "" {
+				notice = l
+			}
+			break
 		}
 	}
-	return ""
+	return notice
+}
+
+// isErrorLine reports an "error: ..." or "HH:MM:SS Error · ..." line.
+func isErrorLine(l string) bool {
+	b := stampRe.ReplaceAllString(l, "")
+	return errorLineRe.MatchString(b) || serverErrorRe.MatchString(b)
 }
 
 // firstErrorLine is the first "error: ..." or "HH:MM:SS Error · ..." line.
 func firstErrorLine(lines []string) string {
 	for _, l := range lines {
-		b := stampRe.ReplaceAllString(l, "")
-		if errorLineRe.MatchString(b) || serverErrorRe.MatchString(b) {
+		if isErrorLine(l) {
 			return l
 		}
 	}

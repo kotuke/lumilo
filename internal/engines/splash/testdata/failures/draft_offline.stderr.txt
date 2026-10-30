@@ -1,0 +1,6 @@
+Reinstalling orcarouter/OrcaCyber-Nano-1.0:Mix-15.7G: [Errno 2] No such file or directory: '/Users/user/Library/Application Support/Splash/models/orcarouter/OrcaCyber-Nano-1.0:Mix-15.7G/draft/config.json'
+Could not reach the Hub (HF_HUB_OFFLINE is set); installing orcarouter/OrcaCyber-Nano-1.0@97140f3ff7e2 from the Hub cache.
+Selected OrcaCyber-Nano-1.0-AI-Defense-Mix-15.7G.gguf from orcarouter/OrcaCyber-Nano-1.0.
+error: cannot resolve incoai/Qwen3.8-27B-DFlash2: HF_HUB_OFFLINE is set; the Hub cache has no snapshot of 015e795645c74b1a0eeef3b570031fb62e769bc5
+error: model download or verification failed
+exit 1

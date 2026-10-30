@@ -408,6 +408,12 @@ func TestClassifyFailureFixtures(t *testing.T) {
 	check("no_model_offline", code, tail, engine.FailModel,
 		"error: cannot resolve orcarouter/NoSuchModel-1.0: HF_HUB_OFFLINE is set; neither this installation nor the Hub cache records a commit for the default branch")
 
+	// The target installs from the cache, its drafter is gone: the panel
+	// names the drafter, not the "installing … from the Hub cache" notice.
+	code, tail = readTail(t, filepath.Join(dir, "draft_offline.stderr.txt"))
+	check("draft_offline", code, tail, engine.FailModel,
+		"error: cannot resolve incoai/Qwen3.8-27B-DFlash2: HF_HUB_OFFLINE is set; the Hub cache has no snapshot of 015e795645c74b1a0eeef3b570031fb62e769bc5")
+
 	code, tail = readTail(t, filepath.Join(dir, "bad_port.stderr.txt"))
 	if code != 2 {
 		t.Fatalf("bad_port exit %d", code)
