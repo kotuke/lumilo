@@ -688,13 +688,33 @@ func (p *Panel) contextChip(c *ui.Context, f *frame, s *mainState) {
 	}
 	b.OnClick(func() {
 		p.openSettings(false)
-		p.set.flashCtx, p.set.revealCtx = p.now().Add(ctxFlash), true
+		p.set.revealCtx = true
 	}).Children(func() {
 		ico(c, "arrows-horizontal", 2, 12)
 		txt(c, label, 11.5).NoWrap()
 	})
 }
 
-// ctxFlash is how long the context row stands out after the context chip
-// opens Settings: the slide, then a second and a bit to find it.
-var ctxFlash = slideAnimation.Duration + 1200*time.Millisecond
+// ctxBlinks are the steps of the context row's blink after the context
+// chip opens Settings, each lit or not: lit while Settings slides in and a
+// moment after, dark, lit again, and dark for good.
+var ctxBlinks = []time.Duration{slideAnimation.Duration + 450*time.Millisecond, 300 * time.Millisecond, 450 * time.Millisecond}
+
+// ctxFlash is how long the context row blinks.
+var ctxFlash = ctxBlinks[0] + ctxBlinks[1] + ctxBlinks[2]
+
+// ctxBlink tells whether the context row is lit e after the blink began,
+// and when that changes: never (0) once it is over.
+func ctxBlink(e time.Duration) (lit bool, next time.Duration) {
+	if e < 0 {
+		return false, 0
+	}
+	at := time.Duration(0)
+	for i, d := range ctxBlinks {
+		at += d
+		if e < at {
+			return i%2 == 0, at - e
+		}
+	}
+	return false, 0
+}

@@ -343,6 +343,25 @@ func TestAgentNeedsContext(t *testing.T) {
 
 // The context chip beside the address: the server's window while it runs,
 // else the one chosen for the model or Auto; a click opens Settings.
+func TestCtxBlink(t *testing.T) {
+	for _, c := range []struct {
+		e    time.Duration
+		lit  bool
+		next time.Duration
+	}{
+		{-time.Second, false, 0},
+		{0, true, ctxBlinks[0]},
+		{ctxBlinks[0], false, ctxBlinks[1]},
+		{ctxBlinks[0] + ctxBlinks[1], true, ctxBlinks[2]},
+		{ctxFlash - time.Millisecond, true, time.Millisecond},
+		{ctxFlash, false, 0},
+	} {
+		if lit, next := ctxBlink(c.e); lit != c.lit || next != c.next {
+			t.Errorf("ctxBlink(%v) = %v, %v; want %v, %v", c.e, lit, next, c.lit, c.next)
+		}
+	}
+}
+
 func TestContextChip(t *testing.T) {
 	b := newBench(t, "en")
 	v := withPhase(core.PhaseReady)
@@ -353,8 +372,8 @@ func TestContextChip(t *testing.T) {
 	if b.p.screen != screenSettings {
 		t.Errorf("screen %v, want Settings", b.p.screen)
 	}
-	// The context row stands out in the accent's tint, then fades back to
-	// the card.
+	// The context row blinks twice in the accent's tint, then is the card
+	// again.
 	r, ok := b.tt.Find("Context")
 	if !ok {
 		t.Fatalf("no context row in %q", b.tt.Texts())
@@ -362,13 +381,25 @@ func TestContextChip(t *testing.T) {
 	at := func() ui.Color { return pixel(b.tt.Image(), int(r.X-4), int(r.Y+r.H/2)) }
 	// The card beside the next row, left of its text as well.
 	card := pixel(b.tt.Image(), int(r.X-4), int(r.Y+r.H/2+34))
-	if got := at(); dist(got, card) < 12 {
-		t.Errorf("context row %v, the card's %v: no tint", got, card)
+	// The blink began with the click; settle moved the clock since.
+	e := slideAnimation.Duration + 100*time.Millisecond
+	to := func(d time.Duration) {
+		b.tt.Advance(d - e)
+		e = d
 	}
-	b.clock = b.clock.Add(ctxFlash)
-	b.tt.Advance(ctxFlash + time.Second)
-	if got := at(); dist(got, card) > 3 {
-		t.Errorf("context row %v after the flash, want the card's %v", got, card)
+	for i, c := range []struct {
+		at  time.Duration
+		lit bool
+	}{
+		{e, true},
+		{ctxBlinks[0] + 250*time.Millisecond, false},
+		{ctxBlinks[0] + ctxBlinks[1] + 300*time.Millisecond, true},
+		{ctxFlash + time.Second, false},
+	} {
+		to(c.at)
+		if got := at(); (dist(got, card) > 12) != c.lit {
+			t.Errorf("step %d at %v: row %v, card %v, want lit %v", i, c.at, got, card, c.lit)
+		}
 	}
 
 	b = newBench(t, "en")

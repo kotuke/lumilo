@@ -12,7 +12,7 @@
   under 64K.
 - The server card shows the model's context beside the address ("↔ 64K"),
   as the server serves it; a click opens Settings, where the context row
-  stands out for a moment.
+  blinks twice.
 - Settings' lists are as wide as their longest item, so a drafter's name
   shows whole.
 - The speed in the menu bar glides instead of jumping, and stays while a

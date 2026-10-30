@@ -30,10 +30,11 @@ type settingsState struct {
 	portBad    bool // the text is not a port number
 	busy, free int  // the port is in use; free is one that is not (0 = none found)
 	focusPort  bool
-	// flashCtx, set by the context chip, is when the context row stops
-	// standing out; revealCtx brings it into view once.
-	flashCtx  time.Time
+	// revealCtx, set by the context chip, brings the context row into
+	// view and makes it blink (ctxBlink) from flashCtx, the frame that
+	// first showed it, on the UI's clock, which its colours follow.
 	revealCtx bool
+	flashCtx  time.Time
 	portFocus bool // the port field had the focus in the last frame
 	epoch     int  // bumped by reset: popups of the selects start closed
 	adding    bool

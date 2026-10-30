@@ -209,20 +209,25 @@ func (p *Panel) contextRow(c *ui.Context, f *frame) {
 		slices.Sort(opts)
 	}
 	opts = append(opts, ctxOtherOpt)
-	// Opened from the context chip, the row stands out in the accent's
-	// tint, which fades once ctxFlash is over. It reaches 8 DIPs past the
-	// row on each side, as a highlighted list row does.
+	// Opened from the context chip, the row blinks twice in the accent's
+	// tint (ctxBlink). It reaches 8 DIPs past the row on each side, as a
+	// highlighted list row does.
 	hl := ui.Column(c).Key("ctx-flash").Margin(-4, -8).Padding(4, 8).Radius(8)
-	tint := ui.Color{}
-	if left := s.flashCtx.Sub(f.now); left > 0 {
-		tint = t.focus.Alpha(0.14)
-		c.After(left)
-	}
-	hl.Background(hl.AnimateColor("tint", tint, ui.Animation{Duration: 700 * time.Millisecond, Ease: ui.EaseOut}))
 	if s.revealCtx && !p.measured {
-		s.revealCtx = false
+		s.revealCtx, s.flashCtx = false, c.Now()
 		hl.ScrollIntoView()
 	}
+	tint := ui.Color{}
+	if !s.flashCtx.IsZero() {
+		lit, next := ctxBlink(c.Now().Sub(s.flashCtx))
+		if lit {
+			tint = t.focus.Alpha(0.16)
+		}
+		if next > 0 {
+			c.After(next)
+		}
+	}
+	hl.Background(hl.AnimateColor("tint", tint, ui.Animation{Duration: 200 * time.Millisecond, Ease: ui.EaseInOut}))
 	hl.Children(func() {
 		dropdown(c, f, [3]any{"ctx", s.epoch, model}, m.Context(), &s.ctx, opts, func(n int) string {
 			switch n {
