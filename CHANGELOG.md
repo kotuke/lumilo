@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.3.0
+
+The speed card shows the request in progress as it runs. This is the
+first version that reaches you as an automatic update.
+
+### Improved
+
+- **A live speed card.** While a request runs, the card leads with its
+  speed against the average ("47 tok/s now ↑ 7%") and counts its tokens.
+  The number, its bar and the count glide between the server's readings,
+  as the menu bar does, instead of jumping once a second.
+- **An average line on the chart.** A dashed line at the average speed
+  shows which requests were faster or slower than usual.
+- The bar of the request in progress stands at its real speed instead of
+  growing in a loop.
+- "Almost full" under memory starts with a capital letter and stands on
+  the line of the size beside it.
+
+### Updating from 0.2.0
+
+Lumilo 0.2.0 downloads this version by itself within a day and offers to
+restart; Settings → Check for updates finds it at once.
+
 ## 0.2.0
 
 Lumilo now keeps itself up to date, runs a third engine, TensorFold, and

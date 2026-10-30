@@ -980,15 +980,21 @@ func TestSpeedMeter(t *testing.T) {
 	// Generating: Current is the live rate between probes.
 	snap.Active, snap.OutputTokens, snap.DecodeTime = 1, 50, time.Second
 	m.add(snap, at(1))
-	if m.speed.Current != 50 || len(m.speed.History) != 0 {
-		t.Fatalf("current %v history %v", m.speed.Current, m.speed.History)
+	if m.speed.Current != 50 || m.speed.Tokens != 50 || len(m.speed.History) != 0 {
+		t.Fatalf("current %v tokens %v history %v", m.speed.Current, m.speed.Tokens, m.speed.History)
+	}
+	// Tokens count up while the request runs.
+	snap.OutputTokens, snap.DecodeTime = 120, 2*time.Second
+	m.add(snap, at(1))
+	if m.speed.Tokens != 120 {
+		t.Fatalf("tokens %v, want 120", m.speed.Tokens)
 	}
 	// Finished: one entry of Δtokens/Δdecode.
 	snap.Active, snap.Completed, snap.OutputTokens, snap.DecodeTime = 0, 1, 150, 3*time.Second
 	if !m.add(snap, at(2)) {
 		t.Fatal("completion not reported")
 	}
-	if !slices.Equal(m.speed.History, []float64{50}) || m.speed.Current != 0 || !m.speed.LastRequest.Equal(at(2)) {
+	if !slices.Equal(m.speed.History, []float64{50}) || m.speed.Current != 0 || m.speed.Tokens != 0 || !m.speed.LastRequest.Equal(at(2)) {
 		t.Fatalf("speed %+v", m.speed)
 	}
 	// Two requests finished between probes: two entries of the same rate.

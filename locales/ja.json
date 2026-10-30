@@ -104,6 +104,8 @@
   "ofTotal": "/ {total}",
   "speedTitle": "生成速度",
   "avgNote": "平均",
+  "liveNote": "現在",
+  "liveTokens": "トークン: {n, number}",
   "speedTps": "{value} tok/s",
   "trayGb": "{value} GB",
   "trayTps": "{value} T/S",

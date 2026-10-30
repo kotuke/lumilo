@@ -1449,13 +1449,13 @@ func (msgs Messages) Load() string {
 	return Catalog.Format(msgs.locale, "load", nil)
 }
 
-// Almost says "almost full"
+// Almost says "Almost full"
 // in the language the app shows.
 //
 // Label shown when memory is almost full.
 func Almost() string { return In(i18n.Locale()).Almost() }
 
-// Almost says "almost full"
+// Almost says "Almost full"
 // in the language of msgs.
 //
 // Label shown when memory is almost full.
@@ -1559,6 +1559,40 @@ func AvgNote() string { return In(i18n.Locale()).AvgNote() }
 // Caption of the average speed.
 func (msgs Messages) AvgNote() string {
 	return Catalog.Format(msgs.locale, "avgNote", nil)
+}
+
+// LiveNote says "now"
+// in the language the app shows.
+//
+// Caption of the live speed of the request in progress, shown instead of
+// the average while a request runs.
+func LiveNote() string { return In(i18n.Locale()).LiveNote() }
+
+// LiveNote says "now"
+// in the language of msgs.
+//
+// Caption of the live speed of the request in progress, shown instead of
+// the average while a request runs.
+func (msgs Messages) LiveNote() string {
+	return Catalog.Format(msgs.locale, "liveNote", nil)
+}
+
+// LiveTokens says "Tokens: {n, number}"
+// in the language the app shows.
+//
+// How many tokens the request in progress has generated so far. A label and
+// the number, so the words stay still while the number counts up (no plural
+// forms).
+func LiveTokens(n int) string { return In(i18n.Locale()).LiveTokens(n) }
+
+// LiveTokens says "Tokens: {n, number}"
+// in the language of msgs.
+//
+// How many tokens the request in progress has generated so far. A label and
+// the number, so the words stay still while the number counts up (no plural
+// forms).
+func (msgs Messages) LiveTokens(n int) string {
+	return Catalog.Format(msgs.locale, "liveTokens", map[string]any{"n": n})
 }
 
 // SpeedTps says "{value} tok/s"

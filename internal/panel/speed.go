@@ -37,7 +37,16 @@ func (p *Panel) speedCard(c *ui.Context, f *frame, s *mainState) {
 	series := append([]float64(nil), sp.History...)
 	current := -1
 	if generating {
-		series = append(series, sp.Current)
+		// Between the probes that time it (a long prompt read, a burst of a
+		// draft model) the request has no speed: the bar and the number keep
+		// the last one, as the menu-bar icon does.
+		cur := sp.Current
+		if cur > 0 {
+			p.liveLast = cur
+		} else if v.Snapshot.Active > 0 {
+			cur = p.liveLast
+		}
+		series = append(series, cur)
 		current = len(series) - 1
 	}
 	if len(series) > 20 {
@@ -55,15 +64,23 @@ func (p *Panel) speedCard(c *ui.Context, f *frame, s *mainState) {
 	isCur := func(i int) bool { return i == current }
 	tps := func(x float64) string { return format.TokPerSec(f.loc, x) }
 	el := card(c, f, 8).Key("speed-card")
+	// While a request runs, the card leads with its live speed, how it
+	// stands to the average and the tokens it has generated. The speed and
+	// its bar follow the probes with a slow spring (liveSpring), so they
+	// glide through the second between two probes rather than step at
+	// each; at once with Reduce Motion. The live speed is a whole number,
+	// as in the menu bar: its tenths only flicker. The tokens count on at
+	// the live speed (tokenCount).
+	live, tokens := 0.0, int64(0)
 	if current >= 0 {
-		// The live bar and its number follow the speed with a spring, so
-		// they glide where the probes step (once a second); at once with
-		// Reduce Motion.
-		series[current] = float64(el.Spring("live", float32(series[current])))
+		series[current] = float64(el.Spring("live", float32(series[current]), liveSpring))
+		live = series[current]
+		tokens = p.tokenCount(c, f, sp.Tokens, live)
 	}
+	tpsLive := func(x float64) string { return m.SpeedTps(format.Number(f.loc, x, 0)) }
 	barText := func(i int) string {
 		if isCur(i) {
-			return m.HoverCur() + " " + tps(series[i])
+			return m.HoverCur() + " " + tpsLive(series[i])
 		}
 		return m.HoverReq() + " " + tps(series[i])
 	}
@@ -77,21 +94,37 @@ func (p *Panel) speedCard(c *ui.Context, f *frame, s *mainState) {
 			}
 		})
 		ui.Row(c).AlignItems(ui.Baseline).Gap(6).Children(func() {
-			avg := "—"
-			if sp.Average > 0 {
-				avg = tps(sp.Average)
+			if live > 0 {
+				txt(c, tpsLive(live), 17).FontWeight(650).TextColor(t.okText).FontFeatures("tnum").NoWrap()
+				txt(c, m.LiveNote(), 11.5).TextColor(t.muted).NoWrap()
+				// How the live speed stands to the average: "↑ 12 %".
+				if d := live/sp.Average - 1; sp.Average > 0 && math.Abs(d) >= 0.005 {
+					arrow, col := "↑", t.okText
+					if d < 0 {
+						arrow, col = "↓", t.warnText
+					}
+					txt(c, arrow+" "+format.Percent(f.loc, math.Abs(d)), 11.5).FontWeight(600).TextColor(col).FontFeatures("tnum").NoWrap()
+				}
+				ui.Box(c).Grow(1)
+			} else {
+				avg := "—"
+				if sp.Average > 0 {
+					avg = tps(sp.Average)
+				}
+				txt(c, avg, 17).FontWeight(650).NoWrap()
+				txt(c, m.AvgNote(), 11.5).TextColor(t.muted).Grow(1)
 			}
-			txt(c, avg, 17).FontWeight(650).NoWrap()
-			txt(c, m.AvgNote(), 11.5).TextColor(t.muted).Grow(1)
 			if h := p.hoverBar; h >= 0 && h < n {
 				col := t.text
 				if isCur(h) {
 					col = t.okText
 				}
 				txt(c, barText(h), 11.5).FontWeight(600).TextColor(col).NoWrap()
+			} else if tokens > 0 {
+				txt(c, m.LiveTokens(int(tokens)), 11.5).TextColor(t.muted).FontFeatures("tnum").NoWrap()
 			}
 		})
-		p.chart(c, f, series, current, dim, barText)
+		p.chart(c, f, series, current, dim, sp.Average, barText)
 		var foot1, foot2 string
 		if dim {
 			if !sp.LastRequest.IsZero() {
@@ -117,6 +150,46 @@ func (p *Panel) speedCard(c *ui.Context, f *frame, s *mainState) {
 	})
 }
 
+// liveSpring is the spring of the live speed: about as slow as
+// the menu-bar number's easing (trayicon.speedEase), which covers most of
+// a change in the second until the next probe.
+var liveSpring = ui.SpringOptions{Duration: 2 * time.Second}
+
+// tokenCatchUp is about how long the shown token count takes to reach
+// the count it runs toward.
+const tokenCatchUp = 500 * time.Millisecond
+
+// tokenCount is the token count to show for n, the count of the last
+// probe, at the live speed rate. It counts on from n at rate since the
+// probe (tokAt) and catches up with that estimate in about tokenCatchUp,
+// never backwards: a counter that runs, not one that steps once a second
+// as the probes do. With Reduce Motion it is n.
+func (p *Panel) tokenCount(c *ui.Context, f *frame, n int64, rate float64) int64 {
+	switch {
+	case n <= 0:
+		p.tokShown = 0
+		return 0
+	case p.measured: // a layout pass: no time goes by
+		return int64(max(p.tokShown, float64(n)))
+	case f.still || rate <= 0 || p.tokShown <= 0:
+		p.tokShown, p.tokStep = float64(n), f.now
+		if !f.still && rate > 0 {
+			c.AnimationFrame()
+		}
+		return n
+	}
+	// Past a second and a half without a probe the estimate stops: the
+	// server may have stalled.
+	est := float64(n) + rate*min(f.now.Sub(p.tokAt).Seconds(), 1.5)
+	dt := f.now.Sub(p.tokStep).Seconds()
+	p.tokStep = f.now
+	if dt > 0 && dt < 0.5 {
+		p.tokShown = max(p.tokShown, p.tokShown+dt*(rate+(est-p.tokShown)/tokenCatchUp.Seconds()))
+	}
+	c.AnimationFrame()
+	return int64(p.tokShown)
+}
+
 // chartTop is the speed the full chart height stands for: the mockup's 50
 // tok/s, raised in steps of 10 for faster engines.
 func chartTop(series []float64) float64 {
@@ -130,9 +203,9 @@ func chartTop(series []float64) float64 {
 	return math.Ceil(top*1.2/10) * 10
 }
 
-// chart is the 20-bar speed chart. It reads left to right in every
-// language, and so do its keys.
-func (p *Panel) chart(c *ui.Context, f *frame, series []float64, current int, dim bool, barText func(int) string) {
+// chart is the 20-bar speed chart, with a dashed line at avg (none when
+// 0). It reads left to right in every language, and so do its keys.
+func (p *Panel) chart(c *ui.Context, f *frame, series []float64, current int, dim bool, avg float64, barText func(int) string) {
 	t, m := f.pal, f.m
 	n := len(series)
 	top := chartTop(series)
@@ -145,11 +218,17 @@ func (p *Panel) chart(c *ui.Context, f *frame, series []float64, current int, di
 		}
 		group.Label(m.ChartLabel(n, format.Number(f.loc, lo, 1), format.TokPerSec(f.loc, hi)))
 	}
-	// The live bar grows from the time the request began (liveFrom), in
-	// the Draw of its cell: the frames that grow it only paint. The Draw
-	// reads the window's clock, the panel its own: built is the window's
-	// time as this frame is built, when the bar had grown for grown.
-	built, grown := c.Now(), f.now.Sub(p.liveAt)
+	if avg > 0 {
+		// Over the bars, so that each reads above or below the average.
+		ah := float32(math.Round(avg/top*100)) / 100 * 40
+		line := t.muted
+		group.DrawOver(func(pt *ui.Painter, r ui.Rect) {
+			y := r.Y + r.H - ah
+			for x := r.X; x < r.X+r.W; x += 6 {
+				pt.Fill(ui.Rect{X: x, Y: y, W: min(3, r.X+r.W-x), H: 1}, line, 0)
+			}
+		})
+	}
 	sel := p.barSel
 	if sel < 0 {
 		sel = n - 1
@@ -186,8 +265,7 @@ func (p *Panel) chart(c *ui.Context, f *frame, series []float64, current int, di
 				}
 			}
 			if i == current {
-				cell.Draw(liveBar(x/top, bg, t.strong, f.still, built, grown))
-				continue
+				h = max(h, 2) // seen before the first speed comes
 			}
 			cell.Children(func() {
 				ui.Box(c).Height(max(h, 0)).Radius(2).Background(bg)
@@ -201,31 +279,5 @@ func (p *Panel) chart(c *ui.Context, f *frame, series []float64, current int, di
 	if hover != p.hoverBar && !p.measured {
 		p.hoverBar = hover
 		c.AnimationFrame()
-	}
-}
-
-// The live bar grows from 6 % to its height in liveSteps steps of
-// liveStep, then again.
-const (
-	liveStep  = 100 * time.Millisecond
-	liveSteps = 60
-)
-
-// liveBar paints the bar of the request in progress at share of the
-// chart's height, with a 2 DIP top edge in edge. It has grown for grown
-// at the window's time built; it stands at its height while the frame
-// has no motion.
-func liveBar(share float64, fill, edge ui.Color, still bool, built time.Time, grown time.Duration) func(*ui.Painter, ui.Rect) {
-	return func(pt *ui.Painter, r ui.Rect) {
-		phase := 1.0
-		if !still {
-			d := max(0, grown+pt.Now().Sub(built))
-			phase = float64(int(d/liveStep)%liveSteps) / liveSteps
-			pt.After(liveStep - d%liveStep)
-		}
-		h := float32(max(6, math.Round(phase*share*100))) / 100 * r.H
-		bar := ui.Rect{X: r.X, Y: r.Y + r.H - h, W: r.W, H: h}
-		pt.Fill(bar, edge, 2)
-		pt.Fill(ui.Rect{X: bar.X, Y: bar.Y + 2, W: bar.W, H: max(0, bar.H-2)}, fill, 2)
 	}
 }

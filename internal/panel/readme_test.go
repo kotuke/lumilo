@@ -78,7 +78,7 @@ func readmeTensorFold(ph core.Phase) core.View {
 	}
 	v.Speed.Average, v.Speed.FirstToken, v.Speed.Read = 44, 900*time.Millisecond, 880
 	if ph == core.PhaseGenerating {
-		v.Speed.Current = 47
+		v.Speed.Current, v.Speed.Tokens = 47, 386
 	}
 	return v
 }

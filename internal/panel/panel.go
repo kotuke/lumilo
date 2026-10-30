@@ -201,13 +201,17 @@ type Panel struct {
 	removeID string
 
 	// Speed chart: the bar under the pointer or the focus, the bar that
-	// holds the chart's tab stop, and when the live bar started growing:
-	// the request in progress began, as SetView saw it.
+	// holds the chart's tab stop; the token count of the request in
+	// progress (tokenCount): when SetView saw its count change, the count
+	// shown and when it was last moved.
 	hoverBar int
 	barSel   int // -1 = the last bar
 	barFocus bool
 	bars     [20]ui.Handle
-	liveAt   time.Time
+	tokAt    time.Time
+	tokShown float64
+	tokStep  time.Time
+	liveLast float64 // the last live speed, kept while the request has none
 
 	// Agent chips: their names as the last frame laid them out, to give
 	// each chip its content width as the basis it grows from.
@@ -314,11 +318,13 @@ func (p *Panel) SetView(v core.View) {
 	if v.Phase == core.PhaseLoading && (first || old.Phase != core.PhaseLoading) {
 		p.loadAt = now
 	}
-	// A request began: generating began, or a request ended and the next
-	// one runs.
-	if v.Phase == core.PhaseGenerating && (first || old.Phase != core.PhaseGenerating ||
-		len(v.Speed.History) != len(old.Speed.History) || !v.Speed.LastRequest.Equal(old.Speed.LastRequest)) {
-		p.liveAt = now
+	// A probe counted tokens. Fewer than before: the next request runs,
+	// and its count starts over.
+	if v.Speed.Tokens != old.Speed.Tokens {
+		p.tokAt = now
+		if v.Speed.Tokens < old.Speed.Tokens {
+			p.tokShown = 0
+		}
 	}
 	// The download's speed: how fast DownloadBytes grew over the last
 	// dlWindow. The engine writes in bursts; the average keeps the speed

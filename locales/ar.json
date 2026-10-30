@@ -104,6 +104,8 @@
   "ofTotal": "من {total}",
   "speedTitle": "سرعة التوليد",
   "avgNote": "في المتوسط",
+  "liveNote": "الآن",
+  "liveTokens": "الرموز: {n, number}",
   "speedTps": "\u2068{value} tok/s\u2069",
   "trayGb": "{value} GB",
   "trayTps": "{value} T/S",
