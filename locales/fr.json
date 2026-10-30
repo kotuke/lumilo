@@ -426,6 +426,8 @@
   "errTitleModelOnline": "Impossible de télécharger le modèle. Vérifiez son nom et la connexion Internet",
   "errTitleNoVision": "Ce modèle n’a pas d’entrée d’images. Démarrez-le pour le texte seul",
   "errActTextOnly": "Démarrer sans images",
+  "errTitleDraft": "Le modèle brouillon {name} n’est pas sur ce Mac. Téléchargez-le pour démarrer le modèle",
+  "errActDraft": "Télécharger le modèle brouillon",
   "textOnly": "Texte seul",
   "dlCancel": "Annuler le téléchargement",
   "dlCancelling": "Annulation…",

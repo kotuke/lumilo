@@ -138,6 +138,7 @@ func command(c *ui.Context, f *frame, cmd string) {
 func (p *Panel) cardError(c *ui.Context, f *frame, s *mainState) {
 	m, v := f.m, p.view
 	var title string
+	draft := lostDraft(v)
 	switch s.err {
 	case errPort:
 		title = m.ErrTitlePort(v.Port)
@@ -145,7 +146,9 @@ func (p *Panel) cardError(c *ui.Context, f *frame, s *mainState) {
 		// Only an offline run asks for the model-updates switch; online
 		// the download itself failed.
 		title = m.ErrTitleModelOnline()
-		if v.Failure.Offline {
+		if draft != "" {
+			title = m.ErrTitleDraft(draft)
+		} else if v.Failure.Offline {
 			title = m.ErrTitleModel()
 		}
 	case errNoVision:
@@ -169,6 +172,17 @@ func (p *Panel) cardError(c *ui.Context, f *frame, s *mainState) {
 	case errPort:
 		buttons = []errButton{{text: m.ErrActPort(), fill: true, fn: func() { p.openSettings(true) }}, logBtn(false)}
 	case errModel:
+		if draft != "" {
+			// The download shows in the model list, which opens on it.
+			id := v.Model.ID
+			buttons = []errButton{{text: m.ErrActDraft(), fill: true, icon: "download", fn: func() {
+				p.act.Download(id, p.pref.Options[id])
+				if s.modelCanOpen {
+					p.modelsOpen, p.enginesOpen, p.dlg = true, false, dlgNone
+				}
+			}}, logBtn(false)}
+			break
+		}
 		buttons = []errButton{{text: m.ErrActModel(), fill: true, fn: func() {
 			if s.modelCanOpen {
 				p.modelsOpen, p.enginesOpen, p.dlg = true, false, dlgNone
@@ -183,6 +197,21 @@ func (p *Panel) cardError(c *ui.Context, f *frame, s *mainState) {
 		buttons = []errButton{logBtn(true)}
 	}
 	p.errorBlock(c, f, title, v.Failure.Line, "", buttons)
+}
+
+// lostDraft is the name of the selected model's draft when an offline start
+// failed for want of its files alone: Download fetches it at the commit
+// the model was installed with. "" otherwise.
+func lostDraft(v core.View) string {
+	if v.Failure.Kind != engine.FailModel || !v.Failure.Offline || v.Failure.Repo == "" {
+		return ""
+	}
+	for _, d := range v.Model.Features.Drafts {
+		if d.ID == v.Failure.Repo {
+			return d.Name
+		}
+	}
+	return ""
 }
 
 // pulseHalf is half the pill's pulse (sp-pulse, 1.6 s).

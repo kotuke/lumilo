@@ -243,6 +243,8 @@
   "errTitleModelOnline": "无法下载模型。请检查模型名称和网络连接",
   "errTitleNoVision": "此模型不支持图像输入。请以纯文本方式启动",
   "errActTextOnly": "不带图像启动",
+  "errTitleDraft": "此 Mac 上没有草稿模型 {name}。请下载后再启动模型",
+  "errActDraft": "下载草稿模型",
   "textOnly": "仅文本",
   "dlCancel": "取消下载",
   "dlCancelling": "正在取消…",

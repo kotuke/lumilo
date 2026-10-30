@@ -16,6 +16,7 @@ import (
 	"time"
 
 	"github.com/kotuke/lumilo/internal/engine"
+	"github.com/kotuke/lumilo/internal/engines/enginekit"
 )
 
 var _ engine.Downloader = (*Splash)(nil)
@@ -85,6 +86,22 @@ func (s *Splash) Download(ctx context.Context, req engine.DownloadRequest, progr
 	}
 	defer unlock()
 
+	// An installed model whose draft is gone from the hub cache gets that
+	// draft at the commit it records; then the installer only verifies,
+	// offline, so the model stays at its commit too (online it would
+	// resolve both on main: install/upstream.py, after "Reinstalling").
+	link := plainLink(s.modelsDir, md.ID)
+	if req.NoVision {
+		link = textOnlyLink(s.modelsDir, md.ID)
+	}
+	offline := false
+	if d, ok := missingDraft(link); ok {
+		if err := s.fetchDraft(ctx, d, progress); err != nil {
+			return "", err
+		}
+		offline, progress = true, nil
+	}
+
 	argv := []string{filepath.Join(lib, "python", "bin", "python3"), "-u", filepath.Join(lib, "install", "models.py"),
 		"--models", s.modelsDir, "--model", md.ID}
 	if req.NoVision {
@@ -96,6 +113,9 @@ func (s *Splash) Download(ctx context.Context, req engine.DownloadRequest, progr
 	cmd := exec.Command(argv[0], argv[1:]...)
 	cmd.Dir = lib
 	cmd.Env = append(environ(), "PYTHONDONTWRITEBYTECODE=1", "PYTHONUNBUFFERED=1")
+	if offline {
+		cmd.Env = append(cmd.Env, "HF_HUB_OFFLINE=1")
+	}
 	cmd.Stdout, cmd.Stderr = pw, pw
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 	cmd.WaitDelay = dlStopWait
@@ -199,10 +219,6 @@ loop:
 	if progress != nil {
 		progress(max(meter(), t), t)
 	}
-	link := plainLink(s.modelsDir, md.ID)
-	if req.NoVision {
-		link = textOnlyLink(s.modelsDir, md.ID)
-	}
 	if _, ok := readAssembly(link); !ok {
 		return "", engine.Failure{Kind: engine.FailExit, Line: "the installer did not publish " + md.ID}
 	}
@@ -211,10 +227,16 @@ loop:
 
 // DropPartial removes the files huggingface_hub was downloading when the
 // install stopped: "<sha256>.<id>.incomplete" blobs (with hf_xet,
-// enginekit/testdata/hub-hfxet.txt) changed since the install began. The
+// enginekit/testdata/hub-hfxet.txt) changed since the install began, and
+// the parts of a draft fetchDraft was fetching. The
 // whole cache is looked at: the draft's repository is only known to
 // Splash. Files that were complete stay, and the next install reuses them.
-func (s *Splash) DropPartial(_ string, since time.Time) {
+func (s *Splash) DropPartial(model string, since time.Time) {
+	for _, link := range []string{plainLink(s.modelsDir, model), textOnlyLink(s.modelsDir, model)} {
+		if a, ok := readAssembly(link); ok && a.drafts != "" {
+			enginekit.DropHubParts(s.hubDirs, a.drafts)
+		}
+	}
 	for _, d := range s.hubDirs {
 		repos, _ := os.ReadDir(d)
 		for _, r := range repos {

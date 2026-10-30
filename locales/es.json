@@ -426,6 +426,8 @@
   "errTitleModelOnline": "No se pudo descargar el modelo. Comprueba su nombre y la conexión a internet",
   "errTitleNoVision": "Este modelo no tiene entrada de imágenes. Inícialo solo para texto",
   "errActTextOnly": "Iniciar sin imágenes",
+  "errTitleDraft": "El modelo borrador {name} no está en este Mac. Descárgalo para iniciar el modelo",
+  "errActDraft": "Descargar modelo borrador",
   "textOnly": "Solo texto",
   "dlCancel": "Cancelar descarga",
   "dlCancelling": "Cancelando…",

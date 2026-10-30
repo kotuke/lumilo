@@ -570,6 +570,32 @@ func boards() []board {
 			b.click("Restart")
 			b.called("Restart")
 		}},
+		// The model's files are there, its draft is gone from the hub
+		// cache: the card names the draft and downloads it.
+		{name: "error-draft", build: func(b *bench) {
+			v := failed(engine.FailModel, 1, "error: cannot resolve incoai/Qwen3.8-27B-DFlash2: HF_HUB_OFFLINE is set; the Hub cache has no snapshot of 015e795645c74b1a0eeef3b570031fb62e769bc5")
+			v.Failure.Offline, v.Failure.Repo = true, "incoai/Qwen3.8-27B-DFlash2"
+			v.Model.Features.Drafts = []engine.Draft{{Kind: engine.DraftDFlash, Name: "incoai/Qwen3.8-27B-DFlash2",
+				ID: "incoai/Qwen3.8-27B-DFlash2", SizeBytes: 1_266_000_000, Always: true}}
+			v.Models = []engine.Model{v.Model}
+			b.show(v, time.Minute)
+		}, check: func(b *bench) {
+			b.want(en.ErrTitleDraft("incoai/Qwen3.8-27B-DFlash2"), en.ErrActDraft(), "Restart")
+			b.none(en.ErrTitleModel(), "Choose model")
+			b.click(en.ErrActDraft())
+			b.called("Download " + sampleModel.ID)
+		}},
+		// The target itself is missing: its repository is no draft.
+		{name: "error-model-repo", build: func(b *bench) {
+			v := failed(engine.FailModel, 1, "error: cannot resolve orcarouter/OrcaCyber-Nano-1.0: HF_HUB_OFFLINE is set")
+			v.Failure.Offline, v.Failure.Repo = true, "orcarouter/OrcaCyber-Nano-1.0"
+			v.Model.Features.Drafts = []engine.Draft{{Kind: engine.DraftDFlash, Name: "incoai/Qwen3.8-27B-DFlash2",
+				ID: "incoai/Qwen3.8-27B-DFlash2", Always: true}}
+			b.show(v, time.Minute)
+		}, check: func(b *bench) {
+			b.want(en.ErrTitleModel(), "Choose model")
+			b.none(en.ErrActDraft())
+		}},
 		{name: "error-memory", build: func(b *bench) {
 			b.show(withPhase(core.PhaseLoading), 10*time.Minute)
 			b.show(failed(engine.FailMemory, 1, ""), 0)

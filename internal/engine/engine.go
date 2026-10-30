@@ -563,6 +563,10 @@ type Failure struct {
 	// FailModel means files missing locally, not a failed download. The
 	// supervisor sets it; engines leave it false.
 	Offline bool
+	// Repo is the hub repository whose files a FailModel misses, when the
+	// engine names it (e.g. "incoai/Qwen3.8-27B-DFlash2", a draft of the
+	// model); "" when it does not.
+	Repo string
 }
 
 // Error makes a Failure an error, for Downloader.Download.

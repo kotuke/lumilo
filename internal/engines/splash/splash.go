@@ -44,6 +44,7 @@ type Splash struct {
 	hubDirs    []string // Hugging Face hub caches the downloads go to
 	libexecDir string   // Splash's program files; "" = beside the launcher (download.go)
 	releaseURL string
+	hubURL     string // the hub fetchDraft asks; "" = huggingface.co
 	client     *http.Client
 }
 

@@ -426,6 +426,8 @@
   "errTitleModelOnline": "モデルをダウンロードできませんでした。名前とインターネット接続を確認してください",
   "errTitleNoVision": "このモデルには画像入力がありません。テキストのみで起動してください",
   "errActTextOnly": "画像なしで起動",
+  "errTitleDraft": "ドラフトモデル {name} がこの Mac にありません。モデルを起動するにはダウンロードしてください",
+  "errActDraft": "ドラフトモデルをダウンロード",
   "textOnly": "テキストのみ",
   "dlCancel": "ダウンロードをキャンセル",
   "dlCancelling": "キャンセルしています…",
