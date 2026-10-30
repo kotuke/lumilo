@@ -72,8 +72,10 @@ func (p *Panel) memoryCard(c *ui.Context, f *frame, s *mainState) {
 				if !full {
 					label = m.MemPressure()
 				}
-				ui.Row(c).Gap(4).TextColor(t.err).Shrink(1).MinWidth(0).Children(func() {
-					ico(c, "alert-triangle", 2, 12).Shrink(0)
+				// The label's baseline is the row's, to stand on the line of
+				// the size beside it; the icon, which has none, centres on it.
+				ui.Row(c).AlignItems(ui.Baseline).Gap(4).TextColor(t.err).Shrink(1).MinWidth(0).Children(func() {
+					ico(c, "alert-triangle", 2, 12).Shrink(0).AlignSelf(ui.Center)
 					txt(c, label, 11.5).FontWeight(600).SingleLine()
 				})
 			}

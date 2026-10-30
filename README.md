@@ -145,7 +145,9 @@ which prints `accepted` and `source=Notarized Developer ID`.
   the server's while it runs, else the one chosen in Settings.
 - **Metrics.** Memory against the engine's budget, conversation state on
   disk, average speed over the last 10 requests, the last 20 requests as a
-  chart, time to first token and prompt speed.
+  chart with a line at the average, time to first token and prompt speed.
+  While a request runs, the card shows its live speed against the average
+  ("47 tok/s now ↑ 7%") and counts its tokens.
 - **Unload and reload** the model weights without stopping the server, and
   unload automatically when idle. llama.cpp and TensorFold unload only when
   idle.

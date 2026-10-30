@@ -630,7 +630,7 @@
   "@load": {
     "description": "Button that loads the model into memory."
   },
-  "almost": "almost full",
+  "almost": "Almost full",
   "@almost": {
     "description": "Label shown when memory is almost full."
   },
@@ -689,6 +689,20 @@
   "avgNote": "on average",
   "@avgNote": {
     "description": "Caption of the average speed."
+  },
+  "liveNote": "now",
+  "@liveNote": {
+    "description": "Caption of the live speed of the request in progress, shown instead of the average while a request runs."
+  },
+  "liveTokens": "Tokens: {n, number}",
+  "@liveTokens": {
+    "description": "How many tokens the request in progress has generated so far. A label and the number, so the words stay still while the number counts up (no plural forms).",
+    "placeholders": {
+      "n": {
+        "type": "int",
+        "example": "312"
+      }
+    }
   },
   "speedTps": "{value} tok/s",
   "@speedTps": {

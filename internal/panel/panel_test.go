@@ -410,7 +410,7 @@ func boards() []board {
 				b.want("Ready", "Running for 2 h 14 min", "Unloads after 7 minutes idle", "Memory", "17.2 GB", "of 38 GB",
 					"Conversations on disk", "6.1 of 32 GB", "Generation speed", "38 tok/s", "on average",
 					"First token 0.8 s", "Prompt processing 1,240 tok/s", "Unload", "Stop")
-				b.none("almost full")
+				b.none("Almost full")
 				b.click("Unload")
 				b.click("Stop")
 				b.click("Open chat")
@@ -428,13 +428,13 @@ func boards() []board {
 		}, check: func(b *bench) {
 			// The bar is at 45 %: the system's pressure is the cause.
 			b.want("Memory pressure is high")
-			b.none("almost full")
+			b.none("Almost full")
 		}},
 		{name: "memory-full", build: func(b *bench) {
 			v := withPhase(core.PhaseReady)
 			v.Snapshot.MemoryUsed = 35_000_000_000
 			b.show(v, time.Hour)
-		}, check: func(b *bench) { b.want("almost full") }},
+		}, check: func(b *bench) { b.want("Almost full") }},
 		// llama.cpp reports no budget: the bar fills against three quarters
 		// of the Mac's memory.
 		{name: "llamacpp-memory-bar", build: func(b *bench) { b.show(llamaView(), time.Hour) },
@@ -443,7 +443,7 @@ func boards() []board {
 			v := withPhase(core.PhaseReady)
 			v.Snapshot.Pressure = engine.PressureWarning
 			b.show(v, time.Hour)
-		}, check: func(b *bench) { b.none("almost full") }},
+		}, check: func(b *bench) { b.none("Almost full") }},
 		{name: "generating", build: func(b *bench) { b.show(withPhase(core.PhaseGenerating), 2*time.Hour+14*time.Minute) },
 			check: func(b *bench) {
 				b.want("Generating", "Running for 2 h 14 min", "21.4 GB", "6.4 of 32 GB", "2 queued", "Stop")
@@ -508,11 +508,19 @@ func boards() []board {
 			b.want("Ready", "Generation speed", en.SpeedEmpty(), "Memory")
 			b.none("on average", "First token", "Prompt processing")
 			v := withPhase(core.PhaseGenerating)
-			v.Speed = core.Speed{Current: 41}
+			v.Speed = core.Speed{Current: 41, Tokens: 312}
 			b.show(v, 0)
-			// The first generation brings the card with its live bar.
-			b.want("Generating", "on average", "This request 41 tok/s")
-			b.none(en.SpeedEmpty())
+			// The first generation brings the card with its live bar, led by
+			// the live speed: nothing to set it against yet.
+			b.want("Generating", "41 tok/s", "now", "Tokens: 312", "This request 41 tok/s")
+			b.none(en.SpeedEmpty(), "on average", "↑", "↓")
+			// With an average, the live speed says how it stands to it.
+			// The first request ended and the next one runs: its live speed
+			// glides there, its tokens count from its own.
+			v.Speed = core.Speed{History: []float64{40}, Average: 40, Current: 44, Tokens: 1}
+			b.show(v, time.Second)
+			b.tt.Advance(5 * time.Second)
+			b.want("44 tok/s", "now", "↑ 10%", "Tokens: 1")
 		}},
 		{name: "speed-empty-external", build: func(b *bench) {
 			v := withPhase(core.PhaseExternal)

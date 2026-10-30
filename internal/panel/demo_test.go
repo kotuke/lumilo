@@ -25,15 +25,31 @@ type demoFrame struct {
 	Press bool       `json:"press"`
 }
 
+// demoReq is one request of the demo: its speed and how long it runs.
+type demoReq struct{ speed, dur float64 }
+
+// demoReqs are the demo's requests: short and of different speeds, as a
+// coding agent sends them (Qwen3.8-27B with its DFlash2 draft), enough to
+// fill the chart's 20 bars.
+var demoReqs = []demoReq{
+	{36, 0.9}, {42, 0.6}, {31, 0.8}, {39, 0.5}, {45, 0.7}, {34, 0.6}, {40, 0.9}, {29, 0.5},
+	{43, 0.6}, {37, 0.8}, {47, 0.5}, {33, 0.7}, {41, 0.6}, {38, 0.5}, {44, 0.8}, {30, 0.6},
+	{46, 0.5}, {35, 0.7}, {42, 0.6}, {39, 0.9},
+}
+
+// demoSpeedup is how much faster than real time the requests run: the
+// demo shows in a second what takes eight, so it counts eight seconds of
+// tokens.
+const demoSpeedup = 8
+
 // demoView is Splash with Qwen3.8-27B at second s of the demo: stopped,
 // started at 1.2 s, loading for 2.2 s, then requests back to back, as a
 // coding agent sends them, so the server stays generating: the live speed
-// glides to each request's own and the request joins the chart when it
-// ends. A request takes 2.85 s, long enough for the live bar of the chart
-// (6 s to its full height) to grow visibly before it settles. Nothing drops to zero between requests, which would flicker the
-// menu-bar icon between the speed and the memory.
+// glides to each request's own, its tokens count up, and the request
+// joins the chart when it ends. Nothing drops to zero between requests,
+// which would flicker the menu-bar icon between the speed and the memory.
 func demoView(s float64) core.View {
-	const start, loaded, firstReq, req, glide = 1.2, 3.4, 3.6, 2.85, 0.6
+	const start, loaded, firstReq, glide = 1.2, 3.4, 3.6, 0.25
 	switch {
 	case s < start:
 		return readmeSplash(core.PhaseStopped)
@@ -43,40 +59,41 @@ func demoView(s float64) core.View {
 	v := readmeSplash(core.PhaseReady)
 	v.Snapshot.MemoryUsed, v.Snapshot.DiskUsed = 18_900_000_000, 0
 	v.Speed = core.Speed{FirstToken: 900 * time.Millisecond, Read: 1180}
-	// The speeds of the requests: Qwen3.8-27B with its DFlash2 draft.
-	speeds := []float64{36, 39, 38, 41, 39, 42, 40, 41}
-	prev := speeds[0] * 0.6
-	for i, top := range speeds {
-		from := firstReq + float64(i)*req
+	prev, from := demoReqs[0].speed*0.6, firstReq
+	for i, r := range demoReqs {
 		if s < from {
 			break
 		}
-		if s < from+req {
+		if s < from+r.dur {
 			// Ease out from the last request's speed to this one's.
 			u := min(1, (s-from)/glide)
 			u = 1 - (1-u)*(1-u)
 			v.Phase = core.PhaseGenerating
 			v.Snapshot.Active, v.Snapshot.Queued = 1, max(1, 3-i) // the queue pill stays, the card keeps its height
-			v.Snapshot.MemoryUsed = 19_600_000_000 + int64(i)*100_000_000
-			v.Speed.Current = math.Round(prev + (top-prev)*u)
+			v.Snapshot.MemoryUsed = 19_600_000_000 + int64(i%8)*100_000_000
+			v.Speed.Current = math.Round(prev + (r.speed-prev)*u)
+			v.Speed.Tokens = int64(r.speed * (s - from) * demoSpeedup)
 			break
 		}
-		v.Speed.History = append(v.Speed.History, top)
-		prev = top
+		v.Speed.History = append(v.Speed.History, r.speed)
+		prev, from = r.speed, from+r.dur
 	}
-	if n := len(v.Speed.History); n > 0 {
+	// The mean of the last 10, as the speed meter's.
+	if h := v.Speed.History; len(h) > 0 {
+		h = h[max(0, len(h)-10):]
 		var sum float64
-		for _, x := range v.Speed.History {
+		for _, x := range h {
 			sum += x
 		}
-		v.Speed.Average = math.Round(sum / float64(n))
+		v.Speed.Average = math.Round(sum / float64(len(h)))
 	}
 	return v
 }
 
 // LUMILO_DEMO_DIR=… saves the demo's frames in both themes at 2x with the
 // menu-bar icon of each and frames.json: the panel as Lumilo starts Splash
-// with Qwen3.8-27B and serves requests back to back, 15 seconds at demoFPS.
+// with Qwen3.8-27B and serves requests back to back, until the last one
+// ends and a second after, at demoFPS.
 func TestDemo(t *testing.T) {
 	dir := os.Getenv("LUMILO_DEMO_DIR")
 	if dir == "" {
@@ -85,13 +102,19 @@ func TestDemo(t *testing.T) {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		t.Fatal(err)
 	}
-	const length, step = 15.0, time.Second / demoFPS
+	const step = time.Second / demoFPS
+	length := 3.6 + 1.0
+	for _, r := range demoReqs {
+		length += r.dur
+	}
 	for _, dark := range []bool{false, true} {
 		theme := map[bool]string{true: "dark", false: "light"}[dark]
 		b := newBench(t, "en")
 		b.tt.SetDark(dark)
 		b.tt.SetScale(2)
 		b.show(demoView(0), 0)
+		// The icon eases its number as the app does.
+		tps := trayicon.Speed{Ease: true}
 		var frames []demoFrame
 		for i := 0; float64(i)/demoFPS < length; i++ {
 			s := float64(i) / demoFPS
@@ -113,7 +136,9 @@ func TestDemo(t *testing.T) {
 				f.Press = s >= 1.0
 			}
 			save(t, b.tt, filepath.Join(dir, f.Panel))
-			if err := os.WriteFile(filepath.Join(dir, f.Tray), trayicon.PNG(trayicon.For(v, "en", dark, liveTPS(v))), 0o644); err != nil {
+			tps.Target(v, b.clock)
+			tps.Step(b.clock)
+			if err := os.WriteFile(filepath.Join(dir, f.Tray), trayicon.PNG(trayicon.For(v, "en", dark, tps.Shown())), 0o644); err != nil {
 				t.Fatal(err)
 			}
 			frames = append(frames, f)
@@ -126,12 +151,4 @@ func TestDemo(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-}
-
-// liveTPS is the speed the app shows for v without a hold.
-func liveTPS(v core.View) float64 {
-	if v.Phase == core.PhaseGenerating {
-		return v.Speed.Current
-	}
-	return 0
 }

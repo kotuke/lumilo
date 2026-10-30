@@ -63,7 +63,7 @@ func (m *speedMeter) add(s engine.Snapshot, now time.Time) (completed bool) {
 	m.base = &snap
 	if b == nil || s.Completed < b.Completed || s.OutputTokens < b.OutputTokens || s.DecodeTime < b.DecodeTime {
 		// First probe or counters reset: baseline only.
-		m.speed.Current, m.start, m.live = 0, &snap, nil
+		m.speed.Current, m.speed.Tokens, m.start, m.live = 0, 0, &snap, nil
 		return false
 	}
 	dTok := s.OutputTokens - b.OutputTokens
@@ -92,9 +92,12 @@ func (m *speedMeter) add(s engine.Snapshot, now time.Time) (completed bool) {
 		m.start = &snap
 	}
 	if s.Active == 0 {
-		m.speed.Current, m.live = 0, nil
+		m.speed.Current, m.speed.Tokens, m.live = 0, 0, nil
 		m.start = &snap
 		return completed
+	}
+	if m.start != nil {
+		m.speed.Tokens = s.OutputTokens - m.start.OutputTokens
 	}
 	// Only intervals with decode time count: tokens an engine shows before
 	// it times them (TensorFold's first tokens in flight, which its clock

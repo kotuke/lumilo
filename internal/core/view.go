@@ -236,6 +236,9 @@ type Speed struct {
 	Average float64
 	// Current is the live speed of the request in progress; 0 when none.
 	Current float64
+	// Tokens is how many tokens the requests in progress have generated
+	// since the last one began or finished; 0 when none runs.
+	Tokens int64
 	// FirstToken is the typical time to the first token.
 	FirstToken time.Duration
 	// Read is the prompt reading speed, tokens per second.

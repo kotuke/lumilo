@@ -64,6 +64,12 @@ func Number(loc string, v float64, decimals int) string {
 	return i18n.FormatNumber(Tag(loc), v, o)
 }
 
+// Percent writes a share as a whole percent in the locale's way: 0.12 is
+// "12%" in English, "12 %" in Russian. Arabic is isolated.
+func Percent(loc string, v float64) string {
+	return Isolate(loc, i18n.FormatNumber(Tag(loc), v, i18n.NumberOptions{Percent: true}))
+}
+
 // GB writes a size in decimal gigabytes with at most one fraction digit:
 // "17.2 GB", "17,2 ГБ", "17,2 Go". Arabic is isolated.
 func GB(loc string, bytes int64) string {
