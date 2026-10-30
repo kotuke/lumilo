@@ -5,7 +5,9 @@
 #
 # MyGo's disk image has no background, so scripts/make-dmg.sh packs the
 # notarized app again into one with an arrow to Applications, which is
-# signed, notarized and, with -upload, put in the release in its place.
+# signed, notarized and, with -upload, put in the release in its place;
+# scripts/release-notes.sh then says in the release's notes which file to
+# install.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 MYGO_UPDATER_PRIVATE_KEY=$(security find-generic-password -a "$USER" -s "Lumilo update key" -w) ||
@@ -26,5 +28,6 @@ spctl --assess --type install "$dmg"
 for a in "$@"; do
   if [ "$a" = -upload ]; then
     gh release upload "v$version" "$dmg" --repo kotuke/lumilo --clobber
+    scripts/release-notes.sh "$version"
   fi
 done
