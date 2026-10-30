@@ -666,7 +666,8 @@ const (
 // While the server runs it is the window the server reports
 // (Snapshot.ContextTokens); else the one Settings chose for the model, or
 // "Auto". The tooltip gives the tokens; a click opens Settings, where the
-// model's context is chosen.
+// model's context is chosen, and makes that row stand out for a moment
+// (contextRow), so the eye finds it among the others.
 func (p *Panel) contextChip(c *ui.Context, f *frame, s *mainState) {
 	t, m, v := f.pal, f.m, p.view
 	tokens := 0
@@ -685,8 +686,15 @@ func (p *Panel) contextChip(c *ui.Context, f *frame, s *mainState) {
 	if b.Hovered() || b.FocusVisible() {
 		b.Background(t.rowHover).TextColor(t.text)
 	}
-	b.OnClick(func() { p.openSettings(false) }).Children(func() {
+	b.OnClick(func() {
+		p.openSettings(false)
+		p.set.flashCtx, p.set.revealCtx = p.now().Add(ctxFlash), true
+	}).Children(func() {
 		ico(c, "arrows-horizontal", 2, 12)
 		txt(c, label, 11.5).NoWrap()
 	})
 }
+
+// ctxFlash is how long the context row stands out after the context chip
+// opens Settings: the slide, then a second and a bit to find it.
+var ctxFlash = slideAnimation.Duration + 1200*time.Millisecond

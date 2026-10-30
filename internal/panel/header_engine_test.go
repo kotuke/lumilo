@@ -353,6 +353,23 @@ func TestContextChip(t *testing.T) {
 	if b.p.screen != screenSettings {
 		t.Errorf("screen %v, want Settings", b.p.screen)
 	}
+	// The context row stands out in the accent's tint, then fades back to
+	// the card.
+	r, ok := b.tt.Find("Context")
+	if !ok {
+		t.Fatalf("no context row in %q", b.tt.Texts())
+	}
+	at := func() ui.Color { return pixel(b.tt.Image(), int(r.X-4), int(r.Y+r.H/2)) }
+	// The card beside the next row, left of its text as well.
+	card := pixel(b.tt.Image(), int(r.X-4), int(r.Y+r.H/2+34))
+	if got := at(); dist(got, card) < 12 {
+		t.Errorf("context row %v, the card's %v: no tint", got, card)
+	}
+	b.clock = b.clock.Add(ctxFlash)
+	b.tt.Advance(ctxFlash + time.Second)
+	if got := at(); dist(got, card) > 3 {
+		t.Errorf("context row %v after the flash, want the card's %v", got, card)
+	}
 
 	b = newBench(t, "en")
 	b.show(withPhase(core.PhaseStopped), 0)

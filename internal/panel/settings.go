@@ -30,12 +30,16 @@ type settingsState struct {
 	portBad    bool // the text is not a port number
 	busy, free int  // the port is in use; free is one that is not (0 = none found)
 	focusPort  bool
-	portFocus  bool // the port field had the focus in the last frame
-	epoch      int  // bumped by reset: popups of the selects start closed
-	adding     bool
-	hostText   string
-	hostBad    bool
-	opened     Prefs // the settings when the screen opened
+	// flashCtx, set by the context chip, is when the context row stops
+	// standing out; revealCtx brings it into view once.
+	flashCtx  time.Time
+	revealCtx bool
+	portFocus bool // the port field had the focus in the last frame
+	epoch     int  // bumped by reset: popups of the selects start closed
+	adding    bool
+	hostText  string
+	hostBad   bool
+	opened    Prefs // the settings when the screen opened
 	// The update check asked for on this screen: its result shows under
 	// the version until the screen closes. Until a View with another
 	// CheckSeq than checkSeq comes, the check counts as running.
@@ -86,6 +90,7 @@ func (s *settingsState) reset(pr Prefs) {
 	s.portBad, s.busy, s.free = false, 0, 0
 	s.portText = strconv.Itoa(pr.Port)
 	s.adding, s.hostText, s.hostBad, s.focusPort, s.portFocus = false, "", false, false, false
+	s.flashCtx, s.revealCtx = time.Time{}, false
 	s.checkAsked, s.checkSeq = false, 0
 	s.ctxOther, s.ctxText, s.ctxBad, s.ctxModel = false, "", false, ""
 	s.epoch++
@@ -611,7 +616,9 @@ func (p *Panel) hostsRow(c *ui.Context, f *frame) {
 }
 
 // dropdown is a settings row with a select whose list opens upwards, its
-// end 6 DIPs past the button's, as in the mockup.
+// end 6 DIPs past the button's, as in the mockup. The list is width wide,
+// or as wide as its longest item needs, up to dropdownMax; an item still
+// too long ends in an ellipsis.
 func dropdown[T comparable](c *ui.Context, f *frame, key any, label string, sel *T, opts []T, name func(T) string, width float32) {
 	t := f.pal
 	ui.Row(c).Gap(8).MinHeight(28).Children(func() {
@@ -629,7 +636,19 @@ func dropdown[T comparable](c *ui.Context, f *frame, key any, label string, sel 
 			} else {
 				pop.Left(6)
 			}
-			popSurface(pop.Width(width).MinWidth(width).Padding(6), f)
+			w := width
+			for _, o := range opts {
+				// The surface sets tabular figures, which MeasureText does
+				// not: every digit is measured as a 0, as wide as they are.
+				tw, _ := c.MeasureText(0, ui.Span{Text: tabular(name(o)), Size: 12.5})
+				// The surface's padding and border, the item's padding,
+				// its check column and the gap after it.
+				w = max(w, tw+2*6+2+2*8+choiceLeadWidth+8+1)
+			}
+			w = min(w, dropdownMax)
+			// 2 pt between rows, as in the engine and model lists, so a
+			// highlighted row never touches the next one.
+			popSurface(pop.Width(w).MinWidth(w).Padding(6).Gap(2), f)
 			for _, o := range opts {
 				on := o == *sel
 				it := d.Item(o).Height(30).Radius(8).PaddingX(8).Gap(8).Cursor(ui.CursorPointer)
@@ -640,12 +659,26 @@ func dropdown[T comparable](c *ui.Context, f *frame, key any, label string, sel 
 					choiceLead(c, f, on)
 					// The name sits at the start even when it reads the
 					// other way, as العربية in an English list.
-					txt(c, name(o), 12.5).NoWrap()
+					txt(c, name(o), 12.5).SingleLine().Shrink(1).MinWidth(0)
 				})
 			}
 		})
 	})
 }
+
+// tabular is s with its digits as 0s, for measuring under tabular figures.
+func tabular(s string) string {
+	return strings.Map(func(r rune) rune {
+		if r >= '1' && r <= '9' {
+			return '0'
+		}
+		return r
+	}, s)
+}
+
+// dropdownMax is the widest a dropdown list grows: the panel less the
+// cards' margins.
+const dropdownMax = Width - 2*16
 
 // switchRow is a settings row that toggles as a whole, with the mockup's
 // 32×20 switch at its end.

@@ -11,7 +11,10 @@
   Code's button is off while the context is under the 100K it needs, Pi's
   under 64K.
 - The server card shows the model's context beside the address ("↔ 64K"),
-  as the server serves it; a click opens Settings.
+  as the server serves it; a click opens Settings, where the context row
+  stands out for a moment.
+- Settings' lists are as wide as their longest item, so a drafter's name
+  shows whole.
 - The speed in the menu bar glides instead of jumping, and stays while a
   coding agent runs its tools between answers; a request's bar in the chart
   is its whole speed.

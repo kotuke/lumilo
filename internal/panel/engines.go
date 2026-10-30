@@ -4,6 +4,7 @@ import (
 	"slices"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/egoist/mygo/ui"
 
@@ -208,15 +209,31 @@ func (p *Panel) contextRow(c *ui.Context, f *frame) {
 		slices.Sort(opts)
 	}
 	opts = append(opts, ctxOtherOpt)
-	dropdown(c, f, [3]any{"ctx", s.epoch, model}, m.Context(), &s.ctx, opts, func(n int) string {
-		switch n {
-		case 0:
-			return m.CtxAuto()
-		case ctxOtherOpt:
-			return m.CtxOther()
-		}
-		return ctxName(f.loc, n)
-	}, 200)
+	// Opened from the context chip, the row stands out in the accent's
+	// tint, which fades once ctxFlash is over. It reaches 8 DIPs past the
+	// row on each side, as a highlighted list row does.
+	hl := ui.Column(c).Key("ctx-flash").Margin(-4, -8).Padding(4, 8).Radius(8)
+	tint := ui.Color{}
+	if left := s.flashCtx.Sub(f.now); left > 0 {
+		tint = t.focus.Alpha(0.14)
+		c.After(left)
+	}
+	hl.Background(hl.AnimateColor("tint", tint, ui.Animation{Duration: 700 * time.Millisecond, Ease: ui.EaseOut}))
+	if s.revealCtx && !p.measured {
+		s.revealCtx = false
+		hl.ScrollIntoView()
+	}
+	hl.Children(func() {
+		dropdown(c, f, [3]any{"ctx", s.epoch, model}, m.Context(), &s.ctx, opts, func(n int) string {
+			switch n {
+			case 0:
+				return m.CtxAuto()
+			case ctxOtherOpt:
+				return m.CtxOther()
+			}
+			return ctxName(f.loc, n)
+		}, 200)
+	})
 
 	if s.ctxOther {
 		ui.Row(c).Gap(8).MinHeight(28).Children(func() {
