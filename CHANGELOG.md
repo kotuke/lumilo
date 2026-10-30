@@ -20,8 +20,10 @@ missing.
 
 ### Updating
 
-Lumilo 0.3.0 downloads this version by itself within a day and offers to
-restart; Settings → Check for updates finds it at once.
+Lumilo 0.2.0 and 0.3.0 download this version by themselves within a day
+and offer to restart; Settings → Check for updates finds it at once.
+Version 0.1.0 cannot update itself: run
+`brew upgrade --cask --greedy kotuke/tap/lumilo`.
 
 ## 0.3.0
 
@@ -44,7 +46,8 @@ first version that reaches you as an automatic update.
 ### Updating from 0.2.0
 
 Lumilo 0.2.0 downloads this version by itself within a day and offers to
-restart; Settings → Check for updates finds it at once.
+restart; Settings → Check for updates finds it at once. Version 0.1.0
+cannot update itself: run `brew upgrade --cask --greedy kotuke/tap/lumilo`.
 
 ### Updating from 0.1.0
 
