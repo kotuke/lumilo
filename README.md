@@ -253,6 +253,10 @@ certificate and keys once, then `scripts/release.sh` builds. It packs the
 app again into a disk image with an arrow to Applications
 (`scripts/make-dmg.sh`, background drawn by `packaging/dmg.py`); Finder lays
 its window out, so the first run asks to let the terminal control Finder.
+With `-upload` it also puts an install line at the top of the release's
+notes (`scripts/release-notes.sh`): the release lists the update archive,
+the deltas and the manifest beside the disk image, and they are for
+Lumilo's own updates.
 After the release, move the cask in
 [kotuke/homebrew-tap](https://github.com/kotuke/homebrew-tap) to the new
 version: `brew bump-cask-pr --version <version> kotuke/tap/lumilo` opens
