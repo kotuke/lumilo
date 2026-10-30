@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- The speed chart starts below the slowest request, not at zero, so
+  requests of close speeds differ at a glance. Its range glides when a new
+  request is the slowest or the fastest.
+
 ## 0.3.0
 
 The speed card shows the request in progress as it runs. This is the
@@ -22,6 +28,13 @@ first version that reaches you as an automatic update.
 
 Lumilo 0.2.0 downloads this version by itself within a day and offers to
 restart; Settings → Check for updates finds it at once.
+
+### Updating from 0.1.0
+
+Version 0.1.0 cannot update itself, and Homebrew skips apps that update
+themselves in a plain `brew upgrade`. Update it once with
+`brew upgrade --cask --greedy kotuke/tap/lumilo`, or download the disk
+image below.
 
 ## 0.2.0
 
