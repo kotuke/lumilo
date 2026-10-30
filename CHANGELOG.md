@@ -5,6 +5,10 @@
 - The speed chart starts below the slowest request, not at zero, so
   requests of close speeds differ at a glance. Its range glides when a new
   request is the slowest or the fastest.
+- When Splash cannot start a model offline, the error card quotes the
+  error that names the missing files, such as a speculative-decoding
+  drafter gone from the Hugging Face cache, not the notice that Splash
+  installs the model from that cache.
 
 ## 0.3.0
 
