@@ -193,7 +193,7 @@ which prints `accepted` and `source=Notarized Developer ID`.
   leaves the agents' own configuration files alone (Pi gets a provider
   extension and, under TensorFold, Codex a home of its own in Lumilo's
   folder, `~/Library/Application Support/Lumilo/agents`). Claude Code needs a
-  context of 100K tokens or more: against a smaller one its button is off and
+  context of 100K tokens or more and Pi 64K: against a smaller one the button is off and
   its tooltip says so.
 - **Install and update** the engine through Homebrew. Lumilo checks for a new
   version once a day and updates only when you click.

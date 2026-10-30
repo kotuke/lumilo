@@ -315,7 +315,7 @@ func TestHeaderTensorFold(t *testing.T) {
 // Claude Code needs a context of 100K or more: against a server of 32K
 // its chip is off and says why; the other agents launch.
 func TestAgentNeedsContext(t *testing.T) {
-	if got := locales.In("en").AgentNeedsContext("Claude", "100K", "33K"); !strings.Contains(got, "100K") {
+	if got := locales.In("en").AgentNeedsContext("Claude", "100K", "32K"); !strings.Contains(got, "100K") {
 		t.Errorf("message %q", got)
 	}
 	b := newBench(t, "en")
@@ -328,6 +328,8 @@ func TestAgentNeedsContext(t *testing.T) {
 	// does not list; the chip does not launch.
 	b.click("Claude")
 	b.notCalled("RunAgent claude")
+	b.click("Pi") // 64K or more
+	b.notCalled("RunAgent pi")
 	b.click("Codex")
 	b.called("RunAgent codex")
 
@@ -335,4 +337,6 @@ func TestAgentNeedsContext(t *testing.T) {
 	b.show(v, time.Hour)
 	b.click("Claude")
 	b.called("RunAgent claude")
+	b.click("Pi")
+	b.called("RunAgent pi")
 }

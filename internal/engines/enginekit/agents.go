@@ -24,10 +24,14 @@ func Agents() []engine.Agent {
 		// Claude Code's own prompt and tools do not fit in 32K ("Prompt is
 		// too long" from a 32,768-token server; fine at 131,072), and it
 		// refuses an auto-compact window under 100k.
-		{ID: "claude", Name: "Claude", Logo: MustFile(agentLogos, "logos/logo-claude.svg"), Color: "#D97757", MinContext: 100_000},
+		{ID: "claude", Name: "Claude", Logo: MustFile(agentLogos, "logos/logo-claude.svg"), Color: "#D97757", MinContext: 100 << 10},
 		{ID: "codex", Name: "Codex", Logo: MustFile(agentLogos, "logos/logo-codex.svg")},
 		{ID: "opencode", Name: "OpenCode", Logo: MustFile(agentLogos, "logos/logo-opencode.svg")},
-		{ID: "pi", Name: "Pi", Logo: MustFile(agentLogos, "logos/logo-pi.svg")},
+		// Pi compacts only between turns: within one, its tools' output
+		// filled a 32K window and left the reply 1 token ("Response was
+		// truncated before completion"; TensorFold, prompt=25110,
+		// finish=length, 2026-10-30).
+		{ID: "pi", Name: "Pi", Logo: MustFile(agentLogos, "logos/logo-pi.svg"), MinContext: 64 << 10},
 	}
 }
 

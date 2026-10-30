@@ -2,14 +2,7 @@ package panel
 
 import (
 	"github.com/egoist/mygo/ui"
-
-	"github.com/kotuke/lumilo/internal/format"
 )
-
-// contextK is a context size as the model settings show it, "100K".
-func contextK(f *frame, tokens int) string {
-	return format.Number(f.loc, float64(tokens)/1000, 0) + "K"
-}
 
 // maxAgents is how many agent chips keep their measured width.
 const maxAgents = 8
@@ -24,7 +17,7 @@ func (p *Panel) agentsCard(c *ui.Context, f *frame, s *mainState) {
 				logo := f.brands.svg(a.Logo, 0)
 				off, title := s.agentsOff, s.agentTitle
 				if have := v.Snapshot.ContextTokens; !off && a.MinContext > 0 && have > 0 && have < a.MinContext {
-					off, title = true, m.AgentNeedsContext(a.Name, contextK(f, a.MinContext), contextK(f, have))
+					off, title = true, m.AgentNeedsContext(a.Name, ctxName(f.loc, a.MinContext), ctxName(f.loc, have))
 				}
 				// A disabled button is drawn at half opacity (MyGo
 				// paint.go), the mockup's chips are not: when off, the chip
