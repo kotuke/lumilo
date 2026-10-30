@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.3.2
+
+A Splash model whose drafter is gone gets it back in one click.
+
+### Fixed
+
+- When Splash cannot start a model offline because its DFlash2 drafter is
+  missing from the Hugging Face cache, the error card names the drafter
+  instead of saying the model files are not found, and **Download draft
+  model** fetches it. The drafter comes at the version the model was
+  installed with, and the model itself is not updated, so “Check for model
+  updates” can stay off.
+
+### Updating
+
+Lumilo 0.2.0 and later download this version by themselves within a day
+and offer to restart; Settings → Check for updates finds it at once.
+Version 0.1.0 cannot update itself: run
+`brew upgrade --cask --greedy kotuke/tap/lumilo`.
+
 ## 0.3.1
 
 Close speeds stand apart on the chart, and a Splash error names what is
