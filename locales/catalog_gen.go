@@ -1363,20 +1363,6 @@ func (msgs Messages) BrewReq(arch string, os string) string {
 	return Catalog.Format(msgs.locale, "brewReq", map[string]any{"arch": arch, "os": os})
 }
 
-// NoUpdates says "Model updates off"
-// in the language the app shows.
-//
-// Chip: model updates are off.
-func NoUpdates() string { return In(i18n.Locale()).NoUpdates() }
-
-// NoUpdates says "Model updates off"
-// in the language of msgs.
-//
-// Chip: model updates are off.
-func (msgs Messages) NoUpdates() string {
-	return Catalog.Format(msgs.locale, "noUpdates", nil)
-}
-
 // CopyAddr says "Copy address"
 // in the language the app shows.
 //
@@ -2201,13 +2187,13 @@ func (msgs Messages) SettingsTitle() string {
 	return Catalog.Format(msgs.locale, "settingsTitle", nil)
 }
 
-// Access says "Server access"
+// Access says "Server"
 // in the language the app shows.
 //
 // Label of the server access control.
 func Access() string { return In(i18n.Locale()).Access() }
 
-// Access says "Server access"
+// Access says "Server"
 // in the language of msgs.
 //
 // Label of the server access control.
@@ -2257,13 +2243,13 @@ func (msgs Messages) HintLocal(address string) string {
 	return Catalog.Format(msgs.locale, "hintLocal", map[string]any{"address": address})
 }
 
-// HintNetwork says "Devices on your network reach the server at {address}. It also listens on VPN and other networks of this computer, so…"
+// HintNetwork says "Other devices connect at {address}. VPNs, tunnels and forwarded ports work too"
 // in the language the app shows.
 //
 // Hint for the network mode. {address} is host:port.
 func HintNetwork(address string) string { return In(i18n.Locale()).HintNetwork(address) }
 
-// HintNetwork says "Devices on your network reach the server at {address}. It also listens on VPN and other networks of this computer, so…"
+// HintNetwork says "Other devices connect at {address}. VPNs, tunnels and forwarded ports work too"
 // in the language of msgs.
 //
 // Hint for the network mode. {address} is host:port.
@@ -2271,13 +2257,13 @@ func (msgs Messages) HintNetwork(address string) string {
 	return Catalog.Format(msgs.locale, "hintNetwork", map[string]any{"address": address})
 }
 
-// WarnNetwork says "Any device on your network can use the model, and the internet too if you forward the port. The server accepts no req…"
+// WarnNetwork says "Anyone on your network can use the model, and the internet too if you forward the port. Requests without the API key …"
 // in the language the app shows.
 //
 // Warning for the network mode.
 func WarnNetwork() string { return In(i18n.Locale()).WarnNetwork() }
 
-// WarnNetwork says "Any device on your network can use the model, and the internet too if you forward the port. The server accepts no req…"
+// WarnNetwork says "Anyone on your network can use the model, and the internet too if you forward the port. Requests without the API key …"
 // in the language of msgs.
 //
 // Warning for the network mode.
@@ -2341,13 +2327,13 @@ func (msgs Messages) NewKey() string {
 	return Catalog.Format(msgs.locale, "newKey", nil)
 }
 
-// KeyNote says "The key is required while the server is open. Stored in Keychain"
+// KeyNote says "Stored in Keychain"
 // in the language the app shows.
 //
 // Note under the API key.
 func KeyNote() string { return In(i18n.Locale()).KeyNote() }
 
-// KeyNote says "The key is required while the server is open. Stored in Keychain"
+// KeyNote says "Stored in Keychain"
 // in the language of msgs.
 //
 // Note under the API key.
@@ -2425,13 +2411,13 @@ func (msgs Messages) Model() string {
 	return Catalog.Format(msgs.locale, "model", nil)
 }
 
-// IdleUnload says "Unload when idle"
+// IdleUnload says "Unload model when idle"
 // in the language the app shows.
 //
 // Label of the idle unload setting.
 func IdleUnload() string { return In(i18n.Locale()).IdleUnload() }
 
-// IdleUnload says "Unload when idle"
+// IdleUnload says "Unload model when idle"
 // in the language of msgs.
 //
 // Label of the idle unload setting.
@@ -2541,20 +2527,6 @@ func (msgs Messages) CheckUpdates() string {
 	return Catalog.Format(msgs.locale, "checkUpdates", nil)
 }
 
-// UpdatesNote says "Updates are installed with Homebrew"
-// in the language the app shows.
-//
-// Note under the engine version.
-func UpdatesNote() string { return In(i18n.Locale()).UpdatesNote() }
-
-// UpdatesNote says "Updates are installed with Homebrew"
-// in the language of msgs.
-//
-// Note under the engine version.
-func (msgs Messages) UpdatesNote() string {
-	return Catalog.Format(msgs.locale, "updatesNote", nil)
-}
-
 // CheckLatest says "You have the latest version, {version}"
 // in the language the app shows.
 //
@@ -2601,20 +2573,6 @@ func CheckFailed() string { return In(i18n.Locale()).CheckFailed() }
 // failed.
 func (msgs Messages) CheckFailed() string {
 	return Catalog.Format(msgs.locale, "checkFailed", nil)
-}
-
-// AppUpdNote says "Lumilo updates itself from its releases on GitHub"
-// in the language the app shows.
-//
-// App card: Lumilo updates itself; the note under Lumilo's version.
-func AppUpdNote() string { return In(i18n.Locale()).AppUpdNote() }
-
-// AppUpdNote says "Lumilo updates itself from its releases on GitHub"
-// in the language of msgs.
-//
-// App card: Lumilo updates itself; the note under Lumilo's version.
-func (msgs Messages) AppUpdNote() string {
-	return Catalog.Format(msgs.locale, "appUpdNote", nil)
 }
 
 // AppUpdOff says "This copy can’t update itself: update it with Homebrew"
@@ -2787,20 +2745,114 @@ func (msgs Messages) Login() string {
 	return Catalog.Format(msgs.locale, "login", nil)
 }
 
-// Blink says "Animate the icon while responding"
+// Blink says "Animate the icon while busy"
 // in the language the app shows.
 //
-// Label of the switch that animates the menu bar icon while the server
-// answers.
+// Label of the switch that animates the menu bar icon while it is busy:
+// while the engine loads and while the server answers.
 func Blink() string { return In(i18n.Locale()).Blink() }
 
-// Blink says "Animate the icon while responding"
+// Blink says "Animate the icon while busy"
 // in the language of msgs.
 //
-// Label of the switch that animates the menu bar icon while the server
-// answers.
+// Label of the switch that animates the menu bar icon while it is busy:
+// while the engine loads and while the server answers.
 func (msgs Messages) Blink() string {
 	return Catalog.Format(msgs.locale, "blink", nil)
+}
+
+// MenuBar says "Menu bar"
+// in the language the app shows.
+//
+// Title of the Settings card about the menu bar icon.
+func MenuBar() string { return In(i18n.Locale()).MenuBar() }
+
+// MenuBar says "Menu bar"
+// in the language of msgs.
+//
+// Title of the Settings card about the menu bar icon.
+func (msgs Messages) MenuBar() string {
+	return Catalog.Format(msgs.locale, "menuBar", nil)
+}
+
+// TrayValue says "Show speed and memory"
+// in the language the app shows.
+//
+// Label of the switch that shows the live speed or the memory beside the
+// menu bar icon; off, the icon shows alone.
+func TrayValue() string { return In(i18n.Locale()).TrayValue() }
+
+// TrayValue says "Show speed and memory"
+// in the language of msgs.
+//
+// Label of the switch that shows the live speed or the memory beside the
+// menu bar icon; off, the icon shows alone.
+func (msgs Messages) TrayValue() string {
+	return Catalog.Format(msgs.locale, "trayValue", nil)
+}
+
+// General says "General"
+// in the language the app shows.
+//
+// Title of the Settings card with the language, the terminal for agents and
+// launch at login.
+func General() string { return In(i18n.Locale()).General() }
+
+// General says "General"
+// in the language of msgs.
+//
+// Title of the Settings card with the language, the terminal for agents and
+// launch at login.
+func (msgs Messages) General() string {
+	return Catalog.Format(msgs.locale, "general", nil)
+}
+
+// UpdatesTitle says "Updates"
+// in the language the app shows.
+//
+// Title of the Settings card with the versions of Lumilo and the engine,
+// their update checks and the model update switch.
+func UpdatesTitle() string { return In(i18n.Locale()).UpdatesTitle() }
+
+// UpdatesTitle says "Updates"
+// in the language of msgs.
+//
+// Title of the Settings card with the versions of Lumilo and the engine,
+// their update checks and the model update switch.
+func (msgs Messages) UpdatesTitle() string {
+	return Catalog.Format(msgs.locale, "updatesTitle", nil)
+}
+
+// Tunnel says "Tunnel or forwarded port"
+// in the language the app shows.
+//
+// Settings, Server, network access: a row that opens the allowed host
+// names, which a tunnel or a forwarded port needs.
+func Tunnel() string { return In(i18n.Locale()).Tunnel() }
+
+// Tunnel says "Tunnel or forwarded port"
+// in the language of msgs.
+//
+// Settings, Server, network access: a row that opens the allowed host
+// names, which a tunnel or a forwarded port needs.
+func (msgs Messages) Tunnel() string {
+	return Catalog.Format(msgs.locale, "tunnel", nil)
+}
+
+// CheckShort says "Check"
+// in the language the app shows.
+//
+// Settings, Updates: the short text of the button that checks for updates
+// of Lumilo or the engine; its accessible name is checkUpdates.
+func CheckShort() string { return In(i18n.Locale()).CheckShort() }
+
+// CheckShort says "Check"
+// in the language of msgs.
+//
+// Settings, Updates: the short text of the button that checks for updates
+// of Lumilo or the engine; its accessible name is checkUpdates.
+func (msgs Messages) CheckShort() string {
+	return Catalog.Format(msgs.locale, "checkShort", nil)
 }
 
 // RestartStopped says "Applies when the server starts"
@@ -3021,13 +3073,13 @@ func (msgs Messages) EngineSwitchBtn() string {
 	return Catalog.Format(msgs.locale, "engineSwitchBtn", nil)
 }
 
-// EngineNote says "One engine runs at a time. An engine that is not installed is installed with Homebrew"
+// EngineNote says "One engine runs at a time. Lumilo installs and updates engines with Homebrew"
 // in the language the app shows.
 //
 // Settings: note under the engine list.
 func EngineNote() string { return In(i18n.Locale()).EngineNote() }
 
-// EngineNote says "One engine runs at a time. An engine that is not installed is installed with Homebrew"
+// EngineNote says "One engine runs at a time. Lumilo installs and updates engines with Homebrew"
 // in the language of msgs.
 //
 // Settings: note under the engine list.
@@ -4005,70 +4057,6 @@ func AddModelUnreachable() string { return In(i18n.Locale()).AddModelUnreachable
 // as without a network.
 func (msgs Messages) AddModelUnreachable() string {
 	return Catalog.Format(msgs.locale, "addModelUnreachable", nil)
-}
-
-// UpdatesOn says "Model updates on"
-// in the language the app shows.
-//
-// Chip in the server card, a toggle: the server checks Hugging Face for
-// model updates on start (the other state is noUpdates).
-func UpdatesOn() string { return In(i18n.Locale()).UpdatesOn() }
-
-// UpdatesOn says "Model updates on"
-// in the language of msgs.
-//
-// Chip in the server card, a toggle: the server checks Hugging Face for
-// model updates on start (the other state is noUpdates).
-func (msgs Messages) UpdatesOn() string {
-	return Catalog.Format(msgs.locale, "updatesOn", nil)
-}
-
-// UpdatesOffTip says "The server starts offline, without checking models for updates. Click to check on start"
-// in the language the app shows.
-//
-// Tooltip of the model-updates chip while off: what off does and what a
-// click does.
-func UpdatesOffTip() string { return In(i18n.Locale()).UpdatesOffTip() }
-
-// UpdatesOffTip says "The server starts offline, without checking models for updates. Click to check on start"
-// in the language of msgs.
-//
-// Tooltip of the model-updates chip while off: what off does and what a
-// click does.
-func (msgs Messages) UpdatesOffTip() string {
-	return Catalog.Format(msgs.locale, "updatesOffTip", nil)
-}
-
-// UpdatesOnTip says "On start, the server checks Hugging Face for model updates. Click to start offline"
-// in the language the app shows.
-//
-// Tooltip of the model-updates chip while on: what on does and what a click
-// does.
-func UpdatesOnTip() string { return In(i18n.Locale()).UpdatesOnTip() }
-
-// UpdatesOnTip says "On start, the server checks Hugging Face for model updates. Click to start offline"
-// in the language of msgs.
-//
-// Tooltip of the model-updates chip while on: what on does and what a click
-// does.
-func (msgs Messages) UpdatesOnTip() string {
-	return Catalog.Format(msgs.locale, "updatesOnTip", nil)
-}
-
-// AppliesOnRestart says "Applies on restart"
-// in the language the app shows.
-//
-// Note under the server card's chips after the model-updates chip changed
-// while the server runs; a Restart button follows.
-func AppliesOnRestart() string { return In(i18n.Locale()).AppliesOnRestart() }
-
-// AppliesOnRestart says "Applies on restart"
-// in the language of msgs.
-//
-// Note under the server card's chips after the model-updates chip changed
-// while the server runs; a Restart button follows.
-func (msgs Messages) AppliesOnRestart() string {
-	return Catalog.Format(msgs.locale, "appliesOnRestart", nil)
 }
 
 // RmLabel says "Delete {model}"

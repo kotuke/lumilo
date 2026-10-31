@@ -76,7 +76,7 @@ func (p *Panel) serverCard(c *ui.Context, f *frame, s *mainState) {
 				if v.Install.InstallCommand != "" {
 					command(c, f, v.Install.InstallCommand)
 				}
-				btn(c).Height(30).Radius(8).Background(t.startBg).TextColor(t.startText).Gap(7).OnClick(p.act.Install).Children(func() {
+				btn(c).Height(32).Radius(16).Background(t.startBg).TextColor(t.startText).Gap(7).OnClick(p.act.Install).Children(func() {
 					ico(c, "download", 2, 14)
 					txt(c, m.InstBtn(), 12.5).FontWeight(600)
 				})
@@ -88,12 +88,12 @@ func (p *Panel) serverCard(c *ui.Context, f *frame, s *mainState) {
 			ui.Column(c).Gap(10).Children(func() {
 				txt(c, m.BrewText(v.Engine), 12).LineHeight(1.4).TextColor(t.soft)
 				ui.Column(c).Gap(6).Children(func() {
-					btn(c).Height(30).Radius(8).Background(t.chip).TextColor(t.text).Gap(7).
+					btn(c).Height(32).Radius(16).Background(t.chip).TextColor(t.text).Gap(7).
 						OnClick(func() { p.act.OpenURL(pre.URL) }).Children(func() {
 						txt(c, m.OpenBrew(pre.Host), 12.5).FontWeight(600)
 						mirror(ico(c, "external-link", 2, 14), f.rtl)
 					})
-					btn(c).Height(30).Radius(8).Border(1, t.outline).TextColor(t.text).OnClick(p.act.Recheck).Children(func() {
+					btn(c).Height(32).Radius(16).Border(1, t.outline).TextColor(t.text).OnClick(p.act.Recheck).Children(func() {
 						txt(c, m.Recheck(), 12.5).FontWeight(500)
 					})
 				})
@@ -117,7 +117,7 @@ func (p *Panel) serverCard(c *ui.Context, f *frame, s *mainState) {
 		if s.warnOn {
 			ui.Column(c).AlignItems(ui.Start).Gap(8).Background(t.warnBg).Radius(8).Padding(8, 10).Role(ui.RoleStatus).Children(func() {
 				txt(c, s.warnText, 11.5).LineHeight(1.4).TextColor(t.warnText)
-				btn(c).Height(22).Radius(6).Background(t.warnBtn).TextColor(t.warnText).PaddingX(8).OnClick(p.act.ForceStop).Children(func() {
+				btn(c).Height(22).Radius(11).Background(t.warnBtn).TextColor(t.warnText).PaddingX(8).OnClick(p.act.ForceStop).Children(func() {
 					txt(c, m.ActForce(), 12).FontWeight(500).NoWrap()
 				})
 			})
@@ -523,7 +523,7 @@ func (p *Panel) suggestionRow(c *ui.Context, f *frame, sg engine.Suggestion, pri
 			}
 		})
 		id := sg.ID
-		b := btn(c).Height(26).Radius(7).PaddingStart(8).PaddingEnd(10).Gap(5).Shrink(0).
+		b := btn(c).Height(26).Radius(13).PaddingStart(8).PaddingEnd(10).Gap(5).Shrink(0).
 			Label(m.Download() + " " + sg.Name)
 		if reason := p.downloadBlock(&m); reason != "" {
 			b.Disabled(true).Cursor(ui.CursorDefault).Opacity(0.6).Tooltip(reason).Description(reason)
@@ -607,16 +607,13 @@ func (p *Panel) modelRow(c *ui.Context, f *frame, md engine.Model) {
 	})
 }
 
-// controls: the chip row and the main button.
+// controls: the chip row (the address and the context) and the main button.
 func (p *Panel) controls(c *ui.Context, f *frame, s *mainState) {
 	t, m, v := f.pal, f.m, p.view
 	ui.Row(c).Gap(6).Wrap().Children(func() {
-		if s.showUpdChip {
-			p.updatesChip(c, f)
-		}
 		if v.Address != "" {
 			label := m.CopyAddr() + " " + v.Address
-			btn(c).Direction(ui.LeftToRight).Height(22).Radius(6).Background(t.chip).TextColor(t.soft).PaddingX(8).Gap(4).
+			btn(c).Direction(ui.LeftToRight).Height(22).Radius(11).Background(t.chip).TextColor(t.soft).PaddingX(8).Gap(4).
 				Label(label).Tooltip(m.CopyAddr()).OnClick(func() { p.act.Copy(v.Address) }).Children(func() {
 				if s.addrLock {
 					ico(c, "lock", 2, 12)
@@ -628,22 +625,10 @@ func (p *Panel) controls(c *ui.Context, f *frame, s *mainState) {
 			p.contextChip(c, f, s)
 		}
 	})
-	if s.showUpdChip && p.updToggled && v.PendingRestart && p.running() {
-		// The server read the choice when it started.
-		ui.Row(c).Key("updates-restart").Gap(8).AlignItems(ui.Center).Role(ui.RoleStatus).Children(func() {
-			txt(c, m.AppliesOnRestart(), 11.5).TextColor(t.muted).Grow(1).Shrink(1).MinWidth(0)
-			r := btn(c).Key("updates-restart-btn").Height(22).Radius(6).Border(1, t.border).Background(t.btn).
-				TextColor(t.text).PaddingX(8).Shrink(0)
-			r.OnClick(func() {
-				p.updToggled = false
-				p.act.Restart()
-			}).Children(func() { txt(c, m.Restart(), 11.5).NoWrap() })
-		})
-	}
 	if !s.showMain {
 		return
 	}
-	b := btn(c).Height(30).Radius(8).Background(s.actBg).TextColor(s.actText).Gap(7)
+	b := btn(c).Height(32).Radius(16).Background(s.actBg).TextColor(s.actText).Gap(7)
 	switch s.main {
 	case mainStart:
 		b.OnClick(p.act.Start)
@@ -668,40 +653,6 @@ func (p *Panel) controls(c *ui.Context, f *frame, s *mainState) {
 		}
 		txt(c, s.act, 12.5).FontWeight(600).NoWrap()
 	})
-}
-
-// updatesChip is the model-updates chip, a toggle for the setting of
-// Settings → "Check for model updates": off, the server starts offline and
-// the chip is muted; on, it checks the hub on start, with a refresh icon.
-// The tooltip says what the state does and what a click does.
-func (p *Panel) updatesChip(c *ui.Context, f *frame) {
-	t, m := f.pal, f.m
-	on := p.pref.ModelUpdates
-	label, tip, ink := m.NoUpdates(), m.UpdatesOffTip(), t.muted
-	if on {
-		label, tip, ink = m.UpdatesOn(), m.UpdatesOnTip(), t.soft
-	}
-	b := btn(c).Key("updates-chip").Height(22).Radius(6).Background(t.chip).PaddingX(8).Gap(4).
-		Role(ui.RoleToggleButton).Checked(on).Label(label).Description(tip).Tooltip(tip)
-	if b.Hovered() || b.FocusVisible() {
-		b.Background(t.rowHover)
-		ink = t.text
-	}
-	b.TextColor(ink).OnClick(func() { p.toggleModelUpdates() }).Children(func() {
-		if on {
-			ico(c, "refresh", 2, 12)
-		}
-		txt(c, label, 11.5).NoWrap()
-	})
-}
-
-// toggleModelUpdates flips the model-updates setting from the chip; the
-// settings screen shows the same switch, so it follows.
-func (p *Panel) toggleModelUpdates() {
-	on := !p.pref.ModelUpdates
-	p.set.updates = on
-	p.updToggled = true
-	p.commit(func(pr *Prefs) { pr.ModelUpdates = on })
 }
 
 // The loading bar's running block: its length in segments and the time of
@@ -730,7 +681,7 @@ func (p *Panel) contextChip(c *ui.Context, f *frame, s *mainState) {
 	if tokens > 0 {
 		label, tip = ctxName(f.loc, tokens), m.CtxChipTip(format.Number(f.loc, float64(tokens), 0))
 	}
-	b := btn(c).Key("context-chip").Height(22).Radius(6).Background(t.chip).TextColor(t.soft).PaddingX(8).Gap(4).
+	b := btn(c).Key("context-chip").Height(22).Radius(11).Background(t.chip).TextColor(t.soft).PaddingX(8).Gap(4).
 		Label(m.Context() + " " + label).Description(tip).Tooltip(tip)
 	if b.Hovered() || b.FocusVisible() {
 		b.Background(t.rowHover).TextColor(t.text)

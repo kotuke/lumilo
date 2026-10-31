@@ -606,10 +606,6 @@
       }
     }
   },
-  "noUpdates": "Model updates off",
-  "@noUpdates": {
-    "description": "Chip: model updates are off."
-  },
   "copyAddr": "Copy address",
   "@copyAddr": {
     "description": "Label of the address chip that copies the server address."
@@ -1005,7 +1001,7 @@
   "@settingsTitle": {
     "description": "Title of the Settings screen."
   },
-  "access": "Server access",
+  "access": "Server",
   "@access": {
     "description": "Label of the server access control."
   },
@@ -1027,7 +1023,7 @@
       }
     }
   },
-  "hintNetwork": "Devices on your network reach the server at {address}. It also listens on VPN and other networks of this computer, so a forwarded port or a tunnel works too",
+  "hintNetwork": "Other devices connect at {address}. VPNs, tunnels and forwarded ports work too",
   "@hintNetwork": {
     "description": "Hint for the network mode. {address} is host:port.",
     "placeholders": {
@@ -1037,7 +1033,7 @@
       }
     }
   },
-  "warnNetwork": "Any device on your network can use the model, and the internet too if you forward the port. The server accepts no request without the key",
+  "warnNetwork": "Anyone on your network can use the model, and the internet too if you forward the port. Requests without the API key are refused",
   "@warnNetwork": {
     "description": "Warning for the network mode."
   },
@@ -1057,7 +1053,7 @@
   "@newKey": {
     "description": "Label of the button that creates a new key."
   },
-  "keyNote": "The key is required while the server is open. Stored in Keychain",
+  "keyNote": "Stored in Keychain",
   "@keyNote": {
     "description": "Note under the API key."
   },
@@ -1087,7 +1083,7 @@
   "@model": {
     "description": "Title of the Settings model card."
   },
-  "idleUnload": "Unload when idle",
+  "idleUnload": "Unload model when idle",
   "@idleUnload": {
     "description": "Label of the idle unload setting."
   },
@@ -1125,10 +1121,6 @@
   "@checkUpdates": {
     "description": "Button that checks for engine updates."
   },
-  "updatesNote": "Updates are installed with Homebrew",
-  "@updatesNote": {
-    "description": "Note under the engine version."
-  },
   "checkLatest": "You have the latest version, {version}",
   "@checkLatest": {
     "description": "Settings, under the engine version, after the user checked for updates: the installed version is the newest. {version} is the installed version.",
@@ -1152,10 +1144,6 @@
   "checkFailed": "Couldn’t check for updates",
   "@checkFailed": {
     "description": "Settings, under the engine version: the update check the user asked for failed."
-  },
-  "appUpdNote": "Lumilo updates itself from its releases on GitHub",
-  "@appUpdNote": {
-    "description": "App card: Lumilo updates itself; the note under Lumilo's version."
   },
   "appUpdOff": "This copy can’t update itself: update it with Homebrew",
   "@appUpdOff": {
@@ -1219,9 +1207,33 @@
   "@login": {
     "description": "Label of the launch-at-login switch."
   },
-  "blink": "Animate the icon while responding",
+  "blink": "Animate the icon while busy",
   "@blink": {
-    "description": "Label of the switch that animates the menu bar icon while the server answers."
+    "description": "Label of the switch that animates the menu bar icon while it is busy: while the engine loads and while the server answers."
+  },
+  "menuBar": "Menu bar",
+  "@menuBar": {
+    "description": "Title of the Settings card about the menu bar icon."
+  },
+  "trayValue": "Show speed and memory",
+  "@trayValue": {
+    "description": "Label of the switch that shows the live speed or the memory beside the menu bar icon; off, the icon shows alone."
+  },
+  "general": "General",
+  "@general": {
+    "description": "Title of the Settings card with the language, the terminal for agents and launch at login."
+  },
+  "updatesTitle": "Updates",
+  "@updatesTitle": {
+    "description": "Title of the Settings card with the versions of Lumilo and the engine, their update checks and the model update switch."
+  },
+  "tunnel": "Tunnel or forwarded port",
+  "@tunnel": {
+    "description": "Settings, Server, network access: a row that opens the allowed host names, which a tunnel or a forwarded port needs."
+  },
+  "checkShort": "Check",
+  "@checkShort": {
+    "description": "Settings, Updates: the short text of the button that checks for updates of Lumilo or the engine; its accessible name is checkUpdates."
   },
   "restartStopped": "Applies when the server starts",
   "@restartStopped": {
@@ -1317,7 +1329,7 @@
   "@engineSwitchBtn": {
     "description": "Settings: button that confirms the switch to another engine."
   },
-  "engineNote": "One engine runs at a time. An engine that is not installed is installed with Homebrew",
+  "engineNote": "One engine runs at a time. Lumilo installs and updates engines with Homebrew",
   "@engineNote": {
     "description": "Settings: note under the engine list."
   },
@@ -1697,22 +1709,6 @@
   "addModelUnreachable": "Hugging Face is unreachable",
   "@addModelUnreachable": {
     "description": "Under the Add model field: the search or the look at a repository failed, as without a network."
-  },
-  "updatesOn": "Model updates on",
-  "@updatesOn": {
-    "description": "Chip in the server card, a toggle: the server checks Hugging Face for model updates on start (the other state is noUpdates)."
-  },
-  "updatesOffTip": "The server starts offline, without checking models for updates. Click to check on start",
-  "@updatesOffTip": {
-    "description": "Tooltip of the model-updates chip while off: what off does and what a click does."
-  },
-  "updatesOnTip": "On start, the server checks Hugging Face for model updates. Click to start offline",
-  "@updatesOnTip": {
-    "description": "Tooltip of the model-updates chip while on: what on does and what a click does."
-  },
-  "appliesOnRestart": "Applies on restart",
-  "@appliesOnRestart": {
-    "description": "Note under the server card's chips after the model-updates chip changed while the server runs; a Restart button follows."
   },
   "rmLabel": "Delete {model}",
   "@rmLabel": {

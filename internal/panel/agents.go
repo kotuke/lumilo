@@ -32,7 +32,7 @@ func (p *Panel) agentsCard(c *ui.Context, f *frame, s *mainState) {
 						b.Tooltip(title)
 					}
 				}
-				b.Key(a.ID).Height(26).Radius(8).Background(t.chip).PaddingStart(8).PaddingEnd(10).Gap(6)
+				b.Key(a.ID).Height(26).Radius(13).Background(t.chip).PaddingStart(8).PaddingEnd(10).Gap(6)
 				if i < maxAgents {
 					extra := float32(8 + 10)
 					if logo != nil {

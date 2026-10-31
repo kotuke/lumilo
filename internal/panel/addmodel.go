@@ -549,7 +549,7 @@ func (p *Panel) addSummary(c *ui.Context, f *frame, ch addChoice) {
 				p.needNote(c, f, repoModel(ch.info, ch.bytes), engine.Config{})
 			}
 		})
-		b := btn(c).Key("add-model-download").Height(26).Radius(7).PaddingStart(8).PaddingEnd(10).Gap(5).Shrink(0).
+		b := btn(c).Key("add-model-download").Height(26).Radius(13).PaddingStart(8).PaddingEnd(10).Gap(5).Shrink(0).
 			Background(t.startBg).TextColor(t.startText).KeepFocus().Label(m.Download() + " " + name)
 		if reason != "" {
 			b.Disabled(true).Cursor(ui.CursorDefault).Tooltip(reason).Description(reason)

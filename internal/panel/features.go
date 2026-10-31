@@ -70,7 +70,10 @@ func (p *Panel) modelNeed(c *ui.Context, f *frame) {
 		return
 	}
 	opt := p.pref.Options[md.ID]
-	p.needNote(c, f, md, engine.Config{ContextTokens: p.pref.Contexts[md.ID], NoVision: opt.NoVision, Draft: opt.Draft})
+	rowSep(c, f)
+	ui.Column(c).Padding(8, 0).Children(func() {
+		p.needNote(c, f, md, engine.Config{ContextTokens: p.pref.Contexts[md.ID], NoVision: opt.NoVision, Draft: opt.Draft})
+	})
 }
 
 // featureRows are the model's vision and draft choices in the Model card,
@@ -199,8 +202,8 @@ func (p *Panel) setOptions(model string, change func(o *engine.ModelOptions)) {
 // featureSwitch is switchRow with a tooltip; without an icon, as the other
 // rows of the card. A disabled one only shows its state.
 func featureSwitch(c *ui.Context, f *frame, key, label, tip string, on *bool, disabled bool) {
-	t := f.pal
-	row := ui.SwitchBase(c.Key(key), on).Gap(8).MinHeight(28).Label(label).Description(tip).Tooltip(tip).FocusRing(false)
+	rowSep(c, f)
+	row := ui.SwitchBase(c.Key(key), on).Gap(8).MinHeight(rowHeight).Label(label).Description(tip).Tooltip(tip).FocusRing(false)
 	if disabled {
 		row.Disabled(true).Cursor(ui.CursorDefault)
 	} else {
@@ -209,19 +212,7 @@ func featureSwitch(c *ui.Context, f *frame, key, label, tip string, on *bool, di
 	ring := row.FocusVisible()
 	row.Children(func() {
 		txt(c, label, 12.5).Grow(1)
-		track := ui.Row(c).Size(32, 20).Radius(10).Padding(0, 1).Shrink(0)
-		if *on {
-			track.Background(t.trackOn).Border(1, ui.Transparent).Justify(ui.End)
-		} else {
-			track.Background(t.trackOff).Border(1, t.trackOffBorder).Justify(ui.Start)
-		}
-		if disabled {
-			track.Opacity(0.5)
-		}
-		if ring {
-			track.DrawOver(func(pt *ui.Painter, r ui.Rect) { pt.FocusRing(r, [4]float32{10, 10, 10, 10}) })
-		}
-		track.Children(func() { ui.Box(c).Size(16, 16).Radius(8).Background(t.knob) })
+		switchTrack(c, f, *on, disabled, ring)
 	})
 }
 

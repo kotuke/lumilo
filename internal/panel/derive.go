@@ -52,48 +52,48 @@ const (
 type mainState struct {
 	phase core.Phase
 
-	pill, sub               string
-	pillText, pillBg, dot   ui.Color
-	pillIcon                string
-	pillAnim                anim
-	pillFlip                bool // mirrored in RTL
-	statusOnly              bool // install states: the status is read, not shown
-	served                  bool
-	isInstall               bool
-	isNotInstalled          bool
-	isNoInstaller           bool
-	isInstalling            bool
-	isInstallFailed         bool
-	isLoading, isError      bool
-	isExternal, isHang      bool
-	updAvail, isUpdating    bool
-	updFailed               bool
-	warnOn                  bool
-	warnText                string
-	isProgress              bool
-	progressText, cmd       string
-	progressLeft            string // the time left of a download, "~6 min" (progressText)
-	showHead, showPill      bool
-	hasModel, showChat      bool
-	chatOff                 bool
-	hasControls             bool
-	showAgents, showUpdChip bool
-	modelCanOpen            bool
-	modelTitle              string
-	canRelease, canLoad     bool
-	restoring               bool // weights are coming back: Load shows, off
-	idle                    string
-	agentsOff               bool
-	agentTitle              string
-	main                    mainKind
-	showMain                bool
-	act                     string
-	actBg, actText          ui.Color
-	quit                    dialog
-	err                     errKind
-	addrLock                bool
-	suggest                 bool // no models: the suggestions replace the model button
-	downloading             bool
+	pill, sub             string
+	pillText, pillBg, dot ui.Color
+	pillIcon              string
+	pillAnim              anim
+	pillFlip              bool // mirrored in RTL
+	statusOnly            bool // install states: the status is read, not shown
+	served                bool
+	isInstall             bool
+	isNotInstalled        bool
+	isNoInstaller         bool
+	isInstalling          bool
+	isInstallFailed       bool
+	isLoading, isError    bool
+	isExternal, isHang    bool
+	updAvail, isUpdating  bool
+	updFailed             bool
+	warnOn                bool
+	warnText              string
+	isProgress            bool
+	progressText, cmd     string
+	progressLeft          string // the time left of a download, "~6 min" (progressText)
+	showHead, showPill    bool
+	hasModel, showChat    bool
+	chatOff               bool
+	hasControls           bool
+	showAgents            bool
+	modelCanOpen          bool
+	modelTitle            string
+	canRelease, canLoad   bool
+	restoring             bool // weights are coming back: Load shows, off
+	idle                  string
+	agentsOff             bool
+	agentTitle            string
+	main                  mainKind
+	showMain              bool
+	act                   string
+	actBg, actText        ui.Color
+	quit                  dialog
+	err                   errKind
+	addrLock              bool
+	suggest               bool // no models: the suggestions replace the model button
+	downloading           bool
 }
 
 // modelCanOpen reports whether the model list opens: only where the model
@@ -396,7 +396,6 @@ func (p *Panel) derive(c *ui.Context, f *frame) mainState {
 	// foreign server.
 	// A download runs online; an engine that never contacts the hub
 	// (Caps.ModelUpdates off) has no use for it.
-	s.showUpdChip = !s.isExternal && v.Download == "" && v.Caps.ModelUpdates
 	s.modelCanOpen = s.hasModel && modelCanOpen(v)
 	if v.Phase == core.PhaseExternal && !s.isUpdating {
 		s.modelTitle = m.ModelLocked()

@@ -223,37 +223,45 @@ func (p *Panel) header(c *ui.Context, f *frame, s *mainState) {
 			// runs over, it ends in an ellipsis and does not push the buttons.
 			txt(c, s.sub, 11).TextColor(t.muted).SingleLine()
 		})
-		if s.showChat {
-			b := iconBtn(c, f, m.Chat(), "message", false, p.act.OpenChat)
-			if s.chatOff {
-				// Disabled already halves the opacity (MyGo paint.go): 0.3 in
-				// all, clearly off beside the other buttons; the tooltip says
-				// why.
-				b.Disabled(true).Opacity(0.6).Cursor(ui.CursorDefault).Tooltip(m.ChatOff()).Description(m.ChatOff())
-			}
-		}
-		iconBtn(c, f, m.Log(), "file-text", false, p.act.OpenLog)
-		sb := iconBtn(c, f, m.Settings(), "settings", false, func() { p.openSettings(false) })
-		if p.appReady() {
-			// A new version of Lumilo waits for a restart, which Settings
-			// offers: a dot on the button says so.
-			sb.Description(m.AppUpdReady(p.app.st.Version)).DrawOver(func(pt *ui.Painter, r ui.Rect) {
-				x := r.X + r.W - 7
-				if f.rtl {
-					x = r.X + 1
-				}
-				pt.Fill(ui.Rect{X: x, Y: r.Y + 1, W: 6, H: 6}, t.ok, 3)
-			})
-		}
-		// The icon shows the theme the button switches to, as in Kvoto.
-		if c.Theme().Dark {
-			iconBtn(c, f, m.ThemeLight(), "sun", false, p.act.ToggleTheme)
-		} else {
-			iconBtn(c, f, m.ThemeDark(), "moon", false, p.act.ToggleTheme)
-		}
-		q := iconBtn(c, f, m.Quit(), "logout", true, func() { p.quit(s) })
-		q.MarginStart(6).Expanded(p.dlg == dlgQuitBusy || p.dlg == dlgQuitUpdating)
+		// Round buttons without frames sit close, as in a toolbar.
+		ui.Row(c).Gap(1).Shrink(0).Children(func() { p.headerButtons(c, f, s) })
 	})
+}
+
+// headerButtons are the buttons at the end of the header: chat, log,
+// settings, theme and, apart, quit.
+func (p *Panel) headerButtons(c *ui.Context, f *frame, s *mainState) {
+	t, m := f.pal, f.m
+	if s.showChat {
+		b := iconBtn(c, f, m.Chat(), "message", false, p.act.OpenChat)
+		if s.chatOff {
+			// Disabled already halves the opacity (MyGo paint.go): 0.3 in
+			// all, clearly off beside the other buttons; the tooltip says
+			// why.
+			b.Disabled(true).Opacity(0.6).Cursor(ui.CursorDefault).Tooltip(m.ChatOff()).Description(m.ChatOff())
+		}
+	}
+	iconBtn(c, f, m.Log(), "file-text", false, p.act.OpenLog)
+	sb := iconBtn(c, f, m.Settings(), "settings", false, func() { p.openSettings(false) })
+	if p.appReady() {
+		// A new version of Lumilo waits for a restart, which Settings
+		// offers: a dot on the button says so.
+		sb.Description(m.AppUpdReady(p.app.st.Version)).DrawOver(func(pt *ui.Painter, r ui.Rect) {
+			x := r.X + r.W - 7
+			if f.rtl {
+				x = r.X + 1
+			}
+			pt.Fill(ui.Rect{X: x, Y: r.Y + 1, W: 6, H: 6}, t.ok, 3)
+		})
+	}
+	// The icon shows the theme the button switches to, as in Kvoto.
+	if c.Theme().Dark {
+		iconBtn(c, f, m.ThemeLight(), "sun", false, p.act.ToggleTheme)
+	} else {
+		iconBtn(c, f, m.ThemeDark(), "moon", false, p.act.ToggleTheme)
+	}
+	q := iconBtn(c, f, m.Quit(), "logout", true, func() { p.quit(s) })
+	q.MarginStart(8).Expanded(p.dlg == dlgQuitBusy || p.dlg == dlgQuitUpdating)
 }
 
 // engineSwitch is the engine's name and version as a button, like the model
@@ -301,7 +309,7 @@ func (p *Panel) updateNote(c *ui.Context, f *frame) {
 	ui.Column(c).Background(t.chip).Radius(8).Padding(8, 12).Gap(8).Children(func() {
 		txt(c, m.UpdNote(v.Engine, v.Latest), 11.5).LineHeight(1.4).TextColor(t.soft)
 		ui.Row(c).Gap(10).Children(func() {
-			btn(c).Height(22).Radius(6).Border(1, t.border).Background(t.btn).TextColor(t.text).PaddingX(10).
+			btn(c).Height(22).Radius(11).Border(1, t.border).Background(t.btn).TextColor(t.text).PaddingX(10).
 				OnClick(p.doUpdate).Children(func() { txt(c, m.UpdBtn(), 12).FontWeight(500).NoWrap() })
 			btn(c).Height(22).Gap(4).TextColor(t.soft).OnClick(func() {
 				if v.NotesURL != "" {
@@ -332,7 +340,7 @@ func (p *Panel) errorBlock(c *ui.Context, f *frame, title, line, note string, bu
 		}
 		ui.Row(c).Gap(6).Padding(2, 0, 0, 0).Children(func() {
 			for _, b := range buttons {
-				e := btn(c).Height(22).Radius(6).Gap(5).TextColor(t.err).OnClick(b.fn)
+				e := btn(c).Height(22).Radius(11).Gap(5).TextColor(t.err).OnClick(b.fn)
 				if b.icon != "" {
 					e.PaddingStart(6).PaddingEnd(8)
 				} else {

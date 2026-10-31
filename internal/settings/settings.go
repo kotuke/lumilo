@@ -40,6 +40,9 @@ type Settings struct {
 	Language     string        `json:"language"` // "" = as in the system
 	OpenAtLogin  bool          `json:"open_at_login"`
 	AnimateIcon  bool          `json:"animate_icon"`
+	// IconOnly hides the speed and memory beside the menu-bar icon;
+	// absent, they show.
+	IconOnly bool `json:"icon_only,omitempty"`
 	// ManualUpdates turns the automatic download of new Lumilo versions
 	// off; absent, they download by themselves.
 	ManualUpdates bool     `json:"manual_updates,omitempty"`

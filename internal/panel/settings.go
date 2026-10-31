@@ -26,6 +26,8 @@ type settingsState struct {
 	updates    bool
 	login      bool
 	blink      bool
+	trayValue  bool
+	hostsOpen  bool // the allowed host names show (hostsRow)
 	appAuto    bool
 	portText   string
 	portBad    bool // the text is not a port number
@@ -81,6 +83,7 @@ func (s *settingsState) sync(pr Prefs) {
 	s.lang = pr.Language
 	s.term = pr.Terminal
 	s.updates, s.login, s.blink, s.appAuto = pr.ModelUpdates, pr.OpenAtLogin, pr.AnimateIcon, pr.AppUpdates
+	s.trayValue = pr.TrayValue
 	if n, err := strconv.Atoi(strings.TrimSpace(s.portText)); err != nil || n != pr.Port {
 		if !s.portBad {
 			s.portText = strconv.Itoa(pr.Port)
@@ -92,6 +95,7 @@ func (s *settingsState) reset(pr Prefs) {
 	s.portBad, s.busy, s.free = false, 0, 0
 	s.portText = strconv.Itoa(pr.Port)
 	s.adding, s.hostText, s.hostBad, s.focusPort, s.portFocus = false, "", false, false, false
+	s.hostsOpen = false
 	s.flashCtx, s.revealCtx = time.Time{}, false
 	s.checkAsked, s.checkSeq = false, 0
 	s.ctxOther, s.ctxText, s.ctxBad, s.ctxModel = false, "", false, ""
@@ -209,60 +213,57 @@ func (p *Panel) settings(c *ui.Context, f *frame) {
 	p.body(c, screenSettings, func() { p.settingsBody(c, f) })
 }
 
-// settingsBody is the settings under their header: the cards.
+// settingsBody is the settings under their header: titled groups of rows,
+// as System Settings sets them. What runs comes first (the engine and its
+// model), then who reaches it (the server), then the menu bar, the app,
+// and the updates of all of them.
 func (p *Panel) settingsBody(c *ui.Context, f *frame) {
-	t, m := f.pal, f.m
+	t, m, v := f.pal, f.m, p.view
 	s := &p.set
 	p.restartBanner(c, f)
-	p.engineCard(c, f)
+	if len(v.Engines) > 0 {
+		section(c, f, m.Engine(), func() { p.engineCard(c, f) })
+	}
+	if md := v.Model; md.ID != "" && len(v.Models) > 0 && v.Phase != core.PhaseExternal {
+		section(c, f, m.Model()+" · "+md.Name, func() {
+			p.contextRow(c, f)
+			p.featureRows(c, f)
+			p.modelNeed(c, f)
+		})
+	}
 
-	// Access.
-	open := p.pref.Access != engine.AccessLocal
-	card(c, f, 10).Children(func() {
-		txt(c, m.Access(), 12.5).FontWeight(600)
+	// Server.
+	section(c, f, m.Access(), func() {
 		seg := ui.SegmentedBase(c.Key("access"), &s.access, 2)
-		seg.Track.Gap(2).Background(t.seg).Radius(8).Padding(2).Label(m.Access()).Children(func() {
+		seg.Track.Gap(2).Background(t.seg).Radius(15).Padding(2).Margin(8, 0, 6, 0).Label(m.Access()).Children(func() {
 			for i, name := range []string{m.ModesLocal(), m.ModesNetwork()} {
-				e := seg.Segment(i).Height(26).PaddingX(8).Radius(6).Justify(ui.Center).
+				e := seg.Segment(i).Height(26).PaddingX(8).Radius(13).Justify(ui.Center).
 					Cursor(ui.CursorPointer).Label(name)
 				growAuto(c, e, &p.segTxt[i], &p.segW[i], 8+8)
 				if i == s.access {
-					e.Background(t.segOn).TextColor(t.strong).Shadow(0, 0, 0, 1, t.segShadow)
+					e.Background(t.segOn).TextColor(t.strong).Shadow(0, 1, 2, 0, t.segShadow)
 				} else {
 					e.TextColor(t.muted)
 				}
-				e.Children(func() { txt(c, name, 12).FontWeight(500).NoWrap().Bind(&p.segTxt[i]) })
+				e.Children(func() { txt(c, name, 12.5).FontWeight(500).NoWrap().Bind(&p.segTxt[i]) })
 			}
 		})
 		addr := net.JoinHostPort(p.listenHost(), strconv.Itoa(p.pref.Port))
-		var hint, warn string
-		switch p.pref.Access {
-		case engine.AccessNetwork:
-			hint, warn = m.HintNetwork(addr), m.WarnNetwork()
-		default:
-			hint = m.HintLocal(addr)
+		open := p.pref.Access != engine.AccessLocal
+		if open {
+			note(c, f, m.HintNetwork(addr))
+			warnBox(c, f, m.WarnNetwork())
+		} else {
+			note(c, f, m.HintLocal(addr))
 		}
-		txt(c, hint, 11.5).TextColor(t.muted)
-		if warn != "" {
-			ui.Row(c).Gap(8).AlignItems(ui.Start).Background(t.warnBg).Radius(8).Padding(8, 10).Children(func() {
-				ico(c, "alert-triangle", 2, 15).TextColor(t.warn).Margin(1, 0, 0, 0).Shrink(0)
-				txt(c, warn, 11.5).TextColor(t.warnText).Grow(1).Shrink(1)
-			})
-		}
+		f.rows = 1
 		p.portRow(c, f)
 		if open {
 			p.keyRow(c, f)
-			if p.view.Caps.AllowedHosts {
+			if v.Caps.AllowedHosts {
 				p.hostsRow(c, f)
 			}
 		}
-	})
-
-	// Model.
-	card(c, f, 6).Children(func() {
-		txt(c, m.Model(), 12.5).FontWeight(600).Padding(0, 0, 2, 0)
-		p.contextRow(c, f)
-		p.featureRows(c, f)
 		opts := idleOptions
 		if !slices.Contains(opts, p.pref.IdleRelease) {
 			opts = append(slices.Clone(opts[:len(opts)-1]), p.pref.IdleRelease, 0)
@@ -274,59 +275,14 @@ func (p *Panel) settingsBody(c *ui.Context, f *frame) {
 			}
 			return m.SettingsIdleAfter(format.Duration(f.loc, d))
 		}, 200)
-		if p.view.Caps.ModelUpdates {
-			switchRow(c, f, "updates", m.CheckModelUpdates(), &s.updates)
-		}
-		p.modelNeed(c, f)
 	})
 
-	// App.
-	card(c, f, 6).Children(func() {
-		txt(c, m.App(), 12.5).FontWeight(600).Padding(0, 0, 2, 0)
-		p.appRows(c, f, s)
-		ui.Row(c).Gap(8).MinHeight(28).Children(func() {
-			txt(c, m.EngineVersion(p.view.Engine), 12.5).Grow(1).MinWidth(0)
-			if p.view.Version != "" {
-				txt(c, p.view.Version, 12.5).TextColor(t.muted).Direction(ui.LeftToRight).NoWrap()
-			}
-			checking := p.checking()
-			b := btn(c).Height(22).Radius(6).Background(t.chip).TextColor(t.text).PaddingX(8).Gap(5).
-				Label(m.CheckUpdates()).Description(m.EngineVersion(p.view.Engine)).Disabled(checking).OnClick(p.checkUpdate)
-			if checking {
-				b.TextColor(t.muted)
-			}
-			b.Children(func() {
-				if checking {
-					spinner(c, f, "loader-2", 2.4, 12, t.muted)
-				}
-				txt(c, m.CheckUpdates(), 12).NoWrap()
-			})
-		})
-		// The result of the check in place of the note, until the screen
-		// closes or another check starts.
-		note, tone := m.UpdatesNote(), t.muted
-		switch p.checkResult() {
-		case core.CheckUpToDate:
-			note, tone = m.CheckLatest(p.view.Version), t.okText
-		case core.CheckAvailable:
-			note, tone = m.CheckAvail(p.view.Latest), t.text
-		case core.CheckFailed:
-			note, tone = m.CheckFailed(), t.err
-		}
-		if p.checkResult() == core.CheckAvailable && p.view.Update == core.UpdateAvailable {
-			// The version found, and the update itself. While a request
-			// runs the main screen asks first, as its own Update does.
-			ui.Row(c).Gap(8).AlignItems(ui.Center).Padding(0, 0, 4, 0).Children(func() {
-				txt(c, note, 11.5).TextColor(tone).Grow(1).MinWidth(0).Role(ui.RoleStatus)
-				btn(c).Height(22).Radius(6).Background(t.fillBg).TextColor(t.fillText).PaddingX(10).Shrink(0).
-					OnClick(func() {
-						p.screen = screenMain
-						p.doUpdate()
-					}).Children(func() { txt(c, m.UpdBtn(), 12).FontWeight(600).NoWrap() })
-			})
-		} else {
-			txt(c, note, 11.5).TextColor(tone).Padding(0, 0, 4, 0).Role(ui.RoleStatus)
-		}
+	section(c, f, m.MenuBar(), func() {
+		switchRow(c, f, "tray-value", m.TrayValue(), &s.trayValue)
+		switchRow(c, f, "blink", m.Blink(), &s.blink)
+	})
+
+	section(c, f, m.General(), func() {
 		dropdown(c, f, [2]any{"lang", s.epoch}, m.Language(), &s.lang, languages, func(tag string) string {
 			if tag == "" {
 				return m.System()
@@ -335,7 +291,123 @@ func (p *Panel) settingsBody(c *ui.Context, f *frame) {
 		}, 220)
 		dropdown(c, f, [2]any{"term", s.epoch}, m.Terminal(), &s.term, p.terminalIDs(), p.terminalName, 220)
 		switchRow(c, f, "login", m.Login(), &s.login)
-		switchRow(c, f, "blink", m.Blink(), &s.blink)
+	})
+
+	section(c, f, m.UpdatesTitle(), func() {
+		p.appRows(c, f, s)
+		p.engineVersion(c, f)
+		if v.Caps.ModelUpdates {
+			switchRow(c, f, "updates", m.CheckModelUpdates(), &s.updates)
+		}
+	})
+}
+
+// section is a titled group of settings: the title above the card, small
+// and muted, as System Settings sets a group's, and the rows in the card,
+// a hairline between them (rowSep).
+func section(c *ui.Context, f *frame, title string, rows func()) {
+	ui.Column(c).Gap(6).Children(func() {
+		txt(c, title, 11.5).FontWeight(600).TextColor(f.pal.muted).PaddingX(12).SingleLine()
+		f.rows = 0
+		card(c, f, 0).Padding(2, 12).Children(rows)
+	})
+}
+
+// rowHeight is the height of a settings row.
+const rowHeight = 32
+
+// rowSep starts a row of the current section: a hairline after the rows
+// before it.
+func rowSep(c *ui.Context, f *frame) {
+	if f.rows > 0 {
+		ui.Box(c).Height(0.5).Background(f.pal.border).Shrink(0)
+	}
+	f.rows++
+}
+
+// note is the muted text under a row, which belongs to it: no hairline
+// before it, room after it.
+func note(c *ui.Context, f *frame, s string) ui.Element {
+	return txt(c, s, 11.5).FixedLineHeight(15).TextColor(f.pal.muted).Padding(0, 0, 8, 0)
+}
+
+// warnBox is a warning in a card: the sign in the warning colour, the text
+// in the text colour, on the warning's tint.
+func warnBox(c *ui.Context, f *frame, s string) {
+	t := f.pal
+	ui.Row(c).Gap(8).AlignItems(ui.Start).Background(t.warnBg).Radius(8).Padding(8, 10).Margin(0, 0, 8, 0).
+		Role(ui.RoleStatus).Children(func() {
+		ico(c, "alert-triangle", 2, 15).TextColor(t.warn).Margin(1, 0, 0, 0).Shrink(0)
+		txt(c, s, 11.5).FixedLineHeight(15).TextColor(t.text).Grow(1).Shrink(1)
+	})
+}
+
+// pillBtn is a small capsule button of a settings row, as macOS 26 draws
+// them: "Check for updates", "Use 8001".
+func pillBtn(c *ui.Context, f *frame) ui.Element {
+	t := f.pal
+	return btn(c).Height(24).Radius(12).Background(t.chip).TextColor(t.text).PaddingX(10).Gap(5).Shrink(0)
+}
+
+// engineVersion is the engine's row of the Updates card: its name, its
+// version or the check's result under it, and the check or the update.
+func (p *Panel) engineVersion(c *ui.Context, f *frame) {
+	t, m, v := f.pal, f.m, p.view
+	sub, tone := v.Version, t.muted
+	// The result of the check in place of the version, until the screen
+	// closes or another check starts.
+	switch p.checkResult() {
+	case core.CheckUpToDate:
+		sub = m.CheckLatest(v.Version)
+	case core.CheckAvailable:
+		sub, tone = m.CheckAvail(v.Latest), t.text
+	case core.CheckFailed:
+		sub, tone = m.CheckFailed(), t.err
+	}
+	updateRow(c, f, v.Engine, sub, tone, func() {
+		if p.checkResult() == core.CheckAvailable && v.Update == core.UpdateAvailable {
+			// While a request runs the main screen asks first, as its own
+			// Update does.
+			fillBtn(c, f, "engine-update", m.UpdBtn(), func() {
+				p.screen = screenMain
+				p.doUpdate()
+			})
+			return
+		}
+		checkBtn(c, f, "engine-check", m.EngineVersion(v.Engine), p.checking(), p.checkUpdate)
+	})
+}
+
+// updateRow is a row of the Updates card, as Software Update sets one:
+// the name, under it the version or what the update is doing in tone, and
+// the action at the end.
+func updateRow(c *ui.Context, f *frame, name, sub string, tone ui.Color, action func()) {
+	rowSep(c, f)
+	ui.Row(c).Gap(8).MinHeight(44).Padding(6, 0).Children(func() {
+		ui.Column(c).Grow(1).MinWidth(0).Gap(1).Children(func() {
+			txt(c, name, 12.5)
+			if sub != "" {
+				txt(c, sub, 11).TextColor(tone).Role(ui.RoleStatus)
+			}
+		})
+		action()
+	})
+}
+
+// checkBtn is the capsule that checks for updates: "Check", with a loader
+// while the check runs.
+func checkBtn(c *ui.Context, f *frame, key, desc string, checking bool, fn func()) {
+	t, m := f.pal, f.m
+	b := pillBtn(c, f).Key(key).Label(m.CheckUpdates()).Description(desc).Tooltip(m.CheckUpdates()).
+		Disabled(checking).OnClick(fn)
+	if checking {
+		b.TextColor(t.muted)
+	}
+	b.Children(func() {
+		if checking {
+			spinner(c, f, "loader-2", 2.4, 12, t.muted)
+		}
+		txt(c, m.CheckShort(), 12.5).NoWrap()
 	})
 }
 
@@ -390,12 +462,12 @@ func (p *Panel) applyChoices() {
 	s, pr := &p.set, p.pref
 	if engine.Access(s.access) != pr.Access || s.idle != pr.IdleRelease || s.lang != pr.Language || s.term != pr.Terminal ||
 		s.updates != pr.ModelUpdates || s.login != pr.OpenAtLogin || s.blink != pr.AnimateIcon ||
-		s.appAuto != pr.AppUpdates {
+		s.appAuto != pr.AppUpdates || s.trayValue != pr.TrayValue {
 		p.commit(func(pr *Prefs) {
 			pr.Access = engine.Access(s.access)
 			pr.IdleRelease, pr.Language, pr.Terminal = s.idle, s.lang, s.term
 			pr.ModelUpdates, pr.OpenAtLogin, pr.AnimateIcon = s.updates, s.login, s.blink
-			pr.AppUpdates = s.appAuto
+			pr.AppUpdates, pr.TrayValue = s.appAuto, s.trayValue
 		})
 	}
 }
@@ -449,15 +521,22 @@ func (p *Panel) restartBanner(c *ui.Context, f *frame) {
 func (p *Panel) portRow(c *ui.Context, f *frame) {
 	t, m := f.pal, f.m
 	s := &p.set
-	ui.Column(c).Gap(6).Children(func() {
-		ui.Row(c).Gap(8).MinHeight(28).Children(func() {
+	rowSep(c, f)
+	ui.Column(c).Children(func() {
+		ui.Row(c).Gap(8).MinHeight(rowHeight).Children(func() {
 			txt(c, m.Port(), 12.5).Grow(1)
-			border := t.portBorder
-			if s.portBad || s.busy != 0 {
-				border = t.err
-			}
-			in := ui.TextInputBase(c.Key("port"), &s.portText).Width(72).Height(26).Radius(8).Border(1, border).
+			in := ui.TextInputBase(c.Key("port"), &s.portText).Width(72).Height(24).Radius(7).
 				Background(t.field).TextColor(t.text).FontSize(12.5).PaddingX(8).TextAlign(ui.End).Label(m.Port())
+			// A light frame at rest; the strong one while typing, red when
+			// the port cannot be used.
+			switch {
+			case s.portBad || s.busy != 0:
+				in.Border(1, t.err)
+			case in.Focused():
+				in.Border(1, t.portBorder)
+			default:
+				in.Border(1, t.popBorder)
+			}
 			if s.busy != 0 {
 				in.Error(m.PortBusy(s.busy, s.free))
 			}
@@ -480,16 +559,15 @@ func (p *Panel) portRow(c *ui.Context, f *frame) {
 			}
 		})
 		if s.busy != 0 {
-			ui.Row(c).Gap(8).Children(func() {
+			ui.Row(c).Gap(8).Padding(0, 0, 8, 0).Children(func() {
 				msg := m.PortBusy(s.busy, s.free)
-				txt(c, msg, 11.5).TextColor(t.err).Grow(1).Role(ui.RoleStatus)
+				note(c, f, msg).Padding(0).TextColor(t.err).Grow(1).Role(ui.RoleStatus)
 				if s.free != 0 {
 					free := s.free
-					btn(c).Height(22).Radius(6).Background(t.chip).TextColor(t.text).PaddingX(10).Shrink(0).
-						OnClick(func() {
-							s.portText, s.portBad, s.busy, s.free = strconv.Itoa(free), false, 0, 0
-							p.commit(func(pr *Prefs) { pr.Port = free })
-						}).Children(func() { txt(c, m.PortTake(free), 12).NoWrap() })
+					pillBtn(c, f).OnClick(func() {
+						s.portText, s.portBad, s.busy, s.free = strconv.Itoa(free), false, 0, 0
+						p.commit(func(pr *Prefs) { pr.Port = free })
+					}).Children(func() { txt(c, m.PortTake(free), 12.5).NoWrap() })
 				}
 			})
 		}
@@ -531,12 +609,13 @@ func maskKey(key string) string {
 
 func (p *Panel) keyRow(c *ui.Context, f *frame) {
 	t, m := f.pal, f.m
-	ui.Column(c).Gap(6).Children(func() {
-		ui.Row(c).Gap(6).MinHeight(28).Children(func() {
+	rowSep(c, f)
+	ui.Column(c).Children(func() {
+		ui.Row(c).Gap(6).MinHeight(rowHeight).Children(func() {
 			txt(c, m.ApiKey(), 12.5).Grow(1)
 			monoTxt(c, maskKey(p.pref.APIKey), 12).TextColor(t.soft).Direction(ui.LeftToRight).NoWrap()
 			small := func(label, name string, fn func()) {
-				btn(c).Size(26, 26).Radius(8).Background(t.chip).TextColor(t.soft).Label(label).Tooltip(label).
+				btn(c).Size(24, 24).Radius(12).Background(t.chip).TextColor(t.soft).Label(label).Tooltip(label).
 					OnClick(fn).Children(func() { ico(c, name, 2, 14) })
 			}
 			small(m.CopyKey(), "copy", func() { p.act.Copy(p.pref.APIKey) })
@@ -545,7 +624,7 @@ func (p *Panel) keyRow(c *ui.Context, f *frame) {
 				p.commit(func(pr *Prefs) { pr.APIKey = key })
 			})
 		})
-		txt(c, m.KeyNote(), 11.5).TextColor(t.muted)
+		note(c, f, m.KeyNote())
 	})
 }
 
@@ -563,11 +642,27 @@ func validHost(s string) bool {
 	return true
 }
 
+// hostsRow is the allowed host names, which only a tunnel or a forwarded
+// port needs: a row that opens them, closed until asked for.
 func (p *Panel) hostsRow(c *ui.Context, f *frame) {
 	t, m := f.pal, f.m
 	s := &p.set
-	ui.Column(c).Gap(6).Children(func() {
-		txt(c, m.Hosts(), 12.5)
+	rowSep(c, f)
+	open := s.hostsOpen
+	ui.ButtonBase(c).Key("tunnel").MinHeight(rowHeight).Gap(6).AlignItems(ui.Center).Cursor(ui.CursorPointer).
+		Label(m.Tunnel()).Expanded(open).OnClick(func() { s.hostsOpen = !s.hostsOpen }).Children(func() {
+		txt(c, m.Tunnel(), 12.5).Grow(1)
+		if open {
+			ico(c, "chevron-down", 2, 13).TextColor(t.muted)
+		} else {
+			mirror(ico(c, "chevron-right", 2, 13), f.rtl).TextColor(t.muted)
+		}
+	})
+	if !open {
+		return
+	}
+	ui.Column(c).Gap(6).Padding(0, 0, 8, 0).Children(func() {
+		txt(c, m.Hosts(), 11.5).TextColor(t.muted)
 		ui.Row(c).Wrap().Gap(6).Children(func() {
 			for _, h := range p.pref.AllowedHosts {
 				ui.Row(c).Key("host:" + h).Height(22).Radius(6).Background(t.chip).TextColor(t.text).
@@ -616,7 +711,7 @@ func (p *Panel) hostsRow(c *ui.Context, f *frame) {
 				})
 			}
 		})
-		txt(c, m.HostsNote(p.view.Engine), 11.5).TextColor(t.muted)
+		note(c, f, m.HostsNote(p.view.Engine)).Padding(0)
 	})
 }
 
@@ -626,14 +721,20 @@ func (p *Panel) hostsRow(c *ui.Context, f *frame) {
 // too long ends in an ellipsis.
 func dropdown[T comparable](c *ui.Context, f *frame, key any, label string, sel *T, opts []T, name func(T) string, width float32) {
 	t := f.pal
-	ui.Row(c).Gap(8).MinHeight(28).Children(func() {
+	rowSep(c, f)
+	ui.Row(c).Gap(8).MinHeight(rowHeight).Children(func() {
 		txt(c, label, 12.5).Grow(1)
 		d := ui.SelectBase(c.Key(key), sel)
-		d.Trigger.Height(26).Radius(8).Border(1, t.popBorder).Background(t.field).TextColor(t.text).
-			PaddingStart(10).PaddingEnd(6).Gap(6).Cursor(ui.CursorPointer).Label(label).Children(func() {
+		// As the pop-up buttons of System Settings: the value and a double
+		// chevron, a tint only under the pointer.
+		d.Trigger.Height(24).Radius(6).TextColor(t.text).Margin(0, -6, 0, 0).
+			PaddingStart(8).PaddingEnd(4).Gap(4).Cursor(ui.CursorPointer).Label(label).Children(func() {
 			txt(c, name(*sel), 12.5).NoWrap()
-			ico(c, "chevron-down", 2, 13).TextColor(t.muted)
+			ico(c, "selector", 2, 13).TextColor(t.muted)
 		})
+		if d.Trigger.Hovered() || d.Trigger.FocusVisible() {
+			d.Trigger.Background(t.rowHover)
+		}
 		d.Popup(func(pop ui.Element) {
 			pop.AttachTo(d.Trigger, ui.AnchorTopEnd, ui.AnchorBottomEnd).Margin(0, 0, 6, 0)
 			if f.rtl {
@@ -685,23 +786,35 @@ func tabular(s string) string {
 // cards' margins.
 const dropdownMax = Width - 2*16
 
-// switchRow is a settings row that toggles as a whole, with the mockup's
-// 32×20 switch at its end.
+// switchRow is a settings row that toggles as a whole, with a switch at
+// its end.
 func switchRow(c *ui.Context, f *frame, key, label string, on *bool) {
-	t := f.pal
-	row := ui.SwitchBase(c.Key(key), on).Gap(8).MinHeight(28).Cursor(ui.CursorPointer).Label(label).FocusRing(false)
+	rowSep(c, f)
+	row := ui.SwitchBase(c.Key(key), on).Gap(8).MinHeight(rowHeight).Cursor(ui.CursorPointer).Label(label).FocusRing(false)
 	ring := row.FocusVisible()
 	row.Children(func() {
 		txt(c, label, 12.5).Grow(1)
-		track := ui.Row(c).Size(32, 20).Radius(10).Padding(0, 1).Shrink(0)
-		if *on {
-			track.Background(t.trackOn).Border(1, ui.Transparent).Justify(ui.End)
-		} else {
-			track.Background(t.trackOff).Border(1, t.trackOffBorder).Justify(ui.Start)
-		}
-		if ring {
-			track.DrawOver(func(pt *ui.Painter, r ui.Rect) { pt.FocusRing(r, [4]float32{10, 10, 10, 10}) })
-		}
-		track.Children(func() { ui.Box(c).Size(16, 16).Radius(8).Background(t.knob) })
+		switchTrack(c, f, *on, false, ring)
+	})
+}
+
+// switchTrack is the 32×20 switch of a row, as System Settings draws it:
+// the accent when on, a faint track when off, a white knob with a shadow.
+func switchTrack(c *ui.Context, f *frame, on, disabled, ring bool) {
+	t := f.pal
+	track := ui.Row(c).Size(32, 20).Radius(10).Padding(0, 2).Shrink(0)
+	if on {
+		track.Background(t.trackOn).Justify(ui.End)
+	} else {
+		track.Background(t.trackOff).Justify(ui.Start)
+	}
+	if disabled {
+		track.Opacity(0.5)
+	}
+	if ring {
+		track.DrawOver(func(pt *ui.Painter, r ui.Rect) { pt.FocusRing(r, [4]float32{10, 10, 10, 10}) })
+	}
+	track.Children(func() {
+		ui.Box(c).Size(16, 16).Radius(8).Background(t.knob).Shadow(0, 1, 2, 0, ui.RGBA(0, 0, 0, 0.25))
 	})
 }

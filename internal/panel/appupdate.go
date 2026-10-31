@@ -99,12 +99,33 @@ func (p *Panel) appCheck() {
 func (p *Panel) appRows(c *ui.Context, f *frame, s *settingsState) {
 	t, m, a := f.pal, f.m, &p.app
 	st := a.st
-	ui.Row(c).Gap(8).MinHeight(28).Children(func() {
-		row := m.EngineVersion("Lumilo")
-		txt(c, row, 12.5).Grow(1).MinWidth(0)
-		if a.version != "" {
-			txt(c, a.version, 12.5).TextColor(t.muted).Direction(ui.LeftToRight).NoWrap()
+	// Under the name: the version, or what the update does now.
+	sub, tone := a.version, t.muted
+	switch {
+	case !st.Enabled && a.version != "":
+		sub = a.version + " · " + m.AppUpdOff()
+	case !st.Enabled:
+		sub = m.AppUpdOff()
+	case st.Phase == appupdate.PhaseReady:
+		sub, tone = m.AppUpdReady(st.Version), t.text
+	case st.Phase == appupdate.PhaseDownloading:
+		sub = m.AppUpdDownloading(st.Version)
+		if st.Total > 0 {
+			sub += " · " + m.UsedOf(format.Number(f.loc, float64(st.Done)/1e6, 0), format.MB(f.loc, st.Total))
 		}
+	case st.Phase == appupdate.PhaseFailed:
+		sub, tone = m.AppUpdFailed(st.Version), t.err
+	case st.Phase == appupdate.PhaseAvailable:
+		sub, tone = m.CheckAvail(st.Version), t.text
+	case a.asked && !p.appChecking():
+		switch st.Check {
+		case appupdate.CheckUpToDate:
+			sub = m.CheckLatest(a.version)
+		case appupdate.CheckFailed:
+			sub, tone = m.CheckFailed(), t.err
+		}
+	}
+	updateRow(c, f, "Lumilo", sub, tone, func() {
 		if !st.Enabled {
 			return
 		}
@@ -117,52 +138,17 @@ func (p *Panel) appRows(c *ui.Context, f *frame, s *settingsState) {
 			fillBtn(c, f, "app-retry", m.UpdBtn(), p.act.DownloadAppUpdate)
 		case appupdate.PhaseDownloading:
 		default:
-			checking := p.appChecking()
-			b := btn(c).Key("app-check").Height(22).Radius(6).Background(t.chip).TextColor(t.text).PaddingX(8).Gap(5).
-				Label(m.CheckUpdates()).Description(row).Disabled(checking).OnClick(p.appCheck)
-			if checking {
-				b.TextColor(t.muted)
-			}
-			b.Children(func() {
-				if checking {
-					spinner(c, f, "loader-2", 2.4, 12, t.muted)
-				}
-				txt(c, m.CheckUpdates(), 12).NoWrap()
-			})
+			checkBtn(c, f, "app-check", m.EngineVersion("Lumilo"), p.appChecking(), p.appCheck)
 		}
 	})
-	note, tone := m.AppUpdNote(), t.muted
-	switch {
-	case !st.Enabled:
-		note = m.AppUpdOff()
-	case st.Phase == appupdate.PhaseReady:
-		note, tone = m.AppUpdReady(st.Version), t.text
-	case st.Phase == appupdate.PhaseDownloading:
-		note = m.AppUpdDownloading(st.Version)
-		if st.Total > 0 {
-			note += " · " + m.UsedOf(format.Number(f.loc, float64(st.Done)/1e6, 0), format.MB(f.loc, st.Total))
-		}
-	case st.Phase == appupdate.PhaseFailed:
-		note, tone = m.AppUpdFailed(st.Version), t.err
-	case st.Phase == appupdate.PhaseAvailable:
-		note, tone = m.CheckAvail(st.Version), t.text
-	case a.asked && !p.appChecking():
-		switch st.Check {
-		case appupdate.CheckUpToDate:
-			note, tone = m.CheckLatest(a.version), t.okText
-		case appupdate.CheckFailed:
-			note, tone = m.CheckFailed(), t.err
-		}
-	}
-	txt(c, note, 11.5).TextColor(tone).Padding(0, 0, 4, 0).Role(ui.RoleStatus)
 	if st.Enabled && a.release {
 		switchRow(c, f, "app-auto", m.AppUpdAuto(), &s.appAuto)
 	}
 }
 
-// fillBtn is a small filled button of a settings row.
+// fillBtn is a small filled capsule button of a settings row.
 func fillBtn(c *ui.Context, f *frame, key, label string, fn func()) {
 	t := f.pal
-	btn(c).Key(key).Height(22).Radius(6).Background(t.fillBg).TextColor(t.fillText).PaddingX(10).Shrink(0).
-		Label(label).OnClick(fn).Children(func() { txt(c, label, 12).FontWeight(600).NoWrap() })
+	btn(c).Key(key).Height(24).Radius(12).Background(t.fillBg).TextColor(t.fillText).PaddingX(10).Shrink(0).
+		Label(label).OnClick(fn).Children(func() { txt(c, label, 12.5).FontWeight(600).NoWrap() })
 }

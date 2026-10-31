@@ -244,7 +244,7 @@ func (a *app) SetPrefs(p panel.Prefs) {
 	if login != old.OpenAtLogin {
 		go a.setLogin(login)
 	}
-	a.drawTray() // the animation setting
+	a.drawTray() // the animation and value settings
 	a.panel.SetPrefs(a.prefs())
 }
 
@@ -279,6 +279,7 @@ func (a *app) takePrefs(p panel.Prefs) (old settings.Settings, keyChanged bool) 
 	a.st.Terminal = p.Terminal
 	a.st.OpenAtLogin = p.OpenAtLogin
 	a.st.AnimateIcon = p.AnimateIcon
+	a.st.IconOnly = !p.TrayValue
 	a.st.ManualUpdates = !p.AppUpdates
 	eng := a.st.Engine
 	delete(a.st.Contexts, eng)

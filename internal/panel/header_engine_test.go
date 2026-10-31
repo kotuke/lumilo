@@ -306,7 +306,7 @@ func TestHeaderTensorFold(t *testing.T) {
 	v.Engines = append(engineList(), core.EngineInfo{ID: info.ID, Name: info.Name, Logo: info.Logo,
 		Installed: true, Version: "1.1.9", Install: e.Installer().Describe()})
 	b.show(v, time.Hour)
-	b.none(m.Chat(), m.NoUpdates(), m.UpdatesOn()) // no chat page; nothing to update on start
+	b.none(m.Chat()) // no chat page
 	b.want(m.Log(), m.Settings())
 	b.openEngines("TensorFold 1.1.9")
 	b.want("Splash", "llama.cpp", "TensorFold")

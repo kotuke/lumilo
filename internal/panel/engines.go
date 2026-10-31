@@ -21,9 +21,8 @@ func (p *Panel) engineCard(c *ui.Context, f *frame) {
 		return
 	}
 	busy := p.engineBusy()
-	card(c, f, 6).Children(func() {
-		txt(c, m.Engine(), 12.5).FontWeight(600).Padding(0, 0, 2, 0)
-		ui.Column(c).Gap(2).Role(ui.RoleRadioGroup).Label(m.Engine()).Children(func() {
+	ui.Column(c).Gap(6).Padding(6, 0, 0, 0).Children(func() {
+		ui.Column(c).Gap(2).Margin(0, -6).Role(ui.RoleRadioGroup).Label(m.Engine()).Children(func() {
 			for _, e := range v.Engines {
 				p.engineRow(c, f, e, false, busy)
 			}
@@ -33,24 +32,26 @@ func (p *Panel) engineCard(c *ui.Context, f *frame) {
 				note, act := p.switchTexts(f, p.switchTo)
 				txt(c, note, 11.5).LineHeight(1.4).TextColor(t.warnText)
 				ui.Row(c).Gap(6).Justify(ui.End).Children(func() {
-					btn(c).Height(24).Radius(6).Border(1, t.outline).TextColor(t.text).PaddingX(10).
+					btn(c).Height(24).Radius(12).Border(1, t.outline).TextColor(t.text).PaddingX(10).
 						OnClick(func() { p.switchTo = "" }).Children(func() { txt(c, m.CancelBtn(), 12).NoWrap() })
 					to := p.switchTo
-					btn(c).Height(24).Radius(6).Background(t.warnBtn).TextColor(t.warnText).PaddingX(10).
+					btn(c).Height(24).Radius(12).Background(t.warnBtn).TextColor(t.warnText).PaddingX(10).
 						OnClick(func() { p.switchEngine(to) }).Children(func() {
 						txt(c, act, 12).FontWeight(600).NoWrap()
 					})
 				})
 			})
 		} else {
-			txt(c, m.EngineNote(), 11.5).LineHeight(1.4).TextColor(t.muted)
+			note(c, f, m.EngineNote())
 		}
 	})
 }
 
 // engineRow is one engine of a list, in Settings and in the header's popup
 // (menu): its logo, name, version or "Not installed", and a check on the
-// running one. A busy list only shows.
+// running one: in the menu a check column, as macOS menus mark the chosen
+// item; in Settings a badge on the logo, as System Settings marks a chosen
+// picture. A busy list only shows.
 func (p *Panel) engineRow(c *ui.Context, f *frame, e core.EngineInfo, menu, busy bool) {
 	t, m := f.pal, f.m
 	on := e.ID == p.view.EngineID
@@ -70,12 +71,23 @@ func (p *Panel) engineRow(c *ui.Context, f *frame, e core.EngineInfo, menu, busy
 		id := e.ID
 		row.Cursor(ui.CursorPointer).OnClick(func() { p.chooseEngine(id) })
 	}
-	if on || p.switchTo == e.ID || (!busy && (row.Hovered() || row.FocusVisible())) {
+	// The check marks the running engine, as in a menu; the tint is for
+	// the pointer, the focus and an engine about to be switched to.
+	if p.switchTo == e.ID || (!busy && (row.Hovered() || row.FocusVisible())) {
 		row.Background(t.rowHover)
 	}
 	row.Children(func() {
-		choiceLead(c, f, on)
-		engineTile(c, f, e.Logo, 22, 0)
+		if menu {
+			choiceLead(c, f, on)
+			engineTile(c, f, e.Logo, 22, 0)
+		} else {
+			ui.Box(c).Size(26, 26).Shrink(0).Children(func() {
+				engineTile(c, f, e.Logo, 26, 0)
+				if on {
+					checkBadge(c, f)
+				}
+			})
+		}
 		ui.Column(c).Grow(1).MinWidth(0).Children(func() {
 			txt(c, e.Name, 12.5).FontWeight(600).SingleLine()
 			st := txt(c, status, 11).TextColor(t.muted).SingleLine()
@@ -83,6 +95,17 @@ func (p *Panel) engineRow(c *ui.Context, f *frame, e core.EngineInfo, menu, busy
 				st.Direction(ui.LeftToRight).AlignSelf(ui.Start)
 			}
 		})
+	})
+}
+
+// checkBadge is the mark of a chosen tile: a check in the accent's disc
+// over its bottom end corner, cut from the tile by a ring of the card's
+// colour.
+func checkBadge(c *ui.Context, f *frame) {
+	t := f.pal
+	ui.Box(c).Absolute().Bottom(-3).End(-3).Size(14, 14).Radius(7).Background(t.trackOn).
+		Border(1.5, t.card).Center().Children(func() {
+		ico(c, "check", 3.4, 9).TextColor(ui.Hex("#FFFFFF"))
 	})
 }
 
@@ -241,13 +264,14 @@ func (p *Panel) contextRow(c *ui.Context, f *frame) {
 	})
 
 	if s.ctxOther {
-		ui.Row(c).Gap(8).MinHeight(28).Children(func() {
+		rowSep(c, f)
+		ui.Row(c).Gap(8).MinHeight(rowHeight).Children(func() {
 			txt(c, m.CtxOtherLabel(), 12.5).Grow(1).MinWidth(0)
 			border := t.portBorder
 			if s.ctxBad {
 				border = t.err
 			}
-			in := ui.TextInputBase(c.Key("ctx-other"), &s.ctxText).Width(72).Height(26).Radius(8).Border(1, border).
+			in := ui.TextInputBase(c.Key("ctx-other"), &s.ctxText).Width(72).Height(24).Radius(7).Border(1, border).
 				Background(t.field).TextColor(t.text).FontSize(12.5).PaddingX(8).TextAlign(ui.End).
 				Label(m.CtxOtherLabel()).AutoFocus()
 			if s.ctxBad {
@@ -264,19 +288,15 @@ func (p *Panel) contextRow(c *ui.Context, f *frame) {
 			}
 		})
 		if s.ctxBad {
-			txt(c, m.CtxBad(), 11.5).TextColor(t.err).Role(ui.RoleStatus)
+			note(c, f, m.CtxBad()).TextColor(t.err).Role(ui.RoleStatus)
 		}
 	}
 
 	switch {
 	case native > 0 && cur > native:
-		ui.Row(c).Gap(8).AlignItems(ui.Start).Background(t.warnBg).Radius(8).Padding(8, 10).Role(ui.RoleStatus).
-			Children(func() {
-				ico(c, "alert-triangle", 2, 15).TextColor(t.warn).Margin(1, 0, 0, 0).Shrink(0)
-				txt(c, m.CtxWarn(ctxName(f.loc, native)), 11.5).TextColor(t.warnText).Grow(1).Shrink(1)
-			})
+		warnBox(c, f, m.CtxWarn(ctxName(f.loc, native)))
 	case native > 0:
-		txt(c, m.CtxNative(ctxName(f.loc, native)), 11.5).TextColor(t.muted)
+		note(c, f, m.CtxNative(ctxName(f.loc, native)))
 	}
 }
 

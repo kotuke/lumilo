@@ -166,7 +166,6 @@ func (a *app) ready() {
 		defer t.SetMenu(nil)
 		t.PopUpMenu()
 	})
-	t.OnAppearanceChange(a.drawTray)
 	mygo.App.OnLocaleChanged(func(string) { a.drawTray() })
 	mygo.Theme.OnUpdated(func() { a.drawTray() }) // Reduce Motion may have changed
 
@@ -391,6 +390,7 @@ func (a *app) prefs() panel.Prefs {
 		Terminal:     a.st.Terminal,
 		OpenAtLogin:  a.st.OpenAtLogin,
 		AnimateIcon:  a.st.AnimateIcon,
+		TrayValue:    !a.st.IconOnly,
 		AppUpdates:   !a.st.ManualUpdates,
 		Contexts:     maps.Clone(a.st.Contexts[a.st.Engine]),
 		Options:      maps.Clone(a.st.Options[a.st.Engine]),
@@ -599,15 +599,21 @@ func (a *app) refreshLAN() {
 	a.applyCore()
 }
 
-// drawTray sets the icon and tooltip for the current view, language and
-// menu-bar theme, and runs the breathing animation when it applies.
+// drawTray sets the icon and tooltip for the current view and language,
+// and runs the breathing animation when it applies.
 func (a *app) drawTray() {
 	if a.tray == nil {
 		return
 	}
 	loc := mygo.App.Locale()
 	a.tps.Target(a.view, time.Now())
-	ic := trayicon.For(a.view, loc, a.tray.Dark(), a.tps.Shown())
+	a.mu.Lock()
+	iconOnly := a.st.IconOnly
+	a.mu.Unlock()
+	ic := trayicon.For(a.view, loc, a.tps.Shown())
+	if iconOnly {
+		ic.Text = ""
+	}
 	tip := trayicon.ToolTip(a.view, loc)
 	if !a.haveShown || ic != a.shown {
 		a.setIcon(ic)
@@ -668,12 +674,12 @@ func (a *app) setIcon(ic trayicon.Icon) {
 	if a.stopBreath != nil {
 		ic = trayicon.Frame(ic, a.step)
 	}
-	if err := a.tray.SetIcon(trayicon.PNG(ic), false); err != nil {
+	if err := a.tray.SetIcon(trayicon.PNG(ic), true); err != nil {
 		log.Println("tray icon:", err)
 	}
 }
 
-// syncBreathing starts or stops the ticker that fades the bar while the
+// syncBreathing starts or stops the ticker that fades the spark while the
 // engine generates. It runs only when the user turned it on and the system
 // does not ask for less motion.
 func (a *app) syncBreathing() {
@@ -710,7 +716,7 @@ func (a *app) syncBreathing() {
 		}()
 	case !want && a.stopBreath != nil:
 		a.stopBreathing()
-		a.setIcon(a.shown) // back to the plain bar
+		a.setIcon(a.shown) // back to the plain spark
 	}
 }
 
