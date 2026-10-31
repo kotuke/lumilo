@@ -340,19 +340,10 @@ func (st *fakeStarter) count() int {
 	return len(st.procs)
 }
 
-// last is the last process started. The supervisor shows PhaseLoading
-// before it starts the process, so a test that saw that phase waits here.
 func (st *fakeStarter) last() *fakeProc {
-	deadline := time.Now().Add(3 * time.Second)
-	for {
-		st.mu.Lock()
-		if n := len(st.procs); n > 0 || time.Now().After(deadline) {
-			defer st.mu.Unlock()
-			return st.procs[n-1]
-		}
-		st.mu.Unlock()
-		time.Sleep(time.Millisecond)
-	}
+	st.mu.Lock()
+	defer st.mu.Unlock()
+	return st.procs[len(st.procs)-1]
 }
 
 type harness struct {
@@ -464,9 +455,21 @@ func (h *harness) wait(what string, ok func(View) bool) View {
 	}
 }
 
+// waitPhase waits for phase p. The supervisor shows PhaseLoading before it
+// starts the process, so for that phase it also waits for the process.
 func (h *harness) waitPhase(p Phase) View {
 	h.t.Helper()
-	return h.wait(fmt.Sprintf("phase %d", p), func(v View) bool { return v.Phase == p })
+	return h.wait(fmt.Sprintf("phase %d", p), func(v View) bool {
+		if v.Phase != p {
+			return false
+		}
+		if p != PhaseLoading {
+			return true
+		}
+		h.s.mu.Lock()
+		defer h.s.mu.Unlock()
+		return h.s.proc != nil
+	})
 }
 
 func (h *harness) snap(f func(s *engine.Snapshot)) {
