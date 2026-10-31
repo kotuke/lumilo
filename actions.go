@@ -278,7 +278,7 @@ func (a *app) takePrefs(p panel.Prefs) (old settings.Settings, keyChanged bool) 
 	a.st.Language = p.Language
 	a.st.Terminal = p.Terminal
 	a.st.OpenAtLogin = p.OpenAtLogin
-	a.st.AnimateIcon = p.AnimateIcon
+	a.st.StillIcon = !p.AnimateIcon
 	a.st.IconOnly = !p.TrayValue
 	a.st.ManualUpdates = !p.AppUpdates
 	eng := a.st.Engine

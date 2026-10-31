@@ -389,7 +389,7 @@ func (a *app) prefs() panel.Prefs {
 		Language:     a.st.Language,
 		Terminal:     a.st.Terminal,
 		OpenAtLogin:  a.st.OpenAtLogin,
-		AnimateIcon:  a.st.AnimateIcon,
+		AnimateIcon:  !a.st.StillIcon,
 		TrayValue:    !a.st.IconOnly,
 		AppUpdates:   !a.st.ManualUpdates,
 		Contexts:     maps.Clone(a.st.Contexts[a.st.Engine]),
@@ -633,7 +633,7 @@ func (a *app) drawTray() {
 // shows.
 func (a *app) syncSpeed() {
 	a.mu.Lock()
-	animate := a.st.AnimateIcon
+	animate := !a.st.StillIcon
 	a.mu.Unlock()
 	a.tps.Ease = animate && !mygo.Theme.Preferences().ReduceMotion
 	want := a.tps.Active()
@@ -684,7 +684,7 @@ func (a *app) setIcon(ic trayicon.Icon) {
 // does not ask for less motion.
 func (a *app) syncBreathing() {
 	a.mu.Lock()
-	on := a.st.AnimateIcon
+	on := !a.st.StillIcon
 	a.mu.Unlock()
 	want := on && trayicon.Breathing(a.view) && !mygo.Theme.Preferences().ReduceMotion
 	switch {
