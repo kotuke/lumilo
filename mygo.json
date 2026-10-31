@@ -1,7 +1,7 @@
 {
   "name": "Lumilo",
   "identifier": "ru.kotuke.lumilo",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "out": "build",
   "i18n": {
     "dir": "locales",

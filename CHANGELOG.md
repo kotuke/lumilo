@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.4.1
+
+The menu-bar icon holds still while a model loads, and the speed card
+keeps a request between two answers of an agent.
+
+### Fixed
+
+- At the end of each pulse while a model loaded, the engine's logo in
+  the menu bar grew a little and moved. It now keeps its size and place.
+- The live line of the speed card (the speed now, its change to the
+  average and the token count) no longer drops back to the average for a
+  moment between two requests: it keeps the request that ended for 15
+  seconds, as the menu-bar number does, or until the next one starts.
+
+### Updating
+
+Lumilo 0.2.0 and later download this version by themselves within a day
+and offer to restart; the Check button in Settings finds it at once.
+Version 0.1.0 cannot update itself: run
+`brew upgrade --cask --greedy kotuke/tap/lumilo`.
+
 ## 0.4.0
 
 A new look: the menu bar shows the engine you run, and Settings reads
