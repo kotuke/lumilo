@@ -523,6 +523,7 @@ func (a *app) resize(h int) {
 func (a *app) hide() {
 	a.win.Hide()
 	a.panel.Reset()
+	a.sup.Watch(false)
 }
 
 // menu is the right-click menu of the tray item.
@@ -554,6 +555,7 @@ func (a *app) open() {
 		a.area = mygo.Screen.DisplayNearestPoint(mygo.Point{X: anchor.X, Y: anchor.Y}).WorkArea
 	}
 	go a.refreshLAN() // the computer may have joined another network
+	a.sup.Watch(true) // models and engines may have changed outside Lumilo
 	a.panel.SetView(a.sup.View())
 	a.panel.SetTerminals(installedTerminals()) // one may have been installed since
 	a.panel.SetPrefs(a.prefs())

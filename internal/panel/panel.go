@@ -99,7 +99,7 @@ type Actions interface {
 	Update()
 	CheckUpdate()
 	RunAgent(id string)
-	Recheck() // detect the engine and Homebrew again
+	Recheck() // detect the engines, the models and Homebrew again
 
 	OpenChat()
 	OpenLog()

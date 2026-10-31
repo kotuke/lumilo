@@ -24,6 +24,7 @@ import (
 const (
 	probeInterval       = time.Second      // probe a served or loading server
 	externalScanEvery   = 2 * time.Second  // re-scan for a foreign server
+	modelScanEvery      = 3 * time.Second  // re-read the models while the panel is open
 	hangAfter           = 12 * time.Second // ready server silent this long = unresponsive
 	stoppingLongAfter   = 12 * time.Second // a stop this long sets StoppingLong
 	firstUpdateCheck    = 10 * time.Second // after the engine is first detected
@@ -199,6 +200,9 @@ type Supervisor struct {
 	inst      engine.Install
 	models    []engine.Model
 	adoptable []engine.Model // what the engine can install from files on disk
+	// modelsSeq counts writes of models: a look at the disk that began
+	// before one is stale (setModelsLocked).
+	modelsSeq int
 	latest    string
 	phase     Phase
 	update    UpdatePhase
@@ -220,6 +224,10 @@ type Supervisor struct {
 	check    CheckResult
 	checkSeq int
 	lastScan time.Time
+	// watching is set while the panel is open (Watch); the models are
+	// re-read every modelScanEvery then, lastModelScan the last time.
+	watching      bool
+	lastModelScan time.Time
 
 	// Our server.
 	gen          int // bumped on every start; stale callbacks compare it
@@ -406,7 +414,7 @@ func (s *Supervisor) swapEngine(next engine.Engine, model string) {
 	s.logPath = filepath.Join(s.opts.LogDir, next.Info().ID+".log")
 	s.agents = next.Info().Agents
 	s.inst = engine.Install{}
-	s.models, s.adoptable = nil, nil
+	s.setModelsLocked(nil, nil)
 	s.latest, s.update, s.updateErr, s.updateReason = "", UpdateNone, "", UpdateReasonNone
 	s.checking, s.check = false, CheckNone
 	s.nextCheck = time.Time{}
@@ -541,6 +549,25 @@ func (s *Supervisor) Settings() Settings {
 func (s *Supervisor) Install() { s.goBG(s.runInstall) }
 func (s *Supervisor) Update()  { s.goBG(s.runUpdate) }
 func (s *Supervisor) Recheck() { s.do(s.detect) }
+
+// Watch says whether the panel is open. Files change outside Lumilo (a
+// model pulled with the engine's own command, an engine removed with
+// brew): opening the panel detects the engines and models again, and while
+// it stays open the models are re-read every modelScanEvery. Neither runs
+// while an engine switch, install, update or model removal does.
+func (s *Supervisor) Watch(open bool) {
+	s.mu.Lock()
+	was := s.watching
+	s.watching = open
+	if open {
+		s.lastModelScan = s.d.clock.Now()
+	}
+	busy := s.busyLocked()
+	s.mu.Unlock()
+	if open && !was && !busy {
+		s.Recheck()
+	}
+}
 
 // CheckUpdate asks the release feed for the newest version now, for the
 // user: View.Checking is set at once, before it returns, and View.Check
@@ -699,6 +726,10 @@ func (s *Supervisor) tick() {
 	if scan {
 		s.lastScan = now
 	}
+	models := s.watching && s.inst.Installed && !s.busyLocked() && now.Sub(s.lastModelScan) >= modelScanEvery
+	if models {
+		s.lastModelScan = now
+	}
 	var meter func() int64
 	if s.downloadingLocked() {
 		meter = s.dlMeter
@@ -724,6 +755,9 @@ func (s *Supervisor) tick() {
 	}
 	if scan {
 		s.rescanExternal()
+	}
+	if models {
+		s.rescanModels()
 	}
 	s.probe()
 	s.notify()
@@ -768,7 +802,9 @@ func adoptable(ctx context.Context, eng engine.Engine) []engine.Model {
 func (s *Supervisor) detect() {
 	ctx, cancel := context.WithTimeout(s.ctx, detectTimeout)
 	defer cancel()
-	eng := s.engine()
+	s.mu.Lock()
+	eng, seq := s.eng, s.modelsSeq
+	s.mu.Unlock()
 	inst := eng.Installer().Detect(ctx)
 	var models, adopt []engine.Model
 	var running []engine.Running
@@ -793,7 +829,10 @@ func (s *Supervisor) detect() {
 	s.mu.Lock()
 	s.engines = infos
 	s.inst = inst
-	s.models, s.adoptable = models, adopt
+	// A download or removal that finished meanwhile wrote a newer list.
+	if seq == s.modelsSeq {
+		s.setModelsLocked(models, adopt)
+	}
 	s.pickModelLocked()
 	// A failed update is stale once the installed version is the newest
 	// known (updated by hand, or by a later brew run).
@@ -825,6 +864,18 @@ func (s *Supervisor) detect() {
 	}
 	s.mu.Unlock()
 	s.notify()
+}
+
+// setModelsLocked puts in the engine's installed and adoptable models.
+func (s *Supervisor) setModelsLocked(models, adopt []engine.Model) {
+	s.models, s.adoptable = models, adopt
+	s.modelsSeq++
+}
+
+// busyLocked is a run that changes the engine or its models on disk:
+// a look at them meanwhile could see them half done.
+func (s *Supervisor) busyLocked() bool {
+	return s.switching || s.removal.Running || s.phase == PhaseInstalling || s.update == UpdateUpdating
 }
 
 // pickModelLocked keeps the selected model if it is installed, else picks
@@ -884,6 +935,30 @@ func (s *Supervisor) rescanExternal() {
 		}
 	}
 	s.setStoppedLocked()
+}
+
+// rescanModels reads the installed and adoptable models again, without
+// the installers' look at the engines that detect takes.
+func (s *Supervisor) rescanModels() {
+	s.mu.Lock()
+	eng, epoch, seq := s.eng, s.epoch, s.modelsSeq
+	s.mu.Unlock()
+	ctx, cancel := context.WithTimeout(s.ctx, detectTimeout)
+	models, err := eng.Models(ctx)
+	adopt := adoptable(ctx, eng)
+	cancel()
+	if err != nil {
+		return
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	// The engine changed, or a download, removal or detection wrote a
+	// newer list meanwhile.
+	if epoch != s.epoch || seq != s.modelsSeq || s.busyLocked() {
+		return
+	}
+	s.setModelsLocked(models, adopt)
+	s.pickModelLocked()
 }
 
 // Starting and stopping our server.
@@ -1294,7 +1369,7 @@ func (s *Supervisor) finishDownload() {
 		return
 	}
 	if err == nil {
-		s.models, s.adoptable = models, adopt
+		s.setModelsLocked(models, adopt)
 	}
 	chosen := id
 	if !slices.ContainsFunc(s.models, func(m engine.Model) bool { return m.ID == id }) && s.snap.Model != "" &&

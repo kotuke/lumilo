@@ -152,7 +152,10 @@ which prints `accepted` and `source=Notarized Developer ID`.
   unload automatically when idle. llama.cpp and TensorFold unload only when
   idle.
 - **Models.** Pick an installed model, or add one by its Hugging Face name
-  (`owner/repo:variant`). It downloads in the model list, apart from the
+  (`owner/repo:variant`). Changes made outside Lumilo show up on their own:
+  opening the panel looks for the engines and models again, and while it is
+  open the model list is re-read every 3 seconds; the refresh button beside
+  "Add model…" looks again at once. It downloads in the model list, apart from the
   server, which keeps serving its model: a progress bar with the speed and
   the time left, Pause and Cancel buttons, the reason and Retry or Remove
   when it fails. A paused download shows "Paused" with what it fetched,

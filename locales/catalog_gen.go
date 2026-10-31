@@ -3185,6 +3185,22 @@ func (msgs Messages) AddModel() string {
 	return Catalog.Format(msgs.locale, "addModel", nil)
 }
 
+// RefreshList says "Refresh list"
+// in the language the app shows.
+//
+// Model list: icon button that reads the installed models and engines from
+// disk again, after a change made outside the app.
+func RefreshList() string { return In(i18n.Locale()).RefreshList() }
+
+// RefreshList says "Refresh list"
+// in the language of msgs.
+//
+// Model list: icon button that reads the installed models and engines from
+// disk again, after a change made outside the app.
+func (msgs Messages) RefreshList() string {
+	return Catalog.Format(msgs.locale, "refreshList", nil)
+}
+
 // AddModelHint says "A model from Hugging Face. The server downloads it when it starts"
 // in the language the app shows.
 //

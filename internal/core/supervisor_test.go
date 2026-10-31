@@ -36,6 +36,8 @@ type fakeEngine struct {
 	maxInProbe  int           // most Probe calls that ran at once
 	restoreWait chan struct{} // Restore waits for it to close, when set
 	restores    int           // Restore calls
+	modelsWait  chan struct{} // Models waits for it to close, when set
+	inModels    chan struct{} // Models signals on it before waiting, when set
 
 	id        string // "" = "fake"
 	noRelease bool   // Caps.Release is false, as llama.cpp's
@@ -139,8 +141,15 @@ func (e *fakeEngine) LatestVersion(ctx context.Context) (string, error) {
 }
 func (e *fakeEngine) Models(context.Context) ([]engine.Model, error) {
 	e.mu.Lock()
-	defer e.mu.Unlock()
-	return slices.Clone(e.models), nil
+	wait, in, models := e.modelsWait, e.inModels, slices.Clone(e.models)
+	e.mu.Unlock()
+	if in != nil {
+		in <- struct{}{}
+	}
+	if wait != nil {
+		<-wait
+	}
+	return models, nil
 }
 func (e *fakeEngine) ServeCommand(c engine.Config) ([]string, []string) {
 	argv := []string{"/" + e.ID() + "/serve", "--model", c.Model, "--port", fmt.Sprint(c.Port)}
@@ -331,10 +340,19 @@ func (st *fakeStarter) count() int {
 	return len(st.procs)
 }
 
+// last is the last process started. The supervisor shows PhaseLoading
+// before it starts the process, so a test that saw that phase waits here.
 func (st *fakeStarter) last() *fakeProc {
-	st.mu.Lock()
-	defer st.mu.Unlock()
-	return st.procs[len(st.procs)-1]
+	deadline := time.Now().Add(3 * time.Second)
+	for {
+		st.mu.Lock()
+		if n := len(st.procs); n > 0 || time.Now().After(deadline) {
+			defer st.mu.Unlock()
+			return st.procs[n-1]
+		}
+		st.mu.Unlock()
+		time.Sleep(time.Millisecond)
+	}
 }
 
 type harness struct {

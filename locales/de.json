@@ -399,6 +399,7 @@
   "ctxWarn": "Über den nativen Kontext des Modells von {size} hinaus können Antworten bei jeder Länge schlechter werden",
   "ctxNative": "Nativer Kontext des Modells: {size}",
   "addModel": "Modell hinzufügen…",
+  "refreshList": "Liste aktualisieren",
   "addModelHint": "Ein Modell von Hugging Face. Der Server lädt es beim Start herunter",
   "addModelBad": "Geben Sie owner/repo oder owner/repo:variante ein",
   "addModelLoading": "Varianten werden gesucht …",

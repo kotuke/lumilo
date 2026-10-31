@@ -132,7 +132,7 @@ func (s *Supervisor) RemoveModel(id string) {
 		}
 		removed := merr == nil && !slices.ContainsFunc(models, func(m engine.Model) bool { return m.ID == id })
 		if merr == nil && s.eng == eng {
-			s.models, s.adoptable = models, adopt
+			s.setModelsLocked(models, adopt)
 			if removed && s.settings.Model == id {
 				s.settings.Model = ""
 				s.pickModelLocked()
