@@ -53,6 +53,21 @@ func (p *Panel) speedCard(c *ui.Context, f *frame, s *mainState) {
 		current -= len(series) - 20
 		series = series[len(series)-20:]
 	}
+	// Between two requests of an agent the server is ready for a moment:
+	// the live line keeps the request that just ended, its bar now the
+	// last of the history, until the next one starts or liveHold passes,
+	// as the menu-bar number does, instead of falling back to the average
+	// and coming back.
+	held := false
+	switch {
+	case generating:
+		p.liveUntil = f.now.Add(liveHold)
+	case v.Caps.LiveSpeed && v.Phase == core.PhaseReady && len(series) > 0 && f.now.Before(p.liveUntil):
+		held, current = true, len(series)-1
+		c.After(p.liveUntil.Sub(f.now))
+	case v.Phase != core.PhaseReady:
+		p.liveUntil = time.Time{} // stopped, unloaded: the next start shows no old request
+	}
 	dim := v.Phase == core.PhaseReleased || (v.Phase == core.PhaseExternal && v.Snapshot.Released)
 	n := len(series)
 	if p.barSel >= n {
@@ -75,7 +90,12 @@ func (p *Panel) speedCard(c *ui.Context, f *frame, s *mainState) {
 	if current >= 0 {
 		series[current] = float64(el.Spring("live", float32(series[current]), liveSpring))
 		live = series[current]
-		tokens = p.tokenCount(c, f, sp.Tokens, live)
+		if held {
+			tokens = p.liveTokens
+		} else {
+			tokens = p.tokenCount(c, f, sp.Tokens, live)
+			p.liveTokens = tokens
+		}
 	}
 	tpsLive := func(x float64) string { return m.SpeedTps(format.Number(f.loc, x, 0)) }
 	barText := func(i int) string {
@@ -149,6 +169,11 @@ func (p *Panel) speedCard(c *ui.Context, f *frame, s *mainState) {
 		}
 	})
 }
+
+// liveHold is how long the live line outlasts its request: as long as
+// the menu-bar number holds its speed (trayicon.SpeedHold), which covers
+// the tools an agent runs between two answers.
+const liveHold = 15 * time.Second
 
 // liveSpring is the spring of the live speed: about as slow as
 // the menu-bar number's easing (trayicon.speedEase), which covers most of

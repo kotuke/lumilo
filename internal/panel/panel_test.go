@@ -524,6 +524,26 @@ func boards() []board {
 			b.tt.Advance(5 * time.Second)
 			b.want("44 tok/s", "now", "↑ 10%", "Tokens: 1")
 		}},
+		// An agent between two answers: the server is ready for a moment.
+		// The live line keeps the request that ended until the next one
+		// starts, and gives way to the average once liveHold has passed.
+		{name: "speed-live-held", build: func(b *bench) {
+			v := withPhase(core.PhaseGenerating)
+			v.Speed = core.Speed{History: []float64{40}, Average: 40, Current: 44, Tokens: 312}
+			b.show(v, time.Minute)
+			b.tt.Advance(3 * time.Second)
+		}, check: func(b *bench) {
+			v := withPhase(core.PhaseReady)
+			v.Speed = core.Speed{History: []float64{40, 44}, Average: 42}
+			b.show(v, time.Second)
+			b.tt.Advance(3 * time.Second)
+			b.want("44 tok/s", "now", "↑ 5%", "Tokens: 312")
+			b.none("on average")
+			b.show(v, liveHold)
+			b.tt.Advance(time.Second)
+			b.want("42 tok/s", "on average")
+			b.none("now", "Tokens: 312")
+		}},
 		{name: "speed-empty-external", build: func(b *bench) {
 			v := withPhase(core.PhaseExternal)
 			v.External = &engine.Running{PID: 4242, Port: 8080, Model: sampleModel.ID}

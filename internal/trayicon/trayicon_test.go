@@ -15,6 +15,9 @@ import (
 
 	"github.com/kotuke/lumilo/internal/core"
 	"github.com/kotuke/lumilo/internal/engine"
+	"github.com/kotuke/lumilo/internal/engines/llamacpp"
+	"github.com/kotuke/lumilo/internal/engines/splash"
+	"github.com/kotuke/lumilo/internal/engines/tensorfold"
 )
 
 var phases = []core.Phase{
@@ -320,5 +323,43 @@ func TestLogoStates(t *testing.T) {
 	l.Engine = "Square"
 	if bytes.Equal(PNG(Frame(l, 0)), PNG(l)) {
 		t.Error("a pulsing logo must start from full")
+	}
+}
+
+// A pulsing logo keeps its place: every frame of the loading pulse and the
+// full logo of Ready cover the same pixels, so the icon does not jump when
+// the pulse comes back to full.
+func TestLogoPulseKeepsPlace(t *testing.T) {
+	for name, l := range map[string]engine.Logo{
+		"Splash": splash.New().Info().Logo, "llama.cpp": llamacpp.New().Info().Logo, "TensorFold": tensorfold.New().Info().Logo,
+	} {
+		key := "pulse-" + name
+		SetLogo(key, l)
+		ink := func(ic Icon) image.Rectangle {
+			img, err := png.Decode(bytes.NewReader(PNG(ic)))
+			if err != nil {
+				t.Fatal(err)
+			}
+			r := image.Rectangle{}
+			b := img.Bounds()
+			for y := b.Min.Y; y < b.Max.Y; y++ {
+				for x := b.Min.X; x < b.Max.X; x++ {
+					if _, _, _, a := img.At(x, y).RGBA(); a > 0x0800 {
+						r = r.Union(image.Rect(x, y, x+1, y+1))
+					}
+				}
+			}
+			return r
+		}
+		want := ink(Icon{Engine: key})
+		loading := Icon{Engine: key, Mark: MarkLoader, Faded: true}
+		if got := ink(loading); got != want {
+			t.Errorf("%s still loading: ink %v, ready %v", name, got, want)
+		}
+		for i := range BreathSteps {
+			if got := ink(Frame(loading, i)); got != want {
+				t.Errorf("%s pulse frame %d: ink %v, ready %v", name, i, got, want)
+			}
+		}
 	}
 }

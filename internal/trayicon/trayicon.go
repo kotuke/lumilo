@@ -185,8 +185,11 @@ func render(ic Icon, bg ui.Color) *image.RGBA {
 				if ic.Faded {
 					opacity = faded
 				}
-				bm, w, h := logo.image(ic.Mark, opacity)
-				ui.Image(c, bm).Size(w, h)
+				bm, w, h, fade := logo.image(ic.Mark, opacity)
+				img := ui.Image(c, bm).Size(w, h)
+				if fade < 1 {
+					img.Opacity(fade)
+				}
 			} else {
 				m := ui.Icon(c, mark).Size(markSize, markSize).TextColor(ink)
 				// The loader has faint parts of its own.
