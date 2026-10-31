@@ -138,7 +138,7 @@ func TestDemo(t *testing.T) {
 			save(t, b.tt, filepath.Join(dir, f.Panel))
 			tps.Target(v, b.clock)
 			tps.Step(b.clock)
-			if err := os.WriteFile(filepath.Join(dir, f.Tray), trayicon.PNG(trayicon.For(v, "en", dark, tps.Shown())), 0o644); err != nil {
+			if err := os.WriteFile(filepath.Join(dir, f.Tray), trayicon.Shot(trayicon.For(v, "en", tps.Shown()), dark), 0o644); err != nil {
 				t.Fatal(err)
 			}
 			frames = append(frames, f)

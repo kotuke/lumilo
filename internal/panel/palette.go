@@ -20,7 +20,7 @@ type palette struct {
 
 	// Settings only.
 	seg, segOn, segShadow, field, portBorder, dash ui.Color
-	trackOn, trackOff, trackOffBorder, knob        ui.Color
+	trackOn, trackOff, knob                        ui.Color
 
 	// Colours the mockup writes in its markup, not as tokens.
 	barHi, barLo ui.Color // bright and dim chart bars; barHi also fills memory and disk
@@ -44,10 +44,10 @@ func paletteFor(dark, settings bool) palette {
 			startText: ui.Hex("#0B1220"), startBg: ui.Hex("#6CBF84"), outline: ui.RGBA(255, 255, 255, 0.35),
 			fillBg: ui.Hex("#F3F4F6"), fillText: ui.Hex("#17191F"), brewTile: ui.Hex("#1D1D1F"), focus: ui.Hex("#0A84FF"),
 
-			seg: ui.Hex("#14161C"), segOn: ui.Hex("#2C2F3A"), segShadow: ui.RGBA(255, 255, 255, 0.12),
-			field: ui.Hex("#14161C"), portBorder: ui.RGBA(255, 255, 255, 0.35), dash: ui.RGBA(255, 255, 255, 0.35),
-			trackOn: ui.Hex("#4E9A66"), trackOff: ui.Hex("#5B6170"),
-			trackOffBorder: ui.RGBA(255, 255, 255, 0.35), knob: ui.Hex("#F3F4F6"),
+			// Controls are lighter than the card, as in dark macOS, not wells.
+			seg: ui.RGBA(255, 255, 255, 0.06), segOn: ui.RGBA(255, 255, 255, 0.16), segShadow: ui.RGBA(0, 0, 0, 0.25),
+			field: ui.RGBA(255, 255, 255, 0.07), portBorder: ui.RGBA(255, 255, 255, 0.35), dash: ui.RGBA(255, 255, 255, 0.35),
+			trackOn: ui.Hex("#0A84FF"), trackOff: ui.RGBA(255, 255, 255, 0.16), knob: ui.Hex("#F3F4F6"),
 
 			barHi: ui.RGBA(243, 244, 246, 0.6), barLo: ui.RGBA(255, 255, 255, 0.14),
 		}
@@ -71,8 +71,8 @@ func paletteFor(dark, settings bool) palette {
 
 		seg: ui.Hex("#E3E5EA"), segOn: ui.Hex("#FFFFFF"), segShadow: ui.RGBA(0, 0, 0, 0.12),
 		field: ui.Hex("#FFFFFF"), portBorder: ui.RGBA(0, 0, 0, 0.45), dash: ui.RGBA(0, 0, 0, 0.45),
-		trackOn: ui.Hex("#3F8A55"), trackOff: ui.Hex("#B8BCC6"),
-		trackOffBorder: ui.RGBA(0, 0, 0, 0.25), knob: ui.Hex("#FFFFFF"),
+		// The system accent, as the switches of System Settings.
+		trackOn: ui.Hex("#007AFF"), trackOff: ui.RGBA(0, 0, 0, 0.11), knob: ui.Hex("#FFFFFF"),
 
 		// The older bars keep 3:1 against the card (WCAG 1.4.11); the last
 		// ten stay darker.

@@ -34,6 +34,8 @@ type Prefs struct {
 	Terminal     string // bundle id of the terminal that runs agents
 	OpenAtLogin  bool
 	AnimateIcon  bool
+	// TrayValue shows the speed and memory beside the menu-bar icon.
+	TrayValue bool
 	// AppUpdates: new versions of Lumilo download by themselves and wait
 	// for a restart.
 	AppUpdates bool
@@ -182,9 +184,6 @@ type Panel struct {
 	// enginesOpen is the engine list under the header.
 	enginesOpen bool
 	dlg         dialog
-	// updToggled: the model-updates chip changed the setting, so the card
-	// says it applies on restart while the server runs with the old one.
-	updToggled bool
 
 	// The model name being typed to download ("Add model…"): adding is set
 	// while the field shows; addBad when the engine refused the name.
@@ -358,9 +357,6 @@ func (p *Panel) SetView(v core.View) {
 			p.modelsOpen = false // the list would cover it
 		}
 	}
-	if old.PendingRestart && !v.PendingRestart {
-		p.updToggled = false // restarted, from the card or Settings
-	}
 	p.viewAt = now
 	p.view = v
 	p.gen++
@@ -487,6 +483,8 @@ type frame struct {
 	now   time.Time
 	// brands are the panel's decoded logos.
 	brands *brands
+	// rows counts the rows of the settings section being built (rowSep).
+	rows int
 }
 
 // View builds the panel for one frame.

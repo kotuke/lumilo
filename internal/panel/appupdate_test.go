@@ -20,15 +20,16 @@ func appBench(t *testing.T, phase core.Phase, st appupdate.State, release bool) 
 
 func TestAppUpdateDisabled(t *testing.T) {
 	b := appBench(t, core.PhaseStopped, appupdate.State{}, true)
-	b.want("Lumilo version", "0.1.0", b.m.AppUpdOff())
+	b.want("Lumilo", "0.1.0", b.m.AppUpdOff())
 	b.none(b.m.AppUpdAuto())
 }
 
 func TestAppUpdateCheck(t *testing.T) {
 	b := appBench(t, core.PhaseStopped, appupdate.State{Enabled: true}, true)
-	b.want(b.m.AppUpdNote(), b.m.AppUpdAuto())
-	// Lumilo's row comes first: its button is the first "Check for updates".
-	b.click("Check for updates")
+	b.want("Lumilo", "0.1.0", b.m.AppUpdAuto())
+	// The engine's row comes first, in the engine card: Lumilo's button
+	// is at the end of its own row.
+	b.clickEnd("Lumilo")
 	b.called("CheckAppUpdate")
 	b.notCalled("CheckUpdate")
 	b.p.SetAppUpdate(appupdate.State{Enabled: true, Check: appupdate.CheckUpToDate, CheckSeq: 1})

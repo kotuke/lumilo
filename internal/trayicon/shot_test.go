@@ -42,7 +42,7 @@ func TestTrayShot(t *testing.T) {
 	}
 	for name, v := range views {
 		for theme, dark := range map[string]bool{"dark": true, "light": false} {
-			b := PNG(For(v, "en", dark, liveTPS(v)))
+			b := Shot(For(v, "en", liveTPS(v)), dark)
 			if err := os.WriteFile(filepath.Join(dir, name+"-"+theme+".png"), b, 0o644); err != nil {
 				t.Fatal(err)
 			}

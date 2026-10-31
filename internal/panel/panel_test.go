@@ -181,7 +181,7 @@ func llamaView() core.View {
 
 func defaultPrefs() Prefs {
 	return Prefs{Access: engine.AccessLocal, Port: 8000, IdleRelease: 10 * time.Minute,
-		AllowedHosts: []string{"computer.local"}, OpenAtLogin: true}
+		AllowedHosts: []string{"computer.local"}, OpenAtLogin: true, TrayValue: true}
 }
 
 // bench is one panel in a tester, with a clock of its own.
@@ -373,7 +373,7 @@ func boards() []board {
 		{name: "stopped", build: func(b *bench) { b.show(withPhase(core.PhaseStopped), 0) },
 			check: func(b *bench) {
 				b.want("Splash 1.4.0", "Server not running", "Stopped", "OrcaCyber-Nano-1.0", "orcarouter · Mix-15.7G",
-					"Model updates off", "127.0.0.1:8000", "Start", "Launch agent")
+					"127.0.0.1:8000", "Start", "Launch agent")
 				b.none("Memory", "Generation speed")
 				b.click("Start")
 				b.click("Claude")
@@ -619,7 +619,7 @@ func boards() []board {
 			b.show(v, 2*time.Hour+14*time.Minute)
 		}, check: func(b *bench) {
 			b.want("Running", "Another app · 2 h 14 min", en.ExtNote(), "127.0.0.1:8080", "End process")
-			b.none("Model updates off", "Unloads after 7 minutes idle")
+			b.none("Unloads after 7 minutes idle")
 			b.click("End process")
 			b.want(en.KillTitle("Splash"), en.KillNote())
 			b.clickNext("Cancel")
@@ -681,7 +681,7 @@ func boards() []board {
 			b.show(v, time.Minute)
 		}, check: func(b *bench) {
 			b.want("Updating", "Updating Splash to 1.4.1", en.UpdText(), "brew upgrade incoai/tap/splash")
-			b.none("Start", "Launch agent", "Model updates off")
+			b.none("Start", "Launch agent")
 			b.click("Quit")
 			b.want("Splash is still updating", "Quit when the update finishes?")
 			b.click("Quit after update")
@@ -766,17 +766,22 @@ func boards() []board {
 			b.show(withPhase(core.PhaseReady), time.Hour)
 			b.click("Settings")
 		}, check: func(b *bench) {
-			b.want("Server access", "This computer", "Network",
+			b.want(en.Access(), "This computer", "Network",
 				"The server listens on 127.0.0.1:8000. Only apps on this computer can reach it", "Port",
-				"Unload when idle", "After 10 minutes", "Check for model updates", "Splash version", "1.4.0",
-				"Check for updates", en.UpdatesNote(), "Language", "System default", "Launch at login",
-				"Animate the icon while responding")
+				en.IdleUnload(), "After 10 minutes", "Check for model updates", "1.4.0",
+				"Check for updates", "Language", "System default", "Launch at login",
+				en.MenuBar(), en.TrayValue(), en.Blink())
 			b.none("API key", "Allowed host names")
 			b.click("Check for updates")
 			b.called("CheckUpdate")
 			b.click("Check for model updates")
 			if n := len(b.rec.prefs); n == 0 || !b.rec.prefs[n-1].ModelUpdates {
 				b.t.Errorf("the switch stored %+v", b.rec.prefs)
+			}
+			// Off, the icon shows alone.
+			b.click(en.TrayValue())
+			if n := len(b.rec.prefs); n == 0 || b.rec.prefs[n-1].TrayValue {
+				b.t.Errorf("the value switch stored %+v", b.rec.prefs)
 			}
 			b.click("Back")
 			b.want("Generation speed")
@@ -795,7 +800,11 @@ func boards() []board {
 			b.click("Settings")
 		}, check: func(b *bench) {
 			b.want("This computer", "Network", en.HintNetwork("192.168.1.20:8000"), en.WarnNetwork(),
-				"API key", "sk-splash-••••3f9a", en.KeyNote(), "Allowed host names", "computer.local", "Add")
+				"API key", "sk-splash-••••3f9a", en.KeyNote(), en.Tunnel())
+			// The host names only a tunnel needs open on a click.
+			b.none("Allowed host names")
+			b.click(en.Tunnel())
+			b.want("Allowed host names", "computer.local", "Add")
 			b.none("Local network", "All addresses")
 			b.click("Copy key")
 			b.called("Copy sk-splash-0000000000003f9a")
@@ -826,6 +835,7 @@ func boards() []board {
 			b.show(v, time.Hour)
 			b.click("Settings")
 		}, check: func(b *bench) {
+			b.click(en.Tunnel())
 			b.want(en.HintNetwork("0.0.0.0:8000"), en.WarnNetwork(), "llm.example.com")
 			// Back to this computer only: no key row.
 			b.click("This computer")
@@ -890,7 +900,7 @@ func boards() []board {
 		{name: "slide-to-settings", build: func(b *bench) {
 			b.show(withPhase(core.PhaseReady), time.Hour)
 			b.slide("Settings", 90*time.Millisecond)
-		}, check: func(b *bench) { b.want("Generation speed", "Server access") }},
+		}, check: func(b *bench) { b.want("Generation speed", en.MenuBar()) }},
 		{name: "slide-to-settings-ar", lang: "ar", build: func(b *bench) {
 			b.show(withPhase(core.PhaseReady), time.Hour)
 			b.slide(b.m.Settings(), 90*time.Millisecond)
@@ -899,7 +909,7 @@ func boards() []board {
 			b.show(withPhase(core.PhaseReady), time.Hour)
 			b.click("Settings")
 			b.slide("Back", 90*time.Millisecond)
-		}, check: func(b *bench) { b.want("Generation speed", "Server access") }},
+		}, check: func(b *bench) { b.want("Generation speed", en.MenuBar()) }},
 		// The update check: running, and its three results.
 		{name: "settings-checking", build: func(b *bench) {
 			b.show(withPhase(core.PhaseReady), time.Hour)
@@ -907,14 +917,13 @@ func boards() []board {
 			b.click("Check for updates")
 		}, check: func(b *bench) {
 			b.called("CheckUpdate")
-			b.want(en.UpdatesNote())
 			b.click("Check for updates")
 			if n := strings.Count(strings.Join(b.rec.calls, "\n"), "CheckUpdate"); n != 1 {
 				b.t.Errorf("the disabled button checked %d times", n)
 			}
 		}},
 		{name: "settings-check-latest", build: func(b *bench) { b.checked(core.CheckUpToDate) },
-			check: func(b *bench) { b.want("You have the latest version, 1.4.0"); b.none(en.UpdatesNote()) }},
+			check: func(b *bench) { b.want("You have the latest version, 1.4.0") }},
 		{name: "settings-check-available", build: func(b *bench) { b.checked(core.CheckAvailable) },
 			check: func(b *bench) { b.want("Version 1.4.1 is available") }},
 		{name: "settings-check-failed", build: func(b *bench) { b.checked(core.CheckFailed) },
@@ -983,7 +992,7 @@ func allBoards() []board {
 	all := append(append(boards(), engineBoards()...), headerBoards()...)
 	all = append(append(all, idleBoards()...), featureBoards()...)
 	all = append(append(all, reviewBoards()...), jobBoards()...)
-	all = append(append(all, chipBoards()...), langBoards()...)
+	all = append(all, langBoards()...)
 	all = append(append(append(all, removeBoards()...), readmeBoards()...), adoptBoards()...)
 	return append(all, choiceBoards()...)
 }
@@ -1273,15 +1282,15 @@ func TestSlide(t *testing.T) {
 		speed, _ := b.tt.Find(m.SubStopped())
 		b.slide(m.Settings(), 40*time.Millisecond)
 		half, _ := b.tt.Find(m.SubStopped())
-		access, ok := b.tt.Find(m.Access())
+		access, ok := b.tt.Find(m.MenuBar())
 		if !ok || access.W == 0 || half.W == 0 || !b.tt.FramePending() {
 			t.Fatalf("%s: not both halfway: main %+v, settings %+v, pending %v", lang, half, access, b.tt.FramePending())
 		}
 		out := half.X < speed.X || half.W < speed.W && half.X == 1
-		in := access.X > 23
+		in := access.X > 11
 		if lang == "ar" {
 			out = half.X > speed.X
-			in = access.X+access.W < Width-23
+			in = access.X+access.W < Width-11
 		}
 		if !out || !in {
 			t.Errorf("%s: halfway the main screen is at %+v (was %+v), Settings at %+v", lang, half, speed, access)
@@ -1294,18 +1303,18 @@ func TestSlide(t *testing.T) {
 		if halfH <= mainH || halfH >= settingsH || settingsH <= mainH || b.tt.FramePending() {
 			t.Errorf("%s: heights: main %d, halfway %d, settings %d; pending %v", lang, mainH, halfH, settingsH, b.tt.FramePending())
 		}
-		if a, _ := b.tt.Find(m.Access()); a.X != 23 {
+		if a, _ := b.tt.Find(m.MenuBar()); a.X != 11 {
 			t.Errorf("%s: Settings ends at %+v", lang, a)
 		}
 		// And back: the window shrinks while the screens slide.
 		b.slide(m.Back(), 100*time.Millisecond)
-		b.want(m.SubStopped(), m.Access())
+		b.want(m.SubStopped(), m.MenuBar())
 		b.tt.Frame()
 		if b.p.height <= mainH || b.p.height >= settingsH {
 			t.Errorf("%s: sliding back: height %d, want between %d and %d", lang, b.p.height, mainH, settingsH)
 		}
 		b.settle()
-		b.none(m.Access())
+		b.none(m.MenuBar())
 		if b.p.height != mainH {
 			t.Errorf("%s: back on the main screen: height %d, want %d", lang, b.p.height, mainH)
 		}
@@ -1322,13 +1331,13 @@ func TestSlideReduceMotion(t *testing.T) {
 	}
 	b.tt.Frame()
 	b.none("Generation speed")
-	b.want("Server access")
+	b.want(b.m.MenuBar())
 	if b.tt.FramePending() {
 		t.Error("frames pending after the switch")
 	}
 	b.click("Check for updates")
 	b.click("Back")
-	b.none("Server access")
+	b.none(b.m.MenuBar())
 }
 
 // Reset, as the panel hides, shows the main screen at once.
@@ -1339,7 +1348,7 @@ func TestResetNoSlide(t *testing.T) {
 	b.p.Reset()
 	b.p.Measure(false) // as the app does before it shows the panel
 	b.tt.Frame()
-	b.none("Server access")
+	b.none(b.m.MenuBar())
 	b.want("Generation speed")
 	if b.tt.FramePending() {
 		t.Error("the screens slide after Reset")
@@ -1354,7 +1363,6 @@ func TestCheckLine(t *testing.T) {
 	b.want("Couldn’t check for updates")
 	b.click("Check for updates")
 	b.none("Couldn’t check for updates")
-	b.want("Updates are installed with Homebrew")
 	v := b.p.view
 	v.CheckSeq, v.Check = 2, core.CheckUpToDate
 	b.show(v, 0)
@@ -1362,7 +1370,6 @@ func TestCheckLine(t *testing.T) {
 	b.click("Back")
 	b.click("Settings")
 	b.none("You have the latest version, 1.4.0")
-	b.want("Updates are installed with Homebrew")
 
 	for _, reduce := range []bool{true, false} {
 		b := newBench(t, "en")

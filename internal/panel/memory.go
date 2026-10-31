@@ -89,7 +89,7 @@ func (p *Panel) memoryCard(c *ui.Context, f *frame, s *mainState) {
 				label = m.Load() // the weights are coming back: nothing to click
 			}
 			if label != "" {
-				b := btn(c).Height(22).Radius(6).Background(t.chip).TextColor(t.text).PaddingX(10).MarginStart(ui.Auto).
+				b := btn(c).Height(22).Radius(11).Background(t.chip).TextColor(t.text).PaddingX(10).MarginStart(ui.Auto).
 					AlignSelf(ui.Center).Shrink(0)
 				if s.restoring {
 					b.Disabled(true).Cursor(ui.CursorDefault)

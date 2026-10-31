@@ -2,7 +2,6 @@ package trayicon
 
 import (
 	"math"
-	"strings"
 	"time"
 
 	"github.com/kotuke/lumilo/internal/core"
@@ -14,85 +13,73 @@ import (
 const (
 	BreathSteps    = 8
 	BreathInterval = 250 * time.Millisecond
-	breathDepth    = 55 // the bar fades to 45 % opacity
+	breathDepth    = 55 // the mark fades to 45 % opacity
 )
 
 // For maps the supervisor's view to an icon. loc is the app locale
-// (mygo.App.Locale()); dark is Tray.Dark(); tps is the speed to show
-// (Speed.Shown), 0 for none.
+// (mygo.App.Locale()); tps is the speed to show (Speed.Shown), 0 for none.
 //
-//	state                          bar (bottom up)    value
-//	stopped, stopping              0 lit              power, muted
-//	loading, installing, updating, restoring  2 lit, warn  loader, warn
-//	ready, external                memory fraction    speed "41 T/S" while tps > 0 (held), else memory "17 GB"
-//	generating                     memory fraction    speed "41 T/S"; memory until a speed is known
-//	released                       0 lit              zzz, ink
-//	unresponsive                   2 lit, warn        alert, warn
-//	error, install failed          2 lit, err         alert, err
-//	not installed, no Homebrew     0 lit              download, muted
+// The mark is the engine's logo (SetLogo), Lumilo's spark in a ring when
+// the logo cannot be read; a state shows as its opacity and a badge:
+//
+//	state                                       logo                      Lumilo's mark       value
+//	stopped, stopping                           faded                     spark, faded        —
+//	loading, installing, updating, restoring    faded; pulses (Frame)     loader              —
+//	ready, external                             full                      spark               speed "41 T/S" while tps > 0 (held), else memory "17 GB"
+//	generating                                  full; breathes (Frame)    spark, breathing    speed "41 T/S"; memory until a speed is known
+//	released                                    faded, pause badge        hollow spark        —
+//	unresponsive, error, install failed         full, "!" badge           alert               —
+//	not installed, no Homebrew                  faded, download badge     download, faded     —
 //
 // An update that is running overrides the state: loading look, no text.
-func For(v core.View, loc string, dark bool, tps float64) Icon {
-	ic := Icon{Label: strings.ToUpper(v.Engine), Dark: dark}
-	busy := func() { ic.Glyph, ic.GlyphTone, ic.Lit, ic.BarTone = GlyphLoader, ToneWarn, 2, ToneWarn }
-	fail := func(g Glyph, t Tone) { ic.Glyph, ic.GlyphTone, ic.Lit, ic.BarTone = g, t, 2, t }
-	idle := func(g Glyph, t Tone) { ic.Glyph, ic.GlyphTone = g, t }
-	memory := func() {
-		ic.Text = format.TrayGB(loc, v.Snapshot.MemoryUsed)
-		ic.Lit = LitSegments(v.Snapshot.MemoryUsed, v.Snapshot.MemoryLimit)
-	}
-
+func For(v core.View, loc string, tps float64) (ic Icon) {
+	SetLogo(v.Engine, v.Logo)
+	ic.Engine = v.Engine
 	if v.Update == core.UpdateUpdating {
-		busy()
+		ic.Mark, ic.Faded = MarkLoader, true
 		return ic
 	}
 	switch v.Phase {
 	case core.PhaseStopped, core.PhaseStopping:
-		idle(GlyphPower, ToneMuted)
+		ic.Faded = true
 	case core.PhaseLoading, core.PhaseInstalling, core.PhaseRestoring:
-		busy()
+		ic.Mark, ic.Faded = MarkLoader, true
 	case core.PhaseReady, core.PhaseExternal, core.PhaseGenerating:
-		memory()
+		ic.Text = format.TrayGB(loc, v.Snapshot.MemoryUsed)
 		if tps > 0 {
 			ic.Text = format.TrayTPS(loc, tps)
 		}
 	case core.PhaseReleased:
-		idle(GlyphZzz, ToneInk)
-	case core.PhaseUnresponsive:
-		fail(GlyphAlert, ToneWarn)
-	case core.PhaseError, core.PhaseInstallFailed:
-		fail(GlyphAlert, ToneErr)
+		ic.Mark, ic.Faded = MarkHollow, true
+	case core.PhaseUnresponsive, core.PhaseError, core.PhaseInstallFailed:
+		ic.Mark = MarkAlert
 	case core.PhaseNotInstalled, core.PhaseNoInstaller:
-		idle(GlyphDownload, ToneMuted)
+		ic.Mark, ic.Faded = MarkDownload, true
 	}
 	return ic
 }
 
-// LitSegments is how many of the 8 segments a memory fraction lights:
-// segment i is lit when (i + 0.5) / 8 <= used / limit.
-func LitSegments(used, limit int64) int {
-	if limit <= 0 || used <= 0 {
-		return 0
-	}
-	f := float64(used) / float64(limit)
-	n := 0
-	for i := range segments {
-		if (float64(i)+0.5)/segments <= f {
-			n++
-		}
-	}
-	return n
-}
-
-// Breathing reports whether the bar should breathe in this view.
+// Breathing reports whether the mark should breathe in this view: while
+// the engine answers, and while it loads (the loading logo pulses).
 func Breathing(v core.View) bool {
-	return v.Phase == core.PhaseGenerating && v.Update != core.UpdateUpdating
+	if v.Update == core.UpdateUpdating {
+		return true
+	}
+	switch v.Phase {
+	case core.PhaseGenerating, core.PhaseLoading, core.PhaseInstalling, core.PhaseRestoring:
+		return true
+	}
+	return false
 }
 
-// Frame returns ic with the bar faded for breathing step i.
+// Frame returns ic faded for breathing step i. A loading logo, faded when
+// still, pulses from full instead.
 func Frame(ic Icon, i int) Icon {
 	phase := 2 * math.Pi * float64(((i%BreathSteps)+BreathSteps)%BreathSteps) / BreathSteps
 	ic.Dim = uint8(math.Round(breathDepth * (1 - math.Cos(phase)) / 2))
+	if ic.Mark == MarkLoader {
+		ic.Faded = false
+	}
 	return ic
 }
 

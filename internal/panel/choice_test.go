@@ -123,6 +123,43 @@ func (b *bench) wantRows(on string, off ...string) {
 	}
 }
 
+// wantBadge checks the logos of engine rows found by their button: the
+// one of on carries the check badge in the accent, those of off do not.
+func (b *bench) wantBadge(on string, off ...string) {
+	b.t.Helper()
+	accent := b.palette().trackOn
+	badge := func(s string) bool {
+		r, ok := b.tt.Find(s)
+		if !ok {
+			b.t.Fatalf("no row %q in %q", s, b.tt.Texts())
+		}
+		// The badge sits over the logo's bottom end corner: 8 + 26 from
+		// the row's start.
+		x := r.X + 8 + 26 - 11
+		if format.RTL(b.lang) {
+			x = r.X + r.W - 8 - 26 - 3
+		}
+		img := b.tt.Image()
+		n := 0
+		for y := int(r.Y + r.H/2); y < int(r.Y+r.H); y++ {
+			for xx := int(x); xx < int(x+14); xx++ {
+				if dist(pixel(img, xx, y), accent) < 40 {
+					n++
+				}
+			}
+		}
+		return n >= 12
+	}
+	if !badge(on) {
+		b.t.Errorf("%s: no check badge on the logo", on)
+	}
+	for _, s := range off {
+		if badge(s) {
+			b.t.Errorf("%s: a check badge on a row not chosen", s)
+		}
+	}
+}
+
 // secondModel is another model of the list, in the other row.
 var secondModel = engine.Model{ID: "mlx-community/Qwen3-4B-4bit", Name: "Qwen3-4B", Owner: "mlx-community",
 	Variant: "4bit", SizeBytes: 2_300_000_000}
@@ -253,7 +290,7 @@ func choiceBoards() []board {
 				b.show(withPhase(core.PhaseReady), time.Hour)
 				b.click(b.m.Settings())
 			},
-			check: func(b *bench) { b.wantRows("Splash", "llama.cpp") }})
+			check: func(b *bench) { b.wantBadge("Splash", "llama.cpp") }})
 		// Language: the first item, "System default", is chosen.
 		out = append(out, board{name: "select-language-checked-" + lang, lang: lang,
 			build: func(b *bench) {

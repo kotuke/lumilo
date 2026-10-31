@@ -96,10 +96,10 @@ func (p *Panel) dialogs(c *ui.Context, f *frame) {
 						}
 					})
 					ui.Row(c).Wrap().Justify(ui.End).Gap(6).Children(func() {
-						btn(c).Height(26).Radius(8).Border(1, t.outline).TextColor(t.text).PaddingX(12).AutoFocus().
+						btn(c).Height(26).Radius(13).Border(1, t.outline).TextColor(t.text).PaddingX(12).AutoFocus().
 							OnClick(cancel).Children(func() { txt(c, m.CancelBtn(), 12).NoWrap() })
 						for _, b := range buttons {
-							e := btn(c).Height(26).Radius(8).Background(b.bg).TextColor(b.fg).PaddingX(12)
+							e := btn(c).Height(26).Radius(13).Background(b.bg).TextColor(b.fg).PaddingX(12)
 							if b.off {
 								e.Disabled(true).Cursor(ui.CursorDefault).Opacity(0.6)
 							} else {

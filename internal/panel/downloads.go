@@ -216,7 +216,7 @@ func (p *Panel) jobActions(c *ui.Context, f *frame, j core.DownloadJob, id strin
 	}
 	blocked := p.downloadBlocked()
 	ui.Row(c).Gap(6).Children(func() {
-		b := btn(c).Key("job-retry-" + id).Height(22).Radius(6).PaddingX(8).Gap(5).Background(t.chip).TextColor(t.text)
+		b := btn(c).Key("job-retry-" + id).Height(22).Radius(11).PaddingX(8).Gap(5).Background(t.chip).TextColor(t.text)
 		if blocked {
 			b.Disabled(true).Cursor(ui.CursorDefault).Opacity(0.6)
 		} else {
@@ -226,7 +226,7 @@ func (p *Panel) jobActions(c *ui.Context, f *frame, j core.DownloadJob, id strin
 			ico(c, icon, 2, 12)
 			txt(c, retry, 12).FontWeight(500).NoWrap()
 		})
-		btn(c).Key("job-remove-"+id).Height(22).Radius(6).PaddingX(8).Border(1, t.border).TextColor(t.soft).
+		btn(c).Key("job-remove-"+id).Height(22).Radius(11).PaddingX(8).Border(1, t.border).TextColor(t.soft).
 			OnClick(func() { p.act.DismissDownload(id) }).Children(func() {
 			txt(c, m.DlRemove(), 12).FontWeight(500).NoWrap()
 		})
@@ -277,7 +277,7 @@ func (p *Panel) adoptList(c *ui.Context, f *frame, ms []engine.Model, inPopup bo
 				txt(c, strings.Join(sub, " · "), 11).TextColor(t.muted).SingleLine().Direction(ui.LeftToRight).AlignSelf(ui.Start)
 			})
 			id := md.ID
-			b := btn(c).Key("adopt-btn-" + id).Height(24).Radius(6).PaddingStart(7).PaddingEnd(9).Gap(4).Shrink(0).
+			b := btn(c).Key("adopt-btn-" + id).Height(24).Radius(12).PaddingStart(7).PaddingEnd(9).Gap(4).Shrink(0).
 				Background(t.chip).TextColor(t.text).Label(m.Adopt() + " " + modelName(md))
 			if reason := p.downloadBlock(&m); reason != "" {
 				b.Disabled(true).Cursor(ui.CursorDefault).Opacity(0.6).Tooltip(reason).Description(reason)

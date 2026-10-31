@@ -111,11 +111,14 @@ func btn(c *ui.Context) ui.Element {
 	return ui.ButtonBase(c).Justify(ui.Center).AlignItems(ui.Center).Cursor(ui.CursorPointer)
 }
 
-// iconBtn is a 26×26 header button with a 1 DIP border.
+// iconBtn is a round 28×28 header button, as the toolbar buttons of
+// macOS 26: no frame, a tint under the pointer.
 func iconBtn(c *ui.Context, f *frame, label, name string, flip bool, fn func()) ui.Element {
 	t := f.pal
-	b := btn(c).Size(26, 26).Radius(8).Border(1, t.border).Background(t.btn).TextColor(t.soft).
-		Label(label).Tooltip(label)
+	b := btn(c).Size(28, 28).Radius(14).TextColor(t.soft).Label(label).Tooltip(label)
+	if b.Hovered() || b.FocusVisible() {
+		b.Background(t.rowHover)
+	}
 	if fn != nil {
 		b.OnClick(fn)
 	}

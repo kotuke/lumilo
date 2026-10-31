@@ -69,9 +69,12 @@ brew install --cask kotuke/tap/lumilo
 
 ## In the menu bar
 
-The icon tells the state without opening the panel: the bar fills with the
-memory the model takes, and the value is the live speed while it generates,
-the memory while it waits, or a sign when it loads, sleeps, stops or fails.
+The icon tells the state without opening the panel. It is the engine's logo,
+drawn in one colour like the system's own icons: it breathes while the model
+answers, pulses while it loads and fades when it stops; a badge in its corner
+shows a pause when the model sleeps, "!" when it fails and an arrow when the
+engine is not installed. Beside it is the live speed while it generates or the
+memory while it waits.
 llama.cpp counts a request's tokens when it ends, so under llama.cpp the icon
 shows memory while it generates. TensorFold does too, but it reports the
 tokens in flight, so Lumilo times them itself and the speed shows live. The
@@ -195,9 +198,6 @@ which prints `accepted` and `source=Notarized Developer ID`.
   list). With no model
   yet, the panel suggests Qwen3.8-27B and Qwen3.6-35B-A3B, with their sizes
   and whether they fit in memory.
-- **Model updates** chip in the server card: a toggle for the setting of the
-  same name (off starts the server offline); while the server runs, the card
-  says the change applies on restart and offers Restart.
 - **Agents.** One click opens a terminal (Terminal, Ghostty or Rex; pick it in
   Settings) with Claude Code, Codex, OpenCode or Pi pointed at the local server.
   Splash launches them itself; for llama.cpp and TensorFold Lumilo passes the
@@ -220,11 +220,15 @@ which prints `accepted` and `source=Notarized Developer ID`.
   notarization ticket, and Lumilo offers its updates instead. A copy that
   cannot replace itself (in a folder you cannot write to, or opened from the
   disk image) says to update it with Homebrew.
-- **Settings.** Engine; access from this computer or from the network; port;
-  API key (kept in the macOS Keychain; the network access never starts without
-  one); allowed host names (Splash); context size, vision and draft per model
-  of each engine; idle unload; model updates; Lumilo's version and its
-  automatic updates; language; launch at login; icon animation.
+- **Settings,** in groups as in System Settings. Engine. The model: context
+  size, image input and draft, per model of each engine. Server: access from
+  this computer or from the network, port, idle unload, API key (kept in the
+  macOS Keychain; the network access never starts without one) and the
+  allowed host names a tunnel needs (Splash). Menu bar: the speed and memory
+  beside the icon, or the icon alone; its animation. General: language,
+  terminal for agents, launch at login. Updates: Lumilo and the engine, each
+  with its version and a check, automatic downloads, model updates (off
+  starts the server offline).
 - **Look.** Liquid Glass cards; light and dark themes follow the system until
   you pick one with the header button.
 - **Languages.** English, Arabic, Chinese (Simplified), French, German,
