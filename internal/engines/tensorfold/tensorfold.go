@@ -118,8 +118,15 @@ func (tf *TensorFold) Installer() engine.Installer { return tf.inst }
 // the whole tile, not on the panel's tile.
 var logo = func() engine.Logo {
 	png := enginekit.MustFile(logos, "logos/tensorfold.png")
-	return engine.Logo{Kind: engine.LogoPNG, Dark: png, Light: png, Bare: true}
+	return engine.Logo{Kind: engine.LogoPNG, Dark: png, Light: png, Bare: true, Cuts: logoCuts}
 }()
+
+// logoCuts are the two folds of the mesh, traced over tensorfold.png: the
+// ridge of the left wave and the arch where the right band crosses in
+// front.
+var logoCuts = []byte(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none" ` +
+	`stroke="#000" stroke-width="9" stroke-linecap="round">` +
+	`<path d="M70 56C82 72 90 100 96 138"/><path d="M122 142C130 120 155 108 200 152"/></svg>`)
 
 // caps:
 //   - no Chat: there is no chat page (ChatURL).

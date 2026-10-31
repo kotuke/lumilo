@@ -3,6 +3,8 @@ package trayicon
 import (
 	"bytes"
 	"fmt"
+	"image"
+	"image/color"
 	"image/png"
 	"math"
 	"os"
@@ -30,119 +32,93 @@ func view(p core.Phase) core.View {
 	}
 }
 
-func decode(t *testing.T, data []byte) (w, h int, cornerAlpha uint32) {
-	t.Helper()
-	img, err := png.Decode(bytes.NewReader(data))
-	if err != nil {
-		t.Fatal(err)
-	}
-	_, _, _, a := img.At(0, 0).RGBA()
-	return img.Bounds().Dx(), img.Bounds().Dy(), a
-}
-
-// Every state of every engine draws in both themes: right height, sane
-// width, transparent corner.
+// Every state of every engine draws: right height, sane width,
+// transparent corner, and only black ink, as a template image must.
 func TestEveryState(t *testing.T) {
 	dir := os.Getenv("LUMILO_ICON_DIR")
 	for _, name := range []string{"Splash", "llama.cpp"} {
 		for _, p := range phases {
-			for _, dark := range []bool{false, true} {
-				v := view(p)
-				v.Engine = name
-				ic := For(v, "en", dark, liveTPS(v))
-				data := PNG(ic)
-				w, h, a := decode(t, data)
-				if h != height*scale || w < 20 || w > maxWidth*scale {
-					t.Errorf("%s phase %d dark=%v: size %dx%d", name, p, dark, w, h)
-				}
-				if a != 0 {
-					t.Errorf("%s phase %d dark=%v: corner alpha %d", name, p, dark, a)
-				}
-				if dir != "" {
-					file := fmt.Sprintf("%s-%02d-%s.png", strings.ToLower(name), p, map[bool]string{false: "light", true: "dark"}[dark])
-					_ = os.WriteFile(filepath.Join(dir, file), data, 0o644)
-				}
+			v := view(p)
+			v.Engine = name
+			data := PNG(For(v, "en", liveTPS(v)))
+			img, err := png.Decode(bytes.NewReader(data))
+			if err != nil {
+				t.Fatal(err)
+			}
+			w, h := img.Bounds().Dx(), img.Bounds().Dy()
+			if h != height*scale || w < markSize*scale || w > maxWidth*scale {
+				t.Errorf("%s phase %d: size %dx%d", name, p, w, h)
+			}
+			if _, _, _, a := img.At(0, 0).RGBA(); a != 0 {
+				t.Errorf("%s phase %d: corner alpha %d", name, p, a)
+			}
+			if !blackOnly(img) {
+				t.Errorf("%s phase %d: not a template image", name, p)
+			}
+			if dir != "" {
+				file := fmt.Sprintf("%s-%02d.png", strings.ToLower(name), p)
+				_ = os.WriteFile(filepath.Join(dir, file), data, 0o644)
 			}
 		}
 	}
 }
 
+func blackOnly(img image.Image) bool {
+	b := img.Bounds()
+	for y := b.Min.Y; y < b.Max.Y; y++ {
+		for x := b.Min.X; x < b.Max.X; x++ {
+			if c := color.NRGBAModel.Convert(img.At(x, y)).(color.NRGBA); c.A > 0 && (c.R|c.G|c.B) != 0 {
+				return false
+			}
+		}
+	}
+	return true
+}
+
 func TestStates(t *testing.T) {
+	want := func(name string, got, want Icon) {
+		t.Helper()
+		if got != want {
+			t.Errorf("%s: %+v, want %+v", name, got, want)
+		}
+	}
 	v := view(core.PhaseReady)
-	if ic := For(v, "en", false, liveTPS(v)); ic.Text != "17 GB" || ic.Lit != 4 || ic.Label != "SPLASH" || ic.Glyph != GlyphNone {
-		t.Errorf("ready: %+v", ic)
-	}
-	if ic := For(view(core.PhaseExternal), "en", false, 0); ic.Text != "17 GB" || ic.Lit != 4 {
-		t.Errorf("external: %+v", ic)
-	}
+	want("ready", For(v, "en", liveTPS(v)), Icon{Mark: MarkSpark, Engine: "Splash", Text: "17 GB"})
+	want("external", For(view(core.PhaseExternal), "en", 0), Icon{Mark: MarkSpark, Engine: "Splash", Text: "17 GB"})
 	g := view(core.PhaseGenerating)
-	if ic := For(g, "en", false, liveTPS(g)); ic.Text != "41 T/S" || ic.Lit != 4 {
-		t.Errorf("generating: %+v", ic)
-	}
+	want("generating", For(g, "en", liveTPS(g)), Icon{Mark: MarkSpark, Engine: "Splash", Text: "41 T/S"})
 	g.Speed.Current = 0
-	if ic := For(g, "en", false, liveTPS(g)); ic.Text != "17 GB" {
-		t.Errorf("generating without speed: %+v", ic)
-	}
-	if ic := For(view(core.PhaseLoading), "en", false, 0); ic.Glyph != GlyphLoader || ic.Lit != 2 || ic.BarTone != ToneWarn {
-		t.Errorf("loading: %+v", ic)
-	}
-	if ic := For(view(core.PhaseError), "en", false, 0); ic.Glyph != GlyphAlert || ic.GlyphTone != ToneErr || ic.Lit != 2 {
-		t.Errorf("error: %+v", ic)
-	}
-	// Weights on their way back look like loading, not like ready or zzz.
-	if ic := For(view(core.PhaseRestoring), "en", false, 0); ic.Glyph != GlyphLoader || ic.Lit != 2 || ic.BarTone != ToneWarn || ic.Text != "" {
-		t.Errorf("restoring: %+v", ic)
-	}
+	want("generating without speed", For(g, "en", liveTPS(g)), Icon{Mark: MarkSpark, Engine: "Splash", Text: "17 GB"})
+	want("loading", For(view(core.PhaseLoading), "en", 0), Icon{Mark: MarkLoader, Faded: true, Engine: "Splash"})
+	want("error", For(view(core.PhaseError), "en", 0), Icon{Mark: MarkAlert, Engine: "Splash"})
+	want("unresponsive", For(view(core.PhaseUnresponsive), "en", 0), Icon{Mark: MarkAlert, Engine: "Splash"})
+	// Weights on their way back look like loading, not like ready or released.
+	want("restoring", For(view(core.PhaseRestoring), "en", 0), Icon{Mark: MarkLoader, Faded: true, Engine: "Splash"})
 	if got, want := ToolTip(view(core.PhaseRestoring), "en"), ToolTip(view(core.PhaseLoading), "en"); got != want {
 		t.Errorf("restoring tooltip %q, loading %q", got, want)
 	}
-	if ic := For(view(core.PhaseReleased), "en", false, 0); ic.Glyph != GlyphZzz || ic.Lit != 0 || ic.GlyphTone != ToneInk {
-		t.Errorf("released: %+v", ic)
-	}
-	if ic := For(view(core.PhaseStopped), "en", false, 0); ic.Glyph != GlyphPower || ic.Lit != 0 || ic.GlyphTone != ToneMuted {
-		t.Errorf("stopped: %+v", ic)
-	}
-	if ic := For(view(core.PhaseNoInstaller), "en", false, 0); ic.Glyph != GlyphDownload {
-		t.Errorf("no brew: %+v", ic)
-	}
+	want("released", For(view(core.PhaseReleased), "en", 0), Icon{Mark: MarkHollow, Faded: true, Engine: "Splash"})
+	want("stopped", For(view(core.PhaseStopped), "en", 0), Icon{Mark: MarkSpark, Engine: "Splash", Faded: true})
+	want("no brew", For(view(core.PhaseNoInstaller), "en", 0), Icon{Mark: MarkDownload, Faded: true, Engine: "Splash"})
 	// A running update overrides any state.
 	u := view(core.PhaseReady)
 	u.Update = core.UpdateUpdating
-	if ic := For(u, "en", true, liveTPS(u)); ic.Glyph != GlyphLoader || ic.Text != "" || ic.Lit != 2 || ic.BarTone != ToneWarn {
-		t.Errorf("updating: %+v", ic)
-	}
+	want("updating", For(u, "en", liveTPS(u)), Icon{Mark: MarkLoader, Faded: true, Engine: "Splash"})
 	// An available update changes nothing.
 	u.Update = core.UpdateAvailable
-	if ic := For(u, "en", true, liveTPS(u)); ic.Text != "17 GB" {
-		t.Errorf("update available: %+v", ic)
-	}
+	want("update available", For(u, "en", liveTPS(u)), Icon{Mark: MarkSpark, Engine: "Splash", Text: "17 GB"})
 }
 
 func TestLocaleUnits(t *testing.T) {
-	if ic := For(view(core.PhaseReady), "ru", false, 0); !strings.Contains(ic.Text, "ГБ") {
+	if ic := For(view(core.PhaseReady), "ru", 0); !strings.Contains(ic.Text, "ГБ") {
 		t.Errorf("ru: %q", ic.Text)
 	}
-	if ic := For(view(core.PhaseGenerating), "ru", false, liveTPS(view(core.PhaseGenerating))); !strings.Contains(ic.Text, "Т/С") {
+	if ic := For(view(core.PhaseGenerating), "ru", liveTPS(view(core.PhaseGenerating))); !strings.Contains(ic.Text, "Т/С") {
 		t.Errorf("ru: %q", ic.Text)
 	}
 	// Arabic keeps Latin digits and is not isolated: the icon reads left to right.
-	if ic := For(view(core.PhaseReady), "ar", false, 0); !strings.HasPrefix(ic.Text, "17") {
+	if ic := For(view(core.PhaseReady), "ar", 0); !strings.HasPrefix(ic.Text, "17") {
 		t.Errorf("ar: %q", ic.Text)
-	}
-}
-
-func TestLitSegments(t *testing.T) {
-	const limit = 38_000_000_000
-	for _, c := range []struct {
-		used int64
-		want int
-	}{{0, 0}, {1, 0}, {2_400_000_000, 1}, {17_200_000_000, 4}, {21_400_000_000, 5}, {38_000_000_000, 8}, {90_000_000_000, 8}} {
-		if got := LitSegments(c.used, limit); got != c.want {
-			t.Errorf("used %d: got %d, want %d", c.used, got, c.want)
-		}
-	}
-	if LitSegments(5, 0) != 0 {
-		t.Error("no limit must light nothing")
 	}
 }
 
@@ -168,20 +144,27 @@ func TestToolTip(t *testing.T) {
 	}
 }
 
-func TestCacheAndLight(t *testing.T) {
-	ic := For(view(core.PhaseReady), "en", false, 0)
+// Each state has its own look, and identical icons come from the cache.
+func TestCacheAndLooks(t *testing.T) {
+	ic := For(view(core.PhaseReady), "en", 0)
 	a, b := PNG(ic), PNG(ic)
 	if &a[0] != &b[0] {
 		t.Error("identical icons must come from the cache")
 	}
-	ic.Dark = true
-	if bytes.Equal(a, PNG(ic)) {
-		t.Error("themes must differ")
+	seen := map[string]Icon{}
+	for _, ic := range []Icon{{}, {Faded: true}, {Mark: MarkLoader}, {Mark: MarkHollow}, {Mark: MarkAlert}, {Mark: MarkDownload, Faded: true}} {
+		if prev, ok := seen[string(PNG(ic))]; ok {
+			t.Errorf("%+v looks like %+v", ic, prev)
+		}
+		seen[string(PNG(ic))] = ic
+	}
+	if bytes.Equal(Shot(ic, false), Shot(ic, true)) {
+		t.Error("shots must differ by theme")
 	}
 }
 
 func TestBreathing(t *testing.T) {
-	ic := For(view(core.PhaseGenerating), "en", true, liveTPS(view(core.PhaseGenerating)))
+	ic := For(view(core.PhaseGenerating), "en", liveTPS(view(core.PhaseGenerating)))
 	seen := map[uint8]bool{}
 	for i := range BreathSteps {
 		seen[Frame(ic, i).Dim] = true
@@ -193,54 +176,41 @@ func TestBreathing(t *testing.T) {
 		t.Error("cycle must wrap")
 	}
 	if bytes.Equal(PNG(Frame(ic, 0)), PNG(Frame(ic, BreathSteps/2))) {
-		t.Error("a dimmed bar must look different")
+		t.Error("a dimmed spark must look different")
 	}
-	if !Breathing(view(core.PhaseGenerating)) || Breathing(view(core.PhaseReady)) {
-		t.Error("Breathing must follow the generating phase")
+	if !Breathing(view(core.PhaseGenerating)) || !Breathing(view(core.PhaseLoading)) || Breathing(view(core.PhaseReady)) {
+		t.Error("Breathing must follow the generating and loading phases")
+	}
+	// A loading mark is faded when still and pulses from full.
+	if l := For(view(core.PhaseLoading), "en", 0); Frame(l, 0).Faded || Frame(l, 0).Dim != 0 {
+		t.Errorf("loading frame: %+v", Frame(l, 0))
 	}
 	if BreathSteps*BreathInterval != 2*time.Second {
 		t.Error("cycle must take 2 s")
 	}
 }
 
-// The label sits where Kvoto's labels do (same 7 pt bold label over a 10 pt
-// value in an 18 pt box, centred), so it has the same cap height and
-// baseline next to Kvoto's icon in the menu bar. At @2x the label's ink
-// starts in the top two pixel rows, the value's ink ends in the bottom two,
-// and the bar is centred (a third of the height clear above and below).
-func TestLabelPosition(t *testing.T) {
-	v := view(core.PhaseReady)
-	for _, name := range []string{"Splash", "llama.cpp"} {
-		v.Engine = name
-		img, err := png.Decode(bytes.NewReader(PNG(For(v, "en", false, liveTPS(v)))))
-		if err != nil {
-			t.Fatal(err)
-		}
-		inkRows := func(x0, x1 int, min uint32) (first, last int) {
-			first, last = -1, -1
-			for y := 0; y < img.Bounds().Dy(); y++ {
-				for x := x0; x < x1; x++ {
-					if _, _, _, a := img.At(x, y).RGBA(); a > min {
-						if first < 0 {
-							first = y
-						}
-						last = y
-						break
-					}
+// The mark is centred in the 18 pt height: 1 pt clear above and below.
+func TestMarkCentred(t *testing.T) {
+	img, err := png.Decode(bytes.NewReader(PNG(Icon{})))
+	if err != nil {
+		t.Fatal(err)
+	}
+	first, last := -1, -1
+	for y := 0; y < img.Bounds().Dy(); y++ {
+		for x := 0; x < img.Bounds().Dx(); x++ {
+			if _, _, _, a := img.At(x, y).RGBA(); a > 0x4000 {
+				if first < 0 {
+					first = y
 				}
+				last = y
+				break
 			}
-			return first, last
 		}
-		barEnd := 2*scale + 9 // padding 1 pt, bar 4.5 pt
-		bTop, bBot := inkRows(0, barEnd, 0)
-		tTop, tBot := inkRows(barEnd+6, img.Bounds().Dx(), 0x4000)
-		h := img.Bounds().Dy()
-		if tTop > 2 || tBot < h-3 {
-			t.Errorf("%s: text ink rows %d..%d of %d", name, tTop, tBot, h)
-		}
-		if bTop < 2 || bTop > 4 || h-1-bBot < 2 || h-1-bBot > 4 {
-			t.Errorf("%s: bar rows %d..%d of %d, want it centred", name, bTop, bBot, h)
-		}
+	}
+	h := img.Bounds().Dy()
+	if top, bottom := first, h-1-last; top < scale || bottom < scale || top-bottom > 1 || bottom-top > 1 {
+		t.Errorf("mark rows %d..%d of %d", first, last, h)
 	}
 }
 
@@ -286,7 +256,7 @@ func TestSpeedHoldAndEase(t *testing.T) {
 	if s.Shown() < 119 || !s.Active() {
 		t.Errorf("held: %v", s.Shown())
 	}
-	if ic := For(ready, "en", false, s.Shown()); ic.Text != "120 T/S" {
+	if ic := For(ready, "en", s.Shown()); ic.Text != "120 T/S" {
 		t.Errorf("held icon %q", ic.Text)
 	}
 	// The next request reads a long prompt: longer than the hold, with no
@@ -316,5 +286,39 @@ func TestSpeedHoldAndEase(t *testing.T) {
 	s.Target(gen, t0.Add(time.Second))
 	if s.Shown() != 90 {
 		t.Errorf("no easing: %v", s.Shown())
+	}
+}
+
+// With an engine's logo every state still has its own look, the badges
+// widen the icon, and the icon stays a template image.
+func TestLogoStates(t *testing.T) {
+	SetLogo("Square", engine.Logo{Kind: engine.LogoSVG,
+		Light: []byte(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="4"/></svg>`)})
+	seen := map[string]core.Phase{}
+	plain := 0
+	for _, p := range []core.Phase{core.PhaseReady, core.PhaseStopped, core.PhaseReleased, core.PhaseError, core.PhaseNotInstalled} {
+		ic := For(view(p), "en", 0)
+		ic.Engine, ic.Text = "Square", ""
+		img, err := png.Decode(bytes.NewReader(PNG(ic)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !blackOnly(img) {
+			t.Errorf("phase %d: not a template image", p)
+		}
+		if prev, ok := seen[string(PNG(ic))]; ok {
+			t.Errorf("phase %d looks like phase %d", p, prev)
+		}
+		seen[string(PNG(ic))] = p
+		if p == core.PhaseReady {
+			plain = img.Bounds().Dx()
+		} else if ic.Mark != MarkSpark && img.Bounds().Dx() <= plain {
+			t.Errorf("phase %d: a badge must widen the icon", p)
+		}
+	}
+	l := For(view(core.PhaseLoading), "en", 0)
+	l.Engine = "Square"
+	if bytes.Equal(PNG(Frame(l, 0)), PNG(l)) {
+		t.Error("a pulsing logo must start from full")
 	}
 }

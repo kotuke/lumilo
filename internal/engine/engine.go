@@ -326,6 +326,10 @@ type Logo struct {
 	// Bare: the image is a mark of an odd shape, drawn across the whole
 	// tile without the panel's tile under it.
 	Bare bool
+	// Cuts is an SVG over the image (the same view box) whose strokes are
+	// cut out of the logo's silhouette in the menu bar, where it is one
+	// colour: the folds of a shape that would read as a blob. Optional.
+	Cuts []byte
 }
 
 // Caps are what an engine supports of Lumilo's controls. The panel hides

@@ -1,6 +1,10 @@
-// Package trayicon draws Lumilo's menu-bar icon: a memory bar on the left
-// and, on the right, the engine name over a value (memory, speed) or a
-// state glyph.
+// Package trayicon draws Lumilo's menu-bar icon: the app's mark, a spark
+// in a ring, and the value next to it (memory, speed).
+//
+// The icon is a template image: black with alpha, so macOS tints it for
+// the menu bar's appearance, for a selected item and for Increase
+// Contrast, as it does its own icons. States change the mark's shape, not
+// its colour.
 //
 // The icon is drawn by the same package ui as the panel, without a window,
 // through ui.Tester. The Tester frame is opaque, so the icon is drawn on
@@ -13,6 +17,7 @@ import (
 	"image"
 	"image/color"
 	"image/png"
+	"strings"
 	"sync"
 
 	"github.com/egoist/mygo/ui"
@@ -22,102 +27,95 @@ import (
 const (
 	height   = 18
 	maxWidth = 80
-	segments = 8
+	markSize = 16
+	textSize = 13
+	faded    = 0.4 // the opacity of a faded mark
 )
 
 // scale is the render scale; the README images raise it.
 var scale = 2
 
-// Tone picks a colour from the palette of the menu-bar theme.
-type Tone uint8
+// Mark is the shape of the app's mark for a state.
+type Mark uint8
 
 const (
-	ToneInk   Tone = iota // text, active glyphs, filled segments
-	ToneMuted             // stopped, not installed
-	ToneWarn              // loading, unresponsive, installing, updating
-	ToneErr               // errors
-)
-
-// Glyph is the symbol that stands in for the value text.
-type Glyph uint8
-
-const (
-	GlyphNone Glyph = iota // the value text is shown
-	GlyphPower
-	GlyphLoader
-	GlyphZzz
-	GlyphAlert
-	GlyphDownload
+	MarkSpark    Mark = iota // a spark in a ring
+	MarkLoader               // a faint spark, an arc on the ring
+	MarkHollow               // the spark as an outline: weights released
+	MarkAlert                // "!" in the ring
+	MarkDownload             // an arrow in the ring
 )
 
 // Icon is everything the icon shows. It is comparable and used as the
-// cache key, so it holds no colours: they come from Dark and the tones.
+// cache key.
 type Icon struct {
-	Label string // engine name, upper case
-	Text  string // value text; used when Glyph is GlyphNone
-	Glyph Glyph
-	// GlyphTone colours the glyph. Text is always ToneInk.
-	GlyphTone Tone
-	// Lit is the number of lit segments from the bottom, 0 to 8.
-	Lit int
-	// BarTone colours the lit segments.
-	BarTone Tone
-	// Dim fades the bar by this many percent (0 to 100): the breathing frames.
+	Mark Mark
+	// Faded draws the mark at 40 %: nothing runs, or it loads.
+	Faded bool
+	// Engine names the engine whose logo (SetLogo) is the mark; empty, or
+	// a logo that cannot be read, draws Lumilo's spark in a ring.
+	Engine string
+	// Text is the value next to the mark; empty for none.
+	Text string
+	// Dim fades the mark (Lumilo's: its spark) by this many percent (0 to
+	// 100): the breathing frames.
 	Dim uint8
-	// Dark is true for a dark menu bar.
-	Dark bool
 }
 
-// palette holds the colours of one menu-bar theme (tray-spec section 2).
-type palette struct {
-	ink, label, empty, muted, warn, err ui.Color
-}
+// The mark on a 24 x 24 grid, after AppIcon.icon: the sphere is the ring
+// and the four-point spark keeps its curves and its size inside it. The
+// view box crops the grid to the ring, so the ring is as tall as the
+// system's own icons (about 15.5 pt of 16).
+const (
+	ring  = `<circle cx="12" cy="12" r="8.7" stroke-width="1.9"/>`
+	spark = "M12 5.3C12.49 10.17 13.83 11.51 18.7 12C13.83 12.49 12.49 13.83 12 18.7" +
+		"C11.51 13.83 10.17 12.49 5.3 12C10.17 11.51 11.51 10.17 12 5.3Z"
+	arc   = `<path d="M12 3.3a8.7 8.7 0 0 1 8.7 8.7" stroke-width="1.9" stroke-linecap="round"/>`
+	alert = `<path d="M12 7v6.5M12 16.6v.1" stroke-width="2.2" stroke-linecap="round"/>`
+	arrow = `<path d="M12 7.5v8M8.8 12.6l3.2 3.2l3.2-3.2" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>`
+)
 
-func paletteFor(dark bool) palette {
-	if dark {
-		return palette{
-			ink: ui.RGB(0xF3, 0xF4, 0xF6), label: ui.RGBA(255, 255, 255, 0.78),
-			empty: ui.RGBA(255, 255, 255, 0.22), muted: ui.RGB(0x9C, 0xA3, 0xAF),
-			warn: ui.RGB(0xE0, 0xB4, 0x50), err: ui.RGB(0xE0, 0x6C, 0x60),
-		}
+// markSVG is the SVG of the mark of ic, with fills and strokes in
+// currentColor.
+func markSVG(ic Icon) string {
+	sparkOpacity := 1 - float32(ic.Dim)/100
+	var b strings.Builder
+	switch ic.Mark {
+	case MarkSpark:
+		b.WriteString(ring)
+		fmt.Fprintf(&b, `<path d="%s" fill="currentColor" stroke="none" opacity="%.2f"/>`, spark, sparkOpacity)
+	case MarkLoader:
+		fmt.Fprintf(&b, `<g opacity="0.3">%s</g>%s`, ring, arc)
+		fmt.Fprintf(&b, `<path d="%s" fill="currentColor" stroke="none" opacity="%.2f"/>`, spark, faded)
+	case MarkHollow:
+		b.WriteString(ring)
+		fmt.Fprintf(&b, `<path d="%s" stroke-width="1.4" stroke-linejoin="round"/>`, spark)
+	case MarkAlert:
+		b.WriteString(ring + alert)
+	case MarkDownload:
+		b.WriteString(ring + arrow)
 	}
-	return palette{
-		ink: ui.RGB(0x1D, 0x1D, 0x1F), label: ui.RGBA(0, 0, 0, 0.62),
-		empty: ui.RGBA(0, 0, 0, 0.18), muted: ui.RGB(0x5F, 0x63, 0x6B),
-		warn: ui.RGB(0xA8, 0x68, 0x0F), err: ui.RGB(0xC0, 0x44, 0x3A),
-	}
+	return b.String()
 }
 
-func (p palette) tone(t Tone) ui.Color {
-	switch t {
-	case ToneMuted:
-		return p.muted
-	case ToneWarn:
-		return p.warn
-	case ToneErr:
-		return p.err
-	}
-	return p.ink
-}
+// marks keeps parsed marks by their SVG: a breathing cycle and the states
+// make a few dozen.
+var marks = struct {
+	sync.Mutex
+	m map[string]*ui.SVG
+}{m: map[string]*ui.SVG{}}
 
-// Tabler icons (outline), as in the approved mockup.
-var glyphPaths = map[Glyph]string{
-	GlyphPower:    "M7 6a7.75 7.75 0 1 0 10 0M12 4l0 8",
-	GlyphLoader:   "M12 3a9 9 0 1 0 9 9",
-	GlyphZzz:      "M4 12h6l-6 8h6M14 4h6l-6 8h6",
-	GlyphAlert:    "M12 9v4M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0zM12 16h.01",
-	GlyphDownload: "M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2M7 11l5 5l5 -5M12 4l0 12",
-}
-
-var glyphSVG = func() map[Glyph]*ui.SVG {
-	m := map[Glyph]*ui.SVG{}
-	for g, d := range glyphPaths {
-		m[g] = ui.MustParseSVG(fmt.Appendf(nil, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="1 1 22 22" `+
-			`fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" `+
-			`stroke-linejoin="round"><path d="%s"/></svg>`, d))
+func parseMark(body string) *ui.SVG {
+	marks.Lock()
+	defer marks.Unlock()
+	if svg, ok := marks.m[body]; ok {
+		return svg
 	}
-	return m
-}()
+	svg := ui.MustParseSVG(fmt.Appendf(nil, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="2.2 2.2 19.6 19.6" `+
+		`fill="none" stroke="currentColor">%s</svg>`, body))
+	marks.m[body] = svg
+	return svg
+}
 
 // cache keeps encoded icons by content, so the same state is drawn once.
 var cache = struct {
@@ -127,8 +125,8 @@ var cache = struct {
 
 const cacheMax = 256
 
-// PNG returns the icon as a PNG at @2x: 36 pixels tall, as wide as its
-// content. Identical icons are drawn once.
+// PNG returns the icon as a template PNG at @2x: black with alpha, 36
+// pixels tall, as wide as its content. Identical icons are drawn once.
 func PNG(ic Icon) []byte {
 	cache.Lock()
 	b, ok := cache.m[ic]
@@ -136,13 +134,7 @@ func PNG(ic Icon) []byte {
 	if ok {
 		return b
 	}
-	onBlack := render(ic, ui.RGB(0, 0, 0))
-	onWhite := render(ic, ui.RGB(255, 255, 255))
-	img := unmatte(onBlack, onWhite)
-	img = img.SubImage(image.Rect(0, 0, contentWidth(img), img.Bounds().Dy())).(*image.NRGBA)
-	var buf bytes.Buffer
-	_ = png.Encode(&buf, img)
-	b = buf.Bytes()
+	b = encode(draw(ic))
 
 	cache.Lock()
 	if len(cache.m) >= cacheMax {
@@ -153,35 +145,62 @@ func PNG(ic Icon) []byte {
 	return b
 }
 
+// Shot returns the icon as macOS shows the template in a light or a dark
+// menu bar: in the label colour, black or white at 85 %. For the README
+// and the demo, which have no menu bar to tint it.
+func Shot(ic Icon, dark bool) []byte {
+	img := draw(ic)
+	var v uint8
+	if dark {
+		v = 255
+	}
+	for i := 0; i < len(img.Pix); i += 4 {
+		img.Pix[i], img.Pix[i+1], img.Pix[i+2] = v, v, v
+		img.Pix[i+3] = uint8(int(img.Pix[i+3]) * 85 / 100)
+	}
+	return encode(img)
+}
+
+func draw(ic Icon) *image.NRGBA {
+	img := unmatte(render(ic, ui.RGB(0, 0, 0)), render(ic, ui.RGB(255, 255, 255)))
+	return img.SubImage(image.Rect(0, 0, contentWidth(img), img.Bounds().Dy())).(*image.NRGBA)
+}
+
+func encode(img *image.NRGBA) []byte {
+	var buf bytes.Buffer
+	_ = png.Encode(&buf, img)
+	return buf.Bytes()
+}
+
 func render(ic Icon, bg ui.Color) *image.RGBA {
-	p := paletteFor(ic.Dark)
-	lit := p.tone(ic.BarTone)
+	ink := ui.RGB(0, 0, 0)
+	mark := parseMark(markSVG(ic))
+	logo := logoFor(ic.Engine)
 	view := func(c *ui.Context) {
 		// The icon stays left to right in every language.
 		ui.Row(c).Direction(ui.LeftToRight).Fill().Background(bg).
-			AlignItems(ui.Center).Gap(3).PaddingX(1).Children(func() {
-			ui.Column(c).Reverse().Gap(0.5).Opacity(1 - float32(ic.Dim)/100).Children(func() {
-				for i := range segments {
-					fill := p.empty
-					if i < ic.Lit {
-						fill = lit
-					}
-					ui.Box(c).Size(4.5, 1.5).Radius(0.4).Background(fill)
+			AlignItems(ui.Center).Gap(4).PaddingX(1).Children(func() {
+			if logo != nil {
+				opacity := 1 - float32(ic.Dim)/100
+				if ic.Faded {
+					opacity = faded
 				}
-			})
-			// The same box as Kvoto's icon (label 7, gap 1, value 10 = 18 pt),
-			// so the label has the same size and baseline in the menu bar.
-			ui.Column(c).AlignItems(ui.Start).Gap(1).Children(func() {
-				ui.Text(c, ic.Label).FontSize(7).FontWeight(700).LetterSpacing(0.3).
-					TextColor(p.label).FixedLineHeight(7).NoWrap()
-				if svg := glyphSVG[ic.Glyph]; svg != nil {
-					// 9 pt glyph in the 10 pt value line, 0.25 pt above its bottom.
-					ui.Icon(c, svg).Size(9, 9).Margin(0.75, 0, 0.25, 0).TextColor(p.tone(ic.GlyphTone))
-					return
+				bm, w, h := logo.image(ic.Mark, opacity)
+				ui.Image(c, bm).Size(w, h)
+			} else {
+				m := ui.Icon(c, mark).Size(markSize, markSize).TextColor(ink)
+				// The loader has faint parts of its own.
+				if ic.Faded && ic.Mark != MarkLoader {
+					m.Opacity(faded)
 				}
-				ui.Text(c, ic.Text).FontSize(10).Bold().FontFeatures("tnum").
-					TextColor(p.ink).FixedLineHeight(10).NoWrap()
-			})
+			}
+			if ic.Text != "" {
+				// Regular and on the baseline of the menu-bar clock, 1 pt
+				// above the icon's centre; tabular figures keep the width
+				// while the speed eases.
+				ui.Text(c, ic.Text).FontSize(textSize).FontFeatures("tnum").
+					TextColor(ink).NoWrap().Margin(0, 0, 2, 0)
+			}
 		})
 	}
 	t := ui.NewTester(view, maxWidth, height)
