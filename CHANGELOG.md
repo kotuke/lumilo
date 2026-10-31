@@ -1,5 +1,44 @@
 # Changelog
 
+## 0.4.0
+
+A new look: the menu bar shows the engine you run, and Settings reads
+like System Settings.
+
+### New
+
+- **The engine's logo in the menu bar.** The icon is the running engine's
+  logo, in one colour like the system's own icons, so macOS tints it for
+  the menu bar, a selected item and Increase Contrast. It fades when the
+  server stops, pulses while the model loads and breathes while it
+  answers; a badge at its corner shows a pause when the model sleeps,
+  "!" when something fails and an arrow when the engine is not
+  installed. The speed or memory beside it is set like the menu-bar
+  clock.
+- **The icon alone.** Settings → Menu bar → Show speed and memory turns
+  the number beside the icon off.
+
+### Improved
+
+- **Settings in groups.** Engine, the model, Server, Menu bar, General
+  and Updates, each under its title, with rows of one height. Updates
+  gathers Lumilo, the engine and model updates; each row shows its
+  version, or what the check found, under the name. The chosen engine
+  has a check on its logo. The host names only a tunnel needs fold away
+  under "Tunnel or forwarded port", and the notes are shorter.
+- **macOS 26 controls.** Capsule buttons, segments and chips, pop-up
+  buttons without frames, round header buttons, switches in the system
+  accent; in the dark theme the controls are lighter than the cards.
+- The model-updates chip left the main screen: the switch is in
+  Settings → Updates.
+
+### Updating
+
+Lumilo 0.2.0 and later download this version by themselves within a day
+and offer to restart; the Check button in Settings finds it at once.
+Version 0.1.0 cannot update itself: run
+`brew upgrade --cask --greedy kotuke/tap/lumilo`.
+
 ## 0.3.3
 
 Models and engines changed outside Lumilo show up without a restart.
