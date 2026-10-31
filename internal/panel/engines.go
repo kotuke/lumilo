@@ -48,10 +48,9 @@ func (p *Panel) engineCard(c *ui.Context, f *frame) {
 }
 
 // engineRow is one engine of a list, in Settings and in the header's popup
-// (menu): its logo, name, version or "Not installed", and a check on the
-// running one: in the menu a check column, as macOS menus mark the chosen
-// item; in Settings a badge on the logo, as System Settings marks a chosen
-// picture. A busy list only shows.
+// (menu): its logo, name, version or "Not installed", and a check badge on
+// the running one's logo, as System Settings marks a chosen picture; the
+// same in both lists. A busy list only shows.
 func (p *Panel) engineRow(c *ui.Context, f *frame, e core.EngineInfo, menu, busy bool) {
 	t, m := f.pal, f.m
 	on := e.ID == p.view.EngineID
@@ -77,17 +76,16 @@ func (p *Panel) engineRow(c *ui.Context, f *frame, e core.EngineInfo, menu, busy
 		row.Background(t.rowHover)
 	}
 	row.Children(func() {
-		if menu {
-			choiceLead(c, f, on)
-			engineTile(c, f, e.Logo, 22, 0)
-		} else {
-			ui.Box(c).Size(26, 26).Shrink(0).Children(func() {
-				engineTile(c, f, e.Logo, 26, 0)
-				if on {
-					checkBadge(c, f)
+		ui.Box(c).Size(26, 26).Shrink(0).Children(func() {
+			engineTile(c, f, e.Logo, 26, 0)
+			if on {
+				ring := f.pal.card
+				if menu {
+					ring = f.pal.pop
 				}
-			})
-		}
+				checkBadge(c, f, ring)
+			}
+		})
 		ui.Column(c).Grow(1).MinWidth(0).Children(func() {
 			txt(c, e.Name, 12.5).FontWeight(600).SingleLine()
 			st := txt(c, status, 11).TextColor(t.muted).SingleLine()
@@ -99,12 +97,12 @@ func (p *Panel) engineRow(c *ui.Context, f *frame, e core.EngineInfo, menu, busy
 }
 
 // checkBadge is the mark of a chosen tile: a check in the accent's disc
-// over its bottom end corner, cut from the tile by a ring of the card's
-// colour.
-func checkBadge(c *ui.Context, f *frame) {
+// over its bottom end corner, cut from the tile by a ring of the colour
+// under it (the card's, or the popup's).
+func checkBadge(c *ui.Context, f *frame, ring ui.Color) {
 	t := f.pal
 	ui.Box(c).Absolute().Bottom(-3).End(-3).Size(14, 14).Radius(7).Background(t.trackOn).
-		Border(1.5, t.card).Center().Children(func() {
+		Border(1.5, ring).Center().Children(func() {
 		ico(c, "check", 3.4, 9).TextColor(ui.Hex("#FFFFFF"))
 	})
 }

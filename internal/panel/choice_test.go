@@ -284,7 +284,7 @@ func choiceBoards() []board {
 				b.show(withPhase(core.PhaseReady), time.Hour)
 				b.openEngines(headerTitle)
 			},
-			check: func(b *bench) { b.wantRows("Splash", "llama.cpp") }})
+			check: func(b *bench) { b.wantBadge("Splash", "llama.cpp") }})
 		out = append(out, board{name: "engines-settings-checked-" + lang, lang: lang,
 			build: func(b *bench) {
 				b.show(withPhase(core.PhaseReady), time.Hour)
