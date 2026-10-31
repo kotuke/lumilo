@@ -39,7 +39,10 @@ type Settings struct {
 	ModelUpdates bool          `json:"model_updates"`
 	Language     string        `json:"language"` // "" = as in the system
 	OpenAtLogin  bool          `json:"open_at_login"`
-	AnimateIcon  bool          `json:"animate_icon"`
+	// StillIcon keeps the menu-bar icon from breathing and pulsing;
+	// absent, it moves. It replaced animate_icon, off until 0.4.2 because it
+	// was the default, not a choice: that key is not read.
+	StillIcon bool `json:"still_icon,omitempty"`
 	// IconOnly hides the speed and memory beside the menu-bar icon;
 	// absent, they show.
 	IconOnly bool `json:"icon_only,omitempty"`

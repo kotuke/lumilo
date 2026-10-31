@@ -2,10 +2,15 @@
 
 ## 0.4.2
 
-One look for the engine choice.
+One look for the engine choice, and an icon that shows when it works.
 
 ### Improved
 
+- **The icon moves by default.** The engine's logo in the menu bar
+  pulses while a model loads and breathes while it answers; until now
+  it only did with Settings → Menu bar → Animate the icon on, and a
+  loading engine looked like a stopped one. Reduce Motion in the system
+  still keeps it still, and the switch turns it off.
 - The engine list under the header marks the running engine with a
   check on its logo, as Settings does, instead of a check beside it.
 

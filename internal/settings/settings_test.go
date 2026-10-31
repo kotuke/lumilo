@@ -13,7 +13,7 @@ import (
 func TestDefaults(t *testing.T) {
 	d := Defaults("Mac")
 	if d.Access != engine.AccessLocal || d.Port != 8000 || d.IdleMinutes != 10 ||
-		d.ModelUpdates || d.Language != "" || d.Terminal != "com.apple.Terminal" || !d.OpenAtLogin || d.AnimateIcon ||
+		d.ModelUpdates || d.Language != "" || d.Terminal != "com.apple.Terminal" || !d.OpenAtLogin || d.StillIcon ||
 		d.Engine != "splash" || len(d.Models) != 0 || len(d.Contexts) != 0 || len(d.Options) != 0 {
 		t.Errorf("defaults: %+v", d)
 	}
@@ -170,7 +170,7 @@ func TestRoundTrip(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "sub", "settings.json")
 	want := Settings{
 		Access: engine.AccessNetwork, Port: 9100, IdleMinutes: 0, ModelUpdates: true,
-		Language: "de", OpenAtLogin: false, AnimateIcon: true,
+		Language: "de", OpenAtLogin: false, StillIcon: true,
 		AllowedHosts: []string{}, LoginApplied: true, Terminal: "com.mitchellh.ghostty",
 		Engine:   "llamacpp",
 		Models:   map[string]string{"splash": "a/b:c", "llamacpp": "/m/x.gguf"},
@@ -275,5 +275,25 @@ func TestOldAccessModesLoadAsNetwork(t *testing.T) {
 		if err != nil || got.Access != want {
 			t.Errorf("%s: access %d, %v; want %d", in, got.Access, err, want)
 		}
+	}
+}
+
+// The icon moves unless asked not to: a file of a version before 0.4.2
+// holds "animate_icon": false only because that was the default, and it
+// is not read.
+func TestIconMovesByDefault(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "settings.json")
+	if err := os.WriteFile(path, []byte(`{"animate_icon": false, "port": 8000}`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	got, err := Load(path, Defaults("Mac"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got.StillIcon {
+		t.Error("an old animate_icon false keeps the icon still")
+	}
+	if Defaults("Mac").StillIcon {
+		t.Error("a fresh install keeps the icon still")
 	}
 }
