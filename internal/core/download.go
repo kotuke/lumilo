@@ -348,7 +348,7 @@ func (s *Supervisor) runJob(ctx context.Context, d engine.Downloader, j *job) {
 		j.Failure = engine.Failure{Kind: engine.FailExit, Line: "downloaded, but the engine does not list " + id}
 	}
 	if merr == nil && s.eng == j.eng {
-		s.models, s.adoptable = models, adopt
+		s.setModelsLocked(models, adopt)
 		s.pickModelLocked() // the first model when there was none
 	}
 	s.mu.Unlock()
