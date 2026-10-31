@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.3.3
+
+Models and engines changed outside Lumilo show up without a restart.
+
+### Improved
+
+- **The lists keep up with the disk.** Opening the panel looks for the
+  engines and models again, and while it is open the model list is
+  re-read every 3 seconds. A model pulled with the engine's own command
+  or an engine removed with Homebrew shows so at once, not after Lumilo
+  restarts.
+- **A refresh button** beside "Add model…" in the model list looks again
+  at once.
+
+### Updating
+
+Lumilo 0.2.0 and later download this version by themselves within a day
+and offer to restart; Settings → Check for updates finds it at once.
+Version 0.1.0 cannot update itself: run
+`brew upgrade --cask --greedy kotuke/tap/lumilo`.
+
 ## 0.3.2
 
 A Splash model whose drafter is gone gets it back in one click.
