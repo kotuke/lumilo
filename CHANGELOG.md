@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.4.2
+
+One look for the engine choice.
+
+### Improved
+
+- The engine list under the header marks the running engine with a
+  check on its logo, as Settings does, instead of a check beside it.
+
+### Updating
+
+Lumilo 0.2.0 and later download this version by themselves within a day
+and offer to restart; the Check button in Settings finds it at once.
+Version 0.1.0 cannot update itself: run
+`brew upgrade --cask --greedy kotuke/tap/lumilo`.
+
 ## 0.4.1
 
 The menu-bar icon holds still while a model loads, and the speed card
