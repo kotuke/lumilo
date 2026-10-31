@@ -1376,6 +1376,10 @@
   "@addModel": {
     "description": "Model list: opens a field for a Hugging Face model name to download."
   },
+  "refreshList": "Refresh list",
+  "@refreshList": {
+    "description": "Model list: icon button that reads the installed models and engines from disk again, after a change made outside the app."
+  },
   "addModelHint": "A model from Hugging Face. The server downloads it when it starts",
   "@addModelHint": {
     "description": "Note under the field for a model name to download."

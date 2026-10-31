@@ -399,6 +399,7 @@
   "ctxWarn": "За пределами родного контекста модели ({size}) ответы могут стать хуже при любой длине",
   "ctxNative": "Родной контекст модели — {size}",
   "addModel": "Добавить модель…",
+  "refreshList": "Обновить список",
   "addModelHint": "Модель с Hugging Face. Сервер скачает её при запуске",
   "addModelBad": "Введите owner/repo или owner/repo:вариант",
   "addModelLoading": "Поиск вариантов…",

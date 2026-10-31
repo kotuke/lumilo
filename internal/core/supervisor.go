@@ -24,6 +24,7 @@ import (
 const (
 	probeInterval       = time.Second      // probe a served or loading server
 	externalScanEvery   = 2 * time.Second  // re-scan for a foreign server
+	modelScanEvery      = 3 * time.Second  // re-read the models while the panel is open
 	hangAfter           = 12 * time.Second // ready server silent this long = unresponsive
 	stoppingLongAfter   = 12 * time.Second // a stop this long sets StoppingLong
 	firstUpdateCheck    = 10 * time.Second // after the engine is first detected
@@ -220,6 +221,10 @@ type Supervisor struct {
 	check    CheckResult
 	checkSeq int
 	lastScan time.Time
+	// watching is set while the panel is open (Watch); the models are
+	// re-read every modelScanEvery then, lastModelScan the last time.
+	watching      bool
+	lastModelScan time.Time
 
 	// Our server.
 	gen          int // bumped on every start; stale callbacks compare it
@@ -542,6 +547,23 @@ func (s *Supervisor) Install() { s.goBG(s.runInstall) }
 func (s *Supervisor) Update()  { s.goBG(s.runUpdate) }
 func (s *Supervisor) Recheck() { s.do(s.detect) }
 
+// Watch says whether the panel is open. Files change outside Lumilo (a
+// model pulled with the engine's own command, an engine removed with
+// brew): opening the panel detects the engines and models again, and while
+// it stays open the models are re-read every modelScanEvery.
+func (s *Supervisor) Watch(open bool) {
+	s.mu.Lock()
+	was := s.watching
+	s.watching = open
+	if open {
+		s.lastModelScan = s.d.clock.Now()
+	}
+	s.mu.Unlock()
+	if open && !was {
+		s.Recheck()
+	}
+}
+
 // CheckUpdate asks the release feed for the newest version now, for the
 // user: View.Checking is set at once, before it returns, and View.Check
 // holds the result once the feed answered. A call while such a check runs
@@ -699,6 +721,10 @@ func (s *Supervisor) tick() {
 	if scan {
 		s.lastScan = now
 	}
+	models := s.watching && s.inst.Installed && now.Sub(s.lastModelScan) >= modelScanEvery
+	if models {
+		s.lastModelScan = now
+	}
 	var meter func() int64
 	if s.downloadingLocked() {
 		meter = s.dlMeter
@@ -724,6 +750,9 @@ func (s *Supervisor) tick() {
 	}
 	if scan {
 		s.rescanExternal()
+	}
+	if models {
+		s.rescanModels()
 	}
 	s.probe()
 	s.notify()
@@ -884,6 +913,28 @@ func (s *Supervisor) rescanExternal() {
 		}
 	}
 	s.setStoppedLocked()
+}
+
+// rescanModels reads the installed and adoptable models again, without
+// the installers' look at the engines that detect takes.
+func (s *Supervisor) rescanModels() {
+	s.mu.Lock()
+	eng, epoch := s.eng, s.epoch
+	s.mu.Unlock()
+	ctx, cancel := context.WithTimeout(s.ctx, detectTimeout)
+	models, err := eng.Models(ctx)
+	adopt := adoptable(ctx, eng)
+	cancel()
+	if err != nil {
+		return
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if epoch != s.epoch || s.switching {
+		return // the engine changed meanwhile
+	}
+	s.models, s.adoptable = models, adopt
+	s.pickModelLocked()
 }
 
 // Starting and stopping our server.

@@ -363,7 +363,14 @@ func (p *Panel) modelButton(c *ui.Context, f *frame, s *mainState, crd ui.Elemen
 			p.adoptList(c, f, adopt, true)
 		})
 		ui.Box(c).Height(2)
-		p.addModel(c, f, true)
+		if p.addingModel {
+			p.addModel(c, f, true)
+		} else {
+			ui.Row(c).Gap(2).Children(func() {
+				ui.Column(c).Grow(1).MinWidth(0).Children(func() { p.addModel(c, f, true) })
+				p.refreshModels(c, f)
+			})
+		}
 		txt(c, m.PopNote(), 11).TextColor(t.muted).Padding(6, 8, 4, 8)
 	})
 }
@@ -397,6 +404,19 @@ func (p *Panel) addModel(c *ui.Context, f *frame, inPopup bool) {
 		example = v.Suggestions[0].ID
 	}
 	p.addField(c, f, inPopup, example)
+}
+
+// refreshModels reads the models and engines from disk again, for a
+// change made outside Lumilo while the panel is open (the supervisor also
+// re-reads the models every few seconds then).
+func (p *Panel) refreshModels(c *ui.Context, f *frame) {
+	t, m := f.pal, f.m
+	b := btn(c).Key("refresh-models").Size(34, 34).Radius(8).TextColor(t.soft).Role(ui.RoleMenuItem).
+		Label(m.RefreshList()).Tooltip(m.RefreshList()).OnClick(p.act.Recheck)
+	if b.Hovered() || b.FocusVisible() {
+		b.Background(t.rowHover)
+	}
+	b.Children(func() { ico(c, "refresh", 2, 14) })
 }
 
 // submitModel downloads the typed model when the engine accepts its name.

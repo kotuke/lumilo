@@ -216,6 +216,7 @@
   "ctxWarn": "超过模型的原生上下文 {size} 后，任何长度下的回答都可能变差",
   "ctxNative": "模型的原生上下文为 {size}",
   "addModel": "添加模型…",
+  "refreshList": "刷新列表",
   "addModelHint": "Hugging Face 上的模型。服务器启动时会下载它",
   "addModelBad": "请输入 owner/repo 或 owner/repo:variant",
   "addModelLoading": "正在查找变体…",

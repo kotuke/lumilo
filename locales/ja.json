@@ -399,6 +399,7 @@
   "ctxWarn": "モデル本来のコンテキスト {size} を超えると、どの長さでも回答の質が下がることがあります",
   "ctxNative": "モデル本来のコンテキストは {size} です",
   "addModel": "モデルを追加…",
+  "refreshList": "リストを更新",
   "addModelHint": "Hugging Face のモデル。サーバーの起動時にダウンロードします",
   "addModelBad": "owner/repo または owner/repo:variant の形で入力してください",
   "addModelLoading": "バリアントを検索しています…",

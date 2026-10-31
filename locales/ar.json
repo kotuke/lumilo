@@ -399,6 +399,7 @@
   "ctxWarn": "بعد السياق الأصلي للنموذج (\u2068{size}\u2069) قد تسوء الإجابات عند أي طول",
   "ctxNative": "السياق الأصلي للنموذج \u2068{size}\u2069",
   "addModel": "إضافة نموذج…",
+  "refreshList": "تحديث القائمة",
   "addModelHint": "نموذج من Hugging Face. ينزّله الخادم عند بدء تشغيله",
   "addModelBad": "أدخل owner/repo أو owner/repo:variant",
   "addModelLoading": "جارٍ البحث عن المتغيرات…",

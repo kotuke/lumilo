@@ -395,6 +395,8 @@ func boards() []board {
 			b.click("OrcaCyber-Nano-1.0")
 		}, check: func(b *bench) {
 			b.want(locales.In("en").PopNote(), "Q4 · 4.2 GB")
+			b.click(locales.In("en").RefreshList())
+			b.called("Recheck")
 			b.click("OrcaCyber-Mini-1.0")
 			b.called("SelectModel orcarouter/OrcaCyber-Mini-1.0:Q4")
 			b.none(locales.In("en").PopNote())
