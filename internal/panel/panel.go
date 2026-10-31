@@ -211,6 +211,10 @@ type Panel struct {
 	tokShown float64
 	tokStep  time.Time
 	liveLast float64 // the last live speed, kept while the request has none
+	// The live line stays until liveUntil after a request ends, with the
+	// token count it last showed (liveTokens): see liveHold.
+	liveUntil  time.Time
+	liveTokens int64
 
 	// Agent chips: their names as the last frame laid them out, to give
 	// each chip its content width as the basis it grows from.

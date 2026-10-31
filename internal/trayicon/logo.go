@@ -187,23 +187,23 @@ type composedKey struct {
 	opacity uint8 // percent
 }
 
-// image is the logo for the mark m at opacity (0 to 1), with the badge of
-// m if it has one, and its size in points.
-func (l *logoMark) image(m Mark, opacity float32) (bm *ui.Bitmap, w, h float32) {
+// image is the logo for the mark m and its size in points. A mark
+// without a badge is the logo itself, which the icon fades with the
+// element's opacity: the same pixels at every step of a pulse, so the logo
+// does not move when it comes back to full. A mark with a badge is the
+// logo at opacity (0 to 1) with the badge, composed once.
+func (l *logoMark) image(m Mark, opacity float32) (bm *ui.Bitmap, w, h float32, fade float32) {
 	w, h = l.size()
 	glyph, badged := badgeGlyph[m]
-	if !badged && opacity >= 1 {
-		return l.bitmap, w, h
+	if !badged {
+		return l.bitmap, w, h, opacity
 	}
-	cw := w
-	if badged {
-		cw += badgeOut
-	}
+	cw := w + badgeOut
 	k := composedKey{l, m, uint8(math.Round(float64(opacity) * 100))}
 	composed.Lock()
 	defer composed.Unlock()
 	if bm, ok := composed.m[k]; ok {
-		return bm, cw, h
+		return bm, cw, h, 1
 	}
 	px := func(pt float32) int { return int(math.Ceil(float64(pt * badgeK))) }
 	W, H := px(cw), px(h)
@@ -222,30 +222,28 @@ func (l *logoMark) image(m Mark, opacity float32) (bm *ui.Bitmap, w, h float32) 
 	})
 	out := image.NewNRGBA(image.Rect(0, 0, W, H))
 	copy(out.Pix, logo.Pix)
-	if badged {
-		cx, cy := w-badgeInset, h-badgeRadius
-		svg := func(body string) *ui.SVG {
-			return ui.MustParseSVG(fmt.Appendf(nil, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %g %g">%s</svg>`, cw, h, body))
-		}
-		disc := fmt.Sprintf(`<circle cx="%g" cy="%g" r="%g" fill="#000"/>`, cx, cy, badgeRadius)
-		gap := fmt.Sprintf(`<circle cx="%g" cy="%g" r="%g" fill="#000"/>`, cx, cy, badgeRadius+badgeGap)
-		cut := fmt.Sprintf(`<path transform="translate(%g %g)" d="%s" fill="none" stroke="#000" stroke-width="1.1" `+
-			`stroke-linecap="round" stroke-linejoin="round"/>`, cx, cy, glyph)
-		full := func(body string) *image.NRGBA {
-			s := svg(body)
-			return layer(func(c *ui.Context) { ui.Icon(c, s).Size(cw*badgeK, h*badgeK) })
-		}
-		gapA, discA, cutA := full(gap), full(disc), full(cut)
-		for i := 3; i < len(out.Pix); i += 4 {
-			a := int(out.Pix[i]) * (255 - int(gapA.Pix[i])) / 255
-			b := int(discA.Pix[i]) * (255 - int(cutA.Pix[i])) / 255
-			out.Pix[i] = uint8(max(a, b))
-		}
+	cx, cy := w-badgeInset, h-badgeRadius
+	svg := func(body string) *ui.SVG {
+		return ui.MustParseSVG(fmt.Appendf(nil, `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %g %g">%s</svg>`, cw, h, body))
+	}
+	disc := fmt.Sprintf(`<circle cx="%g" cy="%g" r="%g" fill="#000"/>`, cx, cy, badgeRadius)
+	gap := fmt.Sprintf(`<circle cx="%g" cy="%g" r="%g" fill="#000"/>`, cx, cy, badgeRadius+badgeGap)
+	cut := fmt.Sprintf(`<path transform="translate(%g %g)" d="%s" fill="none" stroke="#000" stroke-width="1.1" `+
+		`stroke-linecap="round" stroke-linejoin="round"/>`, cx, cy, glyph)
+	full := func(body string) *image.NRGBA {
+		s := svg(body)
+		return layer(func(c *ui.Context) { ui.Icon(c, s).Size(cw*badgeK, h*badgeK) })
+	}
+	gapA, discA, cutA := full(gap), full(disc), full(cut)
+	for i := 3; i < len(out.Pix); i += 4 {
+		a := int(out.Pix[i]) * (255 - int(gapA.Pix[i])) / 255
+		b := int(discA.Pix[i]) * (255 - int(cutA.Pix[i])) / 255
+		out.Pix[i] = uint8(max(a, b))
 	}
 	for i := 0; i < len(out.Pix); i += 4 {
 		out.Pix[i], out.Pix[i+1], out.Pix[i+2] = 0, 0, 0
 	}
 	bm = ui.NewBitmap(out)
 	composed.m[k] = bm
-	return bm, cw, h
+	return bm, cw, h, 1
 }
