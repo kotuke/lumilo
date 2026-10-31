@@ -292,6 +292,9 @@ func TestDownloadQueue(t *testing.T) {
 	for _, id := range []string{"hf/a:Q4", "hf/b:Q4", "hf/c:Q4", "hf/b:Q4"} {
 		h.s.DownloadModel(id, engine.ModelOptions{})
 	}
+	// The asks run on the worker: the second one for b must be handled
+	// before the cancel below, or it queues b again after it.
+	h.s.doWait(func() {})
 	a := eng.next(t)
 	v := h.wait("queued", func(v View) bool { return len(v.Downloads) == 3 })
 	var states []DownloadState
