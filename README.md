@@ -74,7 +74,10 @@ drawn in one colour like the system's own icons: it breathes while the model
 answers, pulses while it loads and fades when it stops; a badge in its corner
 shows a pause when the model sleeps, "!" when it fails and an arrow when the
 engine is not installed. Beside it is the live speed while it generates or the
-memory while it waits.
+memory while it waits. The icon animates by default. To keep it still, turn off
+“Animate the icon while busy” in Settings → Menu bar. The system’s Reduce Motion
+setting also keeps it still.
+
 llama.cpp counts a request's tokens when it ends, so under llama.cpp the icon
 shows memory while it generates. TensorFold does too, but it reports the
 tokens in flight, so Lumilo times them itself and the speed shows live. The
